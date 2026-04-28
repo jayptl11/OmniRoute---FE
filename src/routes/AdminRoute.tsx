@@ -35,6 +35,8 @@ export function getDefaultRouteForRole(roleName: string | null | undefined): str
       return '/sa/leads';
     case 'TV':
       return '/tv/leads';
+    case 'DP':
+      return '/dp/queue';
     default:
       return '/';
   }

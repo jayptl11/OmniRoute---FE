@@ -24,5 +24,10 @@ export function PrivateRoute() {
     return <Navigate to={getDefaultRouteForRole('SA')} replace />;
   }
 
+  // DP role belongs in the DP module
+  if (user?.roleName === 'DP') {
+    return <Navigate to={getDefaultRouteForRole('DP')} replace />;
+  }
+
   return <Outlet />;
 }

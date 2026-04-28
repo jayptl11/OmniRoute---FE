@@ -4,11 +4,13 @@ import { AuthLayout } from '@/layouts/AuthLayout';
 import { AdminLayout } from '@/layouts/AdminLayout';
 import { TvLayout } from '@/layouts/TvLayout';
 import { SaLayout } from '@/layouts/SaLayout';
+import { DpLayout } from '@/layouts/DpLayout';
 import { PublicRoute } from './PublicRoute';
 import { PrivateRoute } from './PrivateRoute';
 import { AdminRoute } from './AdminRoute';
 import { TvRoute } from './TvRoute';
 import { SaRoute } from './SaRoute';
+import { DpRoute } from './DpRoute';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })));
 const RegisterPage = lazy(() => import('@/pages/RegisterPage').then((m) => ({ default: m.RegisterPage })));
@@ -34,6 +36,11 @@ const SaleLeadsListPage = lazy(() => import('@/pages/sa/SaleLeadsListPage').then
 const SaleLeadDetailPage = lazy(() => import('@/pages/sa/SaleLeadDetailPage').then((m) => ({ default: m.SaleLeadDetailPage })));
 const FollowUpsPage = lazy(() => import('@/pages/sa/FollowUpsPage').then((m) => ({ default: m.FollowUpsPage })));
 const PerformancePage = lazy(() => import('@/pages/sa/PerformancePage').then((m) => ({ default: m.PerformancePage })));
+
+// DP pages
+const DispatchQueuePage = lazy(() => import('@/pages/dp/DispatchQueuePage').then((m) => ({ default: m.DispatchQueuePage })));
+const DispatchLeadDetailPage = lazy(() => import('@/pages/dp/DispatchLeadDetailPage').then((m) => ({ default: m.DispatchLeadDetailPage })));
+const DispatchHistoryPage = lazy(() => import('@/pages/dp/DispatchHistoryPage').then((m) => ({ default: m.DispatchHistoryPage })));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -109,6 +116,22 @@ export const router = createBrowserRouter([
           { path: '/sa/leads/:id', element: withSuspense(<SaleLeadDetailPage />) },
           { path: '/sa/follow-ups', element: withSuspense(<FollowUpsPage />) },
           { path: '/sa/performance', element: withSuspense(<PerformancePage />) },
+        ],
+      },
+    ],
+  },
+
+  // DP routes — role DP only
+  {
+    element: <DpRoute />,
+    children: [
+      {
+        element: <DpLayout />,
+        children: [
+          { path: '/dp', element: <Navigate to="/dp/queue" replace /> },
+          { path: '/dp/queue', element: withSuspense(<DispatchQueuePage />) },
+          { path: '/dp/queue/:id', element: withSuspense(<DispatchLeadDetailPage />) },
+          { path: '/dp/history', element: withSuspense(<DispatchHistoryPage />) },
         ],
       },
     ],
