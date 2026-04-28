@@ -1,8 +1,12 @@
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AuthLayout } from '@/layouts/AuthLayout';
+import { AdminLayout } from '@/layouts/AdminLayout';
+import { TvLayout } from '@/layouts/TvLayout';
 import { PublicRoute } from './PublicRoute';
 import { PrivateRoute } from './PrivateRoute';
+import { AdminRoute } from './AdminRoute';
+import { TvRoute } from './TvRoute';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })));
 const RegisterPage = lazy(() => import('@/pages/RegisterPage').then((m) => ({ default: m.RegisterPage })));
@@ -11,75 +15,87 @@ const ForgotPasswordPage = lazy(() => import('@/pages/ForgotPasswordPage').then(
 const ResetPasswordPage = lazy(() => import('@/pages/ResetPasswordPage').then((m) => ({ default: m.ResetPasswordPage })));
 const DashboardPage = lazy(() => import('@/pages/DashboardPage').then((m) => ({ default: m.DashboardPage })));
 
+// Admin pages
+const UsersPage = lazy(() => import('@/pages/admin/UsersPage').then((m) => ({ default: m.UsersPage })));
+const RoutingRulesPage = lazy(() => import('@/pages/admin/RoutingRulesPage').then((m) => ({ default: m.RoutingRulesPage })));
+const MasterDataPage = lazy(() => import('@/pages/admin/MasterDataPage').then((m) => ({ default: m.MasterDataPage })));
+const StoresPage = lazy(() => import('@/pages/admin/StoresPage').then((m) => ({ default: m.StoresPage })));
+const TeamsPage = lazy(() => import('@/pages/admin/TeamsPage').then((m) => ({ default: m.TeamsPage })));
+const SlaConfigPage = lazy(() => import('@/pages/admin/SlaConfigPage').then((m) => ({ default: m.SlaConfigPage })));
+
+// TV pages
+const LeadsListPage = lazy(() => import('@/pages/tv/LeadsListPage').then((m) => ({ default: m.LeadsListPage })));
+const LeadDetailPage = lazy(() => import('@/pages/tv/LeadDetailPage').then((m) => ({ default: m.LeadDetailPage })));
+
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">
     <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
   </div>
 );
 
+const withSuspense = (el: React.ReactNode) => (
+  <Suspense fallback={<PageLoader />}>{el}</Suspense>
+);
+
 export const router = createBrowserRouter([
-  // Public routes — redirect to / if already logged in
+  // Public routes — redirect to default route if already logged in
   {
     element: <PublicRoute />,
     children: [
       {
         element: <AuthLayout />,
         children: [
-          {
-            path: '/login',
-            element: (
-              <Suspense fallback={<PageLoader />}>
-                <LoginPage />
-              </Suspense>
-            ),
-          },
-          {
-            path: '/register',
-            element: (
-              <Suspense fallback={<PageLoader />}>
-                <RegisterPage />
-              </Suspense>
-            ),
-          },
-          {
-            path: '/verify-otp',
-            element: (
-              <Suspense fallback={<PageLoader />}>
-                <OtpVerificationPage />
-              </Suspense>
-            ),
-          },
-          {
-            path: '/forgot-password',
-            element: (
-              <Suspense fallback={<PageLoader />}>
-                <ForgotPasswordPage />
-              </Suspense>
-            ),
-          },
-          {
-            path: '/reset-password',
-            element: (
-              <Suspense fallback={<PageLoader />}>
-                <ResetPasswordPage />
-              </Suspense>
-            ),
-          },
+          { path: '/login', element: withSuspense(<LoginPage />) },
+          { path: '/register', element: withSuspense(<RegisterPage />) },
+          { path: '/verify-otp', element: withSuspense(<OtpVerificationPage />) },
+          { path: '/forgot-password', element: withSuspense(<ForgotPasswordPage />) },
+          { path: '/reset-password', element: withSuspense(<ResetPasswordPage />) },
         ],
       },
     ],
   },
-  // Private routes
+
+  // Admin routes — role QT only
+  {
+    element: <AdminRoute />,
+    children: [
+      {
+        element: <AdminLayout />,
+        children: [
+          { path: '/admin', element: <Navigate to="/admin/users" replace /> },
+          { path: '/admin/users', element: withSuspense(<UsersPage />) },
+          { path: '/admin/routing-rules', element: withSuspense(<RoutingRulesPage />) },
+          { path: '/admin/master-data', element: withSuspense(<MasterDataPage />) },
+          { path: '/admin/stores', element: withSuspense(<StoresPage />) },
+          { path: '/admin/teams', element: withSuspense(<TeamsPage />) },
+          { path: '/admin/sla-config', element: withSuspense(<SlaConfigPage />) },
+        ],
+      },
+    ],
+  },
+
+  // TV routes — role TV only
+  {
+    element: <TvRoute />,
+    children: [
+      {
+        element: <TvLayout />,
+        children: [
+          { path: '/tv', element: <Navigate to="/tv/leads" replace /> },
+          { path: '/tv/leads', element: withSuspense(<LeadsListPage />) },
+          { path: '/tv/leads/:id', element: withSuspense(<LeadDetailPage />) },
+        ],
+      },
+    ],
+  },
+
+  // Private routes (non-QT, non-TV roles)
   {
     element: <PrivateRoute />,
     children: [
       {
         path: '/',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <DashboardPage />
-          </Suspense>
-        ),
+        element: withSuspense(<DashboardPage />),
       },
     ],
   },

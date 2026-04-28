@@ -1,11 +1,22 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuthStore, selectIsAuthenticated } from '@/stores/authStore';
+import { useAuthStore } from '@/stores/authStore';
+import { getDefaultRouteForRole } from './AdminRoute';
 
 export function PrivateRoute() {
-  const isAuthenticated = useAuthStore(selectIsAuthenticated);
+  const { isAuthenticated, user } = useAuthStore();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  // QT role always belongs in the admin module, not the generic dashboard
+  if (user?.roleName === 'QT') {
+    return <Navigate to={getDefaultRouteForRole('QT')} replace />;
+  }
+
+  // TV role belongs in the TV module
+  if (user?.roleName === 'TV') {
+    return <Navigate to={getDefaultRouteForRole('TV')} replace />;
   }
 
   return <Outlet />;

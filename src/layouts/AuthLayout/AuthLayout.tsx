@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { GitBranch, Globe, Activity, Users, BarChart3 } from 'lucide-react';
+import { GitBranch, Globe } from 'lucide-react';
 
 export function AuthLayout() {
   return (

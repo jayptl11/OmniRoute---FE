@@ -1,0 +1,58 @@
+.priorityBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 26px;
+  border-radius: 7px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.tag {
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(14, 165, 233, 0.1);
+  color: #0284c7;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.tagAll {
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(100, 116, 139, 0.1);
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.tagKeyword {
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(99, 102, 241, 0.08);
+  color: #6366f1;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.groupBadge {
+  display: inline-flex;
+  padding: 3px 10px;
+  border-radius: 7px;
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
