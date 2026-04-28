@@ -5,12 +5,14 @@ import { AdminLayout } from '@/layouts/AdminLayout';
 import { TvLayout } from '@/layouts/TvLayout';
 import { SaLayout } from '@/layouts/SaLayout';
 import { DpLayout } from '@/layouts/DpLayout';
+import { CsLayout } from '@/layouts/CsLayout';
 import { PublicRoute } from './PublicRoute';
 import { PrivateRoute } from './PrivateRoute';
 import { AdminRoute } from './AdminRoute';
 import { TvRoute } from './TvRoute';
 import { SaRoute } from './SaRoute';
 import { DpRoute } from './DpRoute';
+import { CsRoute } from './CsRoute';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })));
 const RegisterPage = lazy(() => import('@/pages/RegisterPage').then((m) => ({ default: m.RegisterPage })));
@@ -41,6 +43,11 @@ const PerformancePage = lazy(() => import('@/pages/sa/PerformancePage').then((m)
 const DispatchQueuePage = lazy(() => import('@/pages/dp/DispatchQueuePage').then((m) => ({ default: m.DispatchQueuePage })));
 const DispatchLeadDetailPage = lazy(() => import('@/pages/dp/DispatchLeadDetailPage').then((m) => ({ default: m.DispatchLeadDetailPage })));
 const DispatchHistoryPage = lazy(() => import('@/pages/dp/DispatchHistoryPage').then((m) => ({ default: m.DispatchHistoryPage })));
+
+// CS pages
+const TicketsListPage = lazy(() => import('@/pages/cs/TicketsListPage').then((m) => ({ default: m.TicketsListPage })));
+const TicketDetailPage = lazy(() => import('@/pages/cs/TicketDetailPage').then((m) => ({ default: m.TicketDetailPage })));
+const CsPerformancePage = lazy(() => import('@/pages/cs/PerformancePage').then((m) => ({ default: m.PerformancePage })));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -132,6 +139,22 @@ export const router = createBrowserRouter([
           { path: '/dp/queue', element: withSuspense(<DispatchQueuePage />) },
           { path: '/dp/queue/:id', element: withSuspense(<DispatchLeadDetailPage />) },
           { path: '/dp/history', element: withSuspense(<DispatchHistoryPage />) },
+        ],
+      },
+    ],
+  },
+
+  // CS routes — role CS only
+  {
+    element: <CsRoute />,
+    children: [
+      {
+        element: <CsLayout />,
+        children: [
+          { path: '/cs', element: <Navigate to="/cs/tickets" replace /> },
+          { path: '/cs/tickets', element: withSuspense(<TicketsListPage />) },
+          { path: '/cs/tickets/:id', element: withSuspense(<TicketDetailPage />) },
+          { path: '/cs/performance', element: withSuspense(<CsPerformancePage />) },
         ],
       },
     ],

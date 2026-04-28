@@ -336,7 +336,7 @@ export function SaleLeadDetailPage() {
 
   const isClosed = LEAD_STATUS_CLOSED.includes(lead.leadStatus);
   const hasNextStates = (SALE_LEAD_VALID_TRANSITIONS[lead.leadStatus] ?? []).length > 0;
-  const sortedLogs = [...lead.activityLogs].sort(
+  const sortedLogs = [...(lead.activityLogs ?? [])].sort(
     (a, b) => new Date(a.performedAt).getTime() - new Date(b.performedAt).getTime()
   );
 
@@ -407,11 +407,11 @@ export function SaleLeadDetailPage() {
                   {lead.customerEmail ?? 'Chưa có'}
                 </span>
               </div>
-              {lead.productInterest.length > 0 && (
+              {(lead.productInterest ?? []).length > 0 && (
                 <div className={styles.field}>
                   <span className={styles.fieldLabel}><Tag size={10} /> Sản phẩm quan tâm</span>
                   <div className={styles.tagsWrap}>
-                    {lead.productInterest.map((t) => <span key={t} className={styles.tag}>{t}</span>)}
+                    {(lead.productInterest ?? []).map((t) => <span key={t} className={styles.tag}>{t}</span>)}
                   </div>
                 </div>
               )}

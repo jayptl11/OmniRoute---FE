@@ -87,7 +87,7 @@ export function LeadDetailPage() {
       customerAddress: lead.customerAddress ?? '',
       customerEmail: lead.customerEmail ?? '',
       needDescription: lead.needDescription,
-      productInterest: [...lead.productInterest],
+      productInterest: [...(lead.productInterest ?? [])],
       productInterestInput: '',
     });
     setEditing(true);
@@ -286,9 +286,9 @@ export function LeadDetailPage() {
                   </div>
                 </>
               ) : (
-                lead.productInterest.length > 0 ? (
+                (lead.productInterest ?? []).length > 0 ? (
                   <div className={styles.tagsWrap}>
-                    {lead.productInterest.map((tag) => (
+                    {(lead.productInterest ?? []).map((tag) => (
                       <span key={tag} className={styles.tag}>{tag}</span>
                     ))}
                   </div>

@@ -29,5 +29,10 @@ export function PrivateRoute() {
     return <Navigate to={getDefaultRouteForRole('DP')} replace />;
   }
 
+  // CS role belongs in the CS module
+  if (user?.roleName === 'CS') {
+    return <Navigate to={getDefaultRouteForRole('CS')} replace />;
+  }
+
   return <Outlet />;
 }
