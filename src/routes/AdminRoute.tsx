@@ -31,6 +31,8 @@ export function getDefaultRouteForRole(roleName: string | null | undefined): str
     // Add future role routes here:
     // case 'SA': return '/sale/dashboard';
     // case 'CS': return '/cs/dashboard';
+    case 'SA':
+      return '/sa/leads';
     case 'TV':
       return '/tv/leads';
     default:

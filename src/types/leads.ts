@@ -187,3 +187,211 @@ export interface UpdateLeadResponse {
   leadCode: string;
   updatedAt: string;
 }
+
+// ─── SA-01/03: List Sale Leads ────────────────────────────────────────────────
+
+export interface GetSaleLeadsParams {
+  search?: string;
+  status?: LeadStatus;
+  priorityLevel?: PriorityLevel;
+  channel?: LeadChannel;
+  dateFrom?: string;
+  dateTo?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface SaleLeadListItemDto {
+  leadId: string;
+  leadCode: string;
+  customerName: string;
+  customerPhone: string;
+  needType: NeedType | null;
+  leadStatus: LeadStatus;
+  priorityLevel: PriorityLevel | null;
+  slaDeadline: string | null;
+  slaViolated: boolean;
+  assignedAt: string;
+}
+
+// ─── SA-02: Activity Timeline ─────────────────────────────────────────────────
+
+export type ActivityAction =
+  | 'LEAD_CREATED'
+  | 'LEAD_ASSIGNED'
+  | 'STATUS_CHANGED'
+  | 'CONSULTATION_NOTE'
+  | 'LEAD_UPDATED';
+
+export interface ActivityLogDto {
+  id: string;
+  action: ActivityAction;
+  note: string | null;
+  newValue: string | null;
+  performedAt: string;
+  performedByName: string;
+}
+
+export interface SaleLeadDetailDto {
+  leadId: string;
+  leadCode: string;
+  customerName: string;
+  customerPhone: string;
+  customerAddress: string | null;
+  customerEmail: string | null;
+  channel: LeadChannel;
+  needDescription: string;
+  productInterest: string[];
+
+  needType: NeedType | null;
+  priorityScore: number | null;
+  priorityLevel: PriorityLevel | null;
+  assignedGroup: AssignedGroup | null;
+  routingType: RoutingType | null;
+
+  assignedUserId: string | null;
+  assignedUserName: string | null;
+  assignedStoreId: string | null;
+  assignedAt: string | null;
+
+  slaDeadline: string | null;
+  slaViolated: boolean;
+
+  leadStatus: LeadStatus;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  closedAt: string | null;
+
+  activityLogs: ActivityLogDto[];
+}
+
+// ─── SA-04: Update Status ─────────────────────────────────────────────────────
+
+/** Valid next-states from a given status (BR-05 transition rules) */
+export const SALE_LEAD_VALID_TRANSITIONS: Partial<Record<LeadStatus, LeadStatus[]>> = {
+  Assigned:   ['Contacted',  'Lost', 'Cancelled'],
+  Contacted:  ['InProgress', 'Lost', 'Cancelled'],
+  InProgress: ['Won',        'Lost', 'Cancelled'],
+};
+
+export interface UpdateSaleLeadStatusRequest {
+  leadId: string;
+  newStatus: LeadStatus;
+  note?: string | null;
+  lostReason?: string | null;
+  cancelReason?: string | null;
+  wonDetails?: string | null;
+}
+
+export interface UpdateSaleLeadStatusResponse {
+  leadId: string;
+  leadCode: string;
+  newStatus: LeadStatus;
+  updatedAt: string;
+}
+
+// ─── SA-05: Add Note ──────────────────────────────────────────────────────────
+
+export interface AddNoteRequest {
+  leadId: string;
+  content: string;
+}
+
+export interface AddNoteResponse {
+  noteId: string;
+  leadId: string;
+  createdAt: string;
+}
+
+// ─── SA display helpers ───────────────────────────────────────────────────────
+
+/** SA-specific status labels (context: lead assigned to SA) */
+export const SA_LEAD_STATUS_LABELS: Partial<Record<LeadStatus, string>> = {
+  Assigned:   'Chờ tiếp nhận',
+  Contacted:  'Đã liên hệ',
+  InProgress: 'Đang tư vấn',
+  Won:        'Chốt thành công',
+  Lost:       'Không chốt được',
+  Cancelled:  'Đã hủy',
+};
+
+export const ACTIVITY_ACTION_LABELS: Record<ActivityAction, string> = {
+  LEAD_CREATED:       'Lead được tạo',
+  LEAD_ASSIGNED:      'Được gán cho nhân viên',
+  STATUS_CHANGED:     'Chuyển trạng thái',
+  CONSULTATION_NOTE:  'Ghi chú tư vấn',
+  LEAD_UPDATED:       'Cập nhật thông tin',
+};
+
+// ─── SA-08: Report Invalid ────────────────────────────────────────────────────
+
+export type InvalidReason = 'Spam' | 'WrongPhone' | 'Unreachable' | 'Other';
+
+export const INVALID_REASON_LABELS: Record<InvalidReason, string> = {
+  Spam:        'Spam / Cuộc gọi rác',
+  WrongPhone:  'Số điện thoại sai',
+  Unreachable: 'Không liên hệ được',
+  Other:       'Lý do khác',
+};
+
+export interface ReportInvalidRequest {
+  leadId: string;
+  reason: InvalidReason;
+}
+
+export interface ReportInvalidResponse {
+  leadId: string;
+  leadCode: string;
+  cancelledAt: string;
+}
+
+// ─── SA-06: Create Follow-Up ──────────────────────────────────────────────────
+
+export interface CreateFollowUpRequest {
+  leadId: string;
+  dueAt: string; // ISO 8601 UTC, must be > now
+  note: string;  // max 500 chars
+}
+
+export interface CreateFollowUpResponse {
+  taskId: string;
+  leadId: string;
+  dueAt: string;
+  createdAt: string;
+}
+
+// ─── SA-07: Follow-Up Tasks ───────────────────────────────────────────────────
+
+export type FollowUpFilter = 'today' | 'upcoming' | 'overdue';
+
+export interface FollowUpTaskDto {
+  taskId: string;
+  leadId: string;
+  leadCode: string;
+  customerName: string;
+  customerPhone: string;
+  dueAt: string;
+  note: string;
+  isOverdue: boolean;
+  isToday: boolean;
+}
+
+// ─── SA-09: Performance ───────────────────────────────────────────────────────
+
+export type PerformancePeriod = 'week' | 'month' | 'quarter';
+
+export interface PerformanceDto {
+  period: PerformancePeriod;
+  periodStart: string;
+  periodEnd: string;
+  totalAssigned: number;
+  totalProcessed: number;
+  wonCount: number;
+  winRate: number | null;
+  avgResponseTimeMinutes: number | null;
+  slaViolatedCount: number;
+  generatedAt: string;
+}
+
+

@@ -19,5 +19,10 @@ export function PrivateRoute() {
     return <Navigate to={getDefaultRouteForRole('TV')} replace />;
   }
 
+  // SA role belongs in the SA module
+  if (user?.roleName === 'SA') {
+    return <Navigate to={getDefaultRouteForRole('SA')} replace />;
+  }
+
   return <Outlet />;
 }

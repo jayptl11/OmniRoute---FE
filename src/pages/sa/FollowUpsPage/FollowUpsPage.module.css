@@ -1,0 +1,141 @@
+/* ── Page ─────────────────────────────────────────────────────────────────── */
+.page { display: flex; flex-direction: column; gap: 20px; }
+
+.title { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0 0 4px; letter-spacing: -0.02em; }
+.subtitle { font-size: 0.8125rem; color: #64748b; margin: 0; }
+
+/* ── Tabs ─────────────────────────────────────────────────────────────────── */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid #e2e8f0; }
+
+.tab {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s;
+}
+
+.tab:hover { color: #1d4ed8; }
+.tabActive { color: #1d4ed8 !important; border-bottom-color: #2563eb !important; font-weight: 600; }
+
+/* ── Cards grid ───────────────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.15s, border-color 0.15s;
+  cursor: default;
+}
+
+.card:hover { border-color: #bfdbfe; box-shadow: 0 4px 16px rgba(37, 99, 235, 0.07); }
+
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cardName { font-size: 0.9rem; font-weight: 700; color: #0f172a; }
+.cardPhone { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+
+.cardBadges { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+
+.badgeOverdue {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.badgeToday {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.cardLeadLink {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+.cardLeadLink:hover { text-decoration: underline; }
+
+.cardDue {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.cardDueOverdue { color: #b91c1c; font-weight: 700; }
+
+.cardNote {
+  font-size: 0.8125rem;
+  color: #475569;
+  line-height: 1.6;
+  background: #f8fafc;
+  border-left: 3px solid #bfdbfe;
+  padding: 8px 12px;
+  border-radius: 0 6px 6px 0;
+}
+
+/* ── Empty / Loading ──────────────────────────────────────────────────────── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 60px 20px;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.emptyIcon { color: #e2e8f0; margin-bottom: 4px; }
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 32px; height: 32px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}

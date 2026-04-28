@@ -3,10 +3,12 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AuthLayout } from '@/layouts/AuthLayout';
 import { AdminLayout } from '@/layouts/AdminLayout';
 import { TvLayout } from '@/layouts/TvLayout';
+import { SaLayout } from '@/layouts/SaLayout';
 import { PublicRoute } from './PublicRoute';
 import { PrivateRoute } from './PrivateRoute';
 import { AdminRoute } from './AdminRoute';
 import { TvRoute } from './TvRoute';
+import { SaRoute } from './SaRoute';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })));
 const RegisterPage = lazy(() => import('@/pages/RegisterPage').then((m) => ({ default: m.RegisterPage })));
@@ -26,6 +28,12 @@ const SlaConfigPage = lazy(() => import('@/pages/admin/SlaConfigPage').then((m) 
 // TV pages
 const LeadsListPage = lazy(() => import('@/pages/tv/LeadsListPage').then((m) => ({ default: m.LeadsListPage })));
 const LeadDetailPage = lazy(() => import('@/pages/tv/LeadDetailPage').then((m) => ({ default: m.LeadDetailPage })));
+
+// SA pages
+const SaleLeadsListPage = lazy(() => import('@/pages/sa/SaleLeadsListPage').then((m) => ({ default: m.SaleLeadsListPage })));
+const SaleLeadDetailPage = lazy(() => import('@/pages/sa/SaleLeadDetailPage').then((m) => ({ default: m.SaleLeadDetailPage })));
+const FollowUpsPage = lazy(() => import('@/pages/sa/FollowUpsPage').then((m) => ({ default: m.FollowUpsPage })));
+const PerformancePage = lazy(() => import('@/pages/sa/PerformancePage').then((m) => ({ default: m.PerformancePage })));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -84,6 +92,23 @@ export const router = createBrowserRouter([
           { path: '/tv', element: <Navigate to="/tv/leads" replace /> },
           { path: '/tv/leads', element: withSuspense(<LeadsListPage />) },
           { path: '/tv/leads/:id', element: withSuspense(<LeadDetailPage />) },
+        ],
+      },
+    ],
+  },
+
+  // SA routes — role SA only
+  {
+    element: <SaRoute />,
+    children: [
+      {
+        element: <SaLayout />,
+        children: [
+          { path: '/sa', element: <Navigate to="/sa/leads" replace /> },
+          { path: '/sa/leads', element: withSuspense(<SaleLeadsListPage />) },
+          { path: '/sa/leads/:id', element: withSuspense(<SaleLeadDetailPage />) },
+          { path: '/sa/follow-ups', element: withSuspense(<FollowUpsPage />) },
+          { path: '/sa/performance', element: withSuspense(<PerformancePage />) },
         ],
       },
     ],
