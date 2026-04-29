@@ -34,5 +34,10 @@ export function PrivateRoute() {
     return <Navigate to={getDefaultRouteForRole('CS')} replace />;
   }
 
+  // TN role belongs in the TN module
+  if (user?.roleName === 'TN') {
+    return <Navigate to={getDefaultRouteForRole('TN')} replace />;
+  }
+
   return <Outlet />;
 }

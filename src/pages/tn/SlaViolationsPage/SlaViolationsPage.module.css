@@ -1,0 +1,205 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pageHeader { display: flex; flex-direction: column; gap: 4px; }
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.titleIcon { color: #ef4444; }
+
+.pageTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.pageSubtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ── Table ───────────────────────────────────────────────────────────────── */
+.tableWrap {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8375rem;
+}
+
+.table thead tr {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table th {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  background: #f8fafc;
+}
+
+.table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td { border-bottom: none; }
+
+.rowViolated td { background: #fef2f2; }
+.rowWarning td  { background: #fff7ed; }
+
+/* ── Cell content ────────────────────────────────────────────────────────── */
+.leadCode {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #d97706;
+}
+
+.customerName {
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 2px;
+}
+
+.customerPhone {
+  font-size: 0.775rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.priorityBadge {
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.priorityBadge[data-priority='High']   { background: #fef2f2; color: #dc2626; }
+.priorityBadge[data-priority='Medium'] { background: #fffbeb; color: #d97706; }
+.priorityBadge[data-priority='Low']    { background: #f0fdf4; color: #16a34a; }
+
+.statusBadge {
+  font-size: 0.75rem;
+  color: #475569;
+}
+
+.deadlineCell {
+  font-size: 0.8rem;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.hoursBadge {
+  display: inline-flex;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badgeRed    { background: #fef2f2; color: #dc2626; }
+.badgeOrange { background: #fff7ed; color: #ea580c; }
+.badgeGray   { background: #f8fafc; color: #64748b; }
+
+.assigneeCell { color: #374151; font-size: 0.825rem; }
+
+.unassigned { color: #94a3b8; font-style: italic; }
+
+.actionBtn {
+  border: 1.5px solid #d97706;
+  border-radius: 7px;
+  background: transparent;
+  color: #d97706;
+  font-size: 0.775rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.actionBtn:hover { background: #d97706; color: #fff; }
+
+.emptyRow {
+  text-align: center;
+  color: #94a3b8;
+  padding: 40px !important;
+}
+
+/* ── Pagination ───────────────────────────────────────────────────────────── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.pageBtn {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #475569;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+}
+
+.pageBtn:hover:not(:disabled) { border-color: #d97706; color: #d97706; }
+.pageBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.pageInfo { font-size: 0.8375rem; color: #64748b; }
+
+/* ── Loading / Error ──────────────────────────────────────────────────────── */
+.loadingWrap, .errorWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #64748b;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #d97706;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.retryBtn {
+  background: none;
+  border: none;
+  color: #d97706;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: inherit;
+}

@@ -6,6 +6,7 @@ import { TvLayout } from '@/layouts/TvLayout';
 import { SaLayout } from '@/layouts/SaLayout';
 import { DpLayout } from '@/layouts/DpLayout';
 import { CsLayout } from '@/layouts/CsLayout';
+import { TnLayout } from '@/layouts/TnLayout';
 import { PublicRoute } from './PublicRoute';
 import { PrivateRoute } from './PrivateRoute';
 import { AdminRoute } from './AdminRoute';
@@ -13,6 +14,7 @@ import { TvRoute } from './TvRoute';
 import { SaRoute } from './SaRoute';
 import { DpRoute } from './DpRoute';
 import { CsRoute } from './CsRoute';
+import { TnRoute } from './TnRoute';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })));
 const RegisterPage = lazy(() => import('@/pages/RegisterPage').then((m) => ({ default: m.RegisterPage })));
@@ -48,6 +50,15 @@ const DispatchHistoryPage = lazy(() => import('@/pages/dp/DispatchHistoryPage').
 const TicketsListPage = lazy(() => import('@/pages/cs/TicketsListPage').then((m) => ({ default: m.TicketsListPage })));
 const TicketDetailPage = lazy(() => import('@/pages/cs/TicketDetailPage').then((m) => ({ default: m.TicketDetailPage })));
 const CsPerformancePage = lazy(() => import('@/pages/cs/PerformancePage').then((m) => ({ default: m.PerformancePage })));
+
+// TN pages
+const TnOverviewPage = lazy(() => import('@/pages/tn/TnOverviewPage').then((m) => ({ default: m.TnOverviewPage })));
+const SlaViolationsPage = lazy(() => import('@/pages/tn/SlaViolationsPage').then((m) => ({ default: m.SlaViolationsPage })));
+const TeamLeadsPage = lazy(() => import('@/pages/tn/TeamLeadsPage').then((m) => ({ default: m.TeamLeadsPage })));
+const TeamReportPage = lazy(() => import('@/pages/tn/TeamReportPage').then((m) => ({ default: m.TeamReportPage })));
+const EscalateHistoryPage = lazy(() => import('@/pages/tn/EscalateHistoryPage').then((m) => ({ default: m.EscalateHistoryPage })));
+const TeamManagementPage = lazy(() => import('@/pages/tn/TeamManagementPage').then((m) => ({ default: m.TeamManagementPage })));
+const MemberPerformancePage = lazy(() => import('@/pages/tn/MemberPerformancePage').then((m) => ({ default: m.MemberPerformancePage })));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -155,6 +166,26 @@ export const router = createBrowserRouter([
           { path: '/cs/tickets', element: withSuspense(<TicketsListPage />) },
           { path: '/cs/tickets/:id', element: withSuspense(<TicketDetailPage />) },
           { path: '/cs/performance', element: withSuspense(<CsPerformancePage />) },
+        ],
+      },
+    ],
+  },
+
+  // TN routes — role TN only
+  {
+    element: <TnRoute />,
+    children: [
+      {
+        element: <TnLayout />,
+        children: [
+          { path: '/tn', element: <Navigate to="/tn/overview" replace /> },
+          { path: '/tn/overview', element: withSuspense(<TnOverviewPage />) },
+          { path: '/tn/sla', element: withSuspense(<SlaViolationsPage />) },
+          { path: '/tn/leads', element: withSuspense(<TeamLeadsPage />) },
+          { path: '/tn/report', element: withSuspense(<TeamReportPage />) },
+          { path: '/tn/escalate-history', element: withSuspense(<EscalateHistoryPage />) },
+          { path: '/tn/team', element: withSuspense(<TeamManagementPage />) },
+          { path: '/tn/team/:userId/performance', element: withSuspense(<MemberPerformancePage />) },
         ],
       },
     ],

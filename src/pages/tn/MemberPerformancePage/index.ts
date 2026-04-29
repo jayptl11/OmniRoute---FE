@@ -1,0 +1,1 @@
+export { MemberPerformancePage } from './MemberPerformancePage';

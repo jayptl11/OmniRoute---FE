@@ -39,6 +39,8 @@ export function getDefaultRouteForRole(roleName: string | null | undefined): str
       return '/dp/queue';
     case 'CS':
       return '/cs/tickets';
+    case 'TN':
+      return '/tn/overview';
     default:
       return '/';
   }

@@ -1,0 +1,1 @@
+export { EscalateHistoryPage } from './EscalateHistoryPage';
