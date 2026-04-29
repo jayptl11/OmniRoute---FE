@@ -86,14 +86,16 @@ api.interceptors.response.use(
       }
     }
 
-    // Normalize error
+    // Normalize error — ưu tiên errorCode từ body (ví dụ: 'NO_TEAM', 'LEAD_NOT_FOUND')
     if (isAxiosError(error)) {
       const status = error.response?.status;
       const data = error.response?.data as
-        | { errorMessage?: string; message?: string }
+        | { errorCode?: string; errorMessage?: string; message?: string }
         | undefined;
+      const errorCode = data?.errorCode;
       const message = data?.errorMessage ?? data?.message ?? error.message;
-      return Promise.reject(new AppError(message, `HTTP_${status}`, status));
+      // Dùng errorCode từ body nếu có, fallback về HTTP_${status}
+      return Promise.reject(new AppError(message, errorCode ?? `HTTP_${status}`, status));
     }
 
     return Promise.reject(error);

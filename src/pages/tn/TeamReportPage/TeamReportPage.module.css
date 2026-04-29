@@ -1,4 +1,4 @@
-.page { display: flex; flex-direction: column; gap: 24px; max-width: 1100px; }
+.page { display: flex; flex-direction: column; gap: 24px; width: 100%; max-width: 1100px; }
 .pageHeader { display: flex; flex-direction: column; gap: 4px; }
 .titleRow { display: flex; align-items: center; gap: 10px; }
 .titleIcon { color: #d97706; }

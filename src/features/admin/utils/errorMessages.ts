@@ -21,6 +21,12 @@ export const ADMIN_ERROR_MESSAGES: Record<string, string> = {
   // Stores
   STORE_CODE_TAKEN: 'Mã cửa hàng này đã tồn tại.',
 
+  // Teams
+  TEAM_NAME_TAKEN: 'Tên nhóm này đã tồn tại.',
+  LEADER_NOT_FOUND: 'Không tìm thấy tài khoản Team Lead.',
+  LEADER_WRONG_ROLE: 'Người được chọn không có role Team Lead (TN).',
+  LEADER_ALREADY_ASSIGNED: 'Team Lead này đã được gán vào đội khác.',
+
   // SLA
   INVALID_WARNING_HOURS:
     'Giờ cảnh báo phải nhỏ hơn giờ tối đa (WarningBeforeHours < MaxHours).',

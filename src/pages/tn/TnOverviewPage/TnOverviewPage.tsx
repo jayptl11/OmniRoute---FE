@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useTeamLeadOverview } from '@/features/tn/hooks/useTeamLead';
-import { AlertTriangle, Clock, Activity, ShieldAlert } from 'lucide-react';
+import { AlertTriangle, Clock, Activity, ShieldAlert, List, BarChart2, Users, ArrowUpCircle } from 'lucide-react';
 import styles from './TnOverviewPage.module.css';
 
 function StatCard({
@@ -18,18 +18,21 @@ function StatCard({
   icon: Icon,
   color,
   onClick,
+  hint,
 }: {
   label: string;
   value: number;
   icon: React.ElementType;
   color: string;
   onClick?: () => void;
+  hint?: string;
 }) {
   return (
     <div
       className={`${styles.statCard} ${onClick ? styles.statCardClickable : ''}`}
       onClick={onClick}
       style={{ '--accent': color } as React.CSSProperties}
+      title={hint}
     >
       <div className={styles.statIcon}>
         <Icon size={20} />
@@ -37,6 +40,7 @@ function StatCard({
       <div>
         <p className={styles.statLabel}>{label}</p>
         <p className={styles.statValue}>{value}</p>
+        {onClick && <p className={styles.statHint}>Nhấp để xem →</p>}
       </div>
     </div>
   );
@@ -81,27 +85,69 @@ export function TnOverviewPage() {
           value={data.pendingResponse}
           icon={Clock}
           color="#f59e0b"
+          onClick={() => navigate('/tn/leads?status=PendingResponse')}
+          hint="Xem leads đang chờ SA phản hồi"
         />
         <StatCard
           label="Đang xử lý"
           value={data.inProgress}
           icon={Activity}
           color="#3b82f6"
+          onClick={() => navigate('/tn/leads?status=InProgress')}
+          hint="Xem leads đang được tư vấn"
         />
         <StatCard
           label="Vi phạm SLA"
           value={data.slaViolated}
           icon={ShieldAlert}
           color="#ef4444"
-          onClick={data.slaViolated > 0 ? () => navigate('/tn/sla') : undefined}
+          onClick={() => navigate('/tn/sla')}
+          hint="Xem leads đã vi phạm SLA"
         />
         <StatCard
           label="Sắp vi phạm SLA"
           value={data.slaNearDeadline}
           icon={AlertTriangle}
           color="#f97316"
-          onClick={data.slaNearDeadline > 0 ? () => navigate('/tn/sla') : undefined}
+          onClick={() => navigate('/tn/sla')}
+          hint="Xem leads sắp đến hạn SLA"
         />
+      </div>
+
+      {/* Quick links */}
+      <div className={styles.quickLinks}>
+        <button
+          className={styles.quickLinkBtn}
+          onClick={() => navigate('/tn/leads')}
+          id="quick-all-leads"
+        >
+          <List size={14} />
+          Toàn bộ leads
+        </button>
+        <button
+          className={styles.quickLinkBtn}
+          onClick={() => navigate('/tn/report')}
+          id="quick-report"
+        >
+          <BarChart2 size={14} />
+          Báo cáo đội
+        </button>
+        <button
+          className={styles.quickLinkBtn}
+          onClick={() => navigate('/tn/team')}
+          id="quick-team"
+        >
+          <Users size={14} />
+          Quản lý đội
+        </button>
+        <button
+          className={styles.quickLinkBtn}
+          onClick={() => navigate('/tn/escalate-history')}
+          id="quick-escalate"
+        >
+          <ArrowUpCircle size={14} />
+          Lịch sử escalate
+        </button>
       </div>
 
       {/* Trend chart */}

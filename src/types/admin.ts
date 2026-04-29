@@ -233,6 +233,7 @@ export interface TeamDto {
   teamName: string;
   teamType: AssignedGroupString;
   leaderId: string | null;
+  leaderName: string | null;   // tên đầy đủ của TN được gán (nếu API trả về)
   storeId: string | null;
   isActive: boolean;
   createdAt: string;

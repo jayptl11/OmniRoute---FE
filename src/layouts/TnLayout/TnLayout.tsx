@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { useLogout } from '@/features/auth';
+import { useTeamLeadOverview } from '@/features/tn/hooks/useTeamLead';
+import { isAppError } from '@/types/common';
 import {
   LayoutDashboard,
   AlertTriangle,
@@ -13,6 +15,8 @@ import {
   ChevronLeft,
   ChevronRight,
   GitBranch,
+  ShieldOff,
+  RefreshCw,
 } from 'lucide-react';
 import styles from './TnLayout.module.css';
 
@@ -24,6 +28,54 @@ const NAV_ITEMS = [
   { to: '/tn/escalate-history', icon: ArrowUpCircle,   label: 'Lịch sử escalate' },
   { to: '/tn/team',             icon: Users,           label: 'Quản lý đội' },
 ];
+
+// ── No Team Guard ─────────────────────────────────────────────────────────────
+// Gọi overview để detect lỗi NO_TEAM. Nếu có, hiện banner hướng dẫn re-login
+// thay vì render <Outlet /> với dữ liệu lỗi.
+
+function NoTeamGuard() {
+  const { error, isError } = useTeamLeadOverview();
+  const logout = useLogout();
+
+  const isNoTeam =
+    isError &&
+    isAppError(error) &&
+    error.code === 'NO_TEAM';
+
+  if (isNoTeam) {
+    return (
+      <div className={styles.noTeamScreen}>
+        <div className={styles.noTeamCard}>
+          <div className={styles.noTeamIcon}>
+            <ShieldOff size={32} />
+          </div>
+          <h2 className={styles.noTeamTitle}>Chưa được gán vào đội</h2>
+          <p className={styles.noTeamDesc}>
+            Tài khoản của bạn chưa được Admin gán vào đội nào.
+            Vui lòng liên hệ Quản trị viên (QT) để được assign, sau đó{' '}
+            <strong>đăng xuất và đăng nhập lại</strong> để JWT được cập nhật.
+          </p>
+          <div className={styles.noTeamActions}>
+            <button
+              className={styles.noTeamLogoutBtn}
+              onClick={() => logout.mutate()}
+              disabled={logout.isPending}
+            >
+              <RefreshCw size={15} />
+              {logout.isPending ? 'Đang xuất...' : 'Đăng xuất & Đăng nhập lại'}
+            </button>
+          </div>
+          <p className={styles.noTeamNote}>
+            💡 Sau khi QT tạo đội và set bạn là Team Lead, bạn cần re-login để JWT nhận claim{' '}
+            <code>teamId</code> mới.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return <Outlet />;
+}
 
 export function TnLayout() {
   const [collapsed, setCollapsed] = useState(false);
@@ -96,7 +148,7 @@ export function TnLayout() {
         </header>
 
         <main className={styles.content}>
-          <Outlet />
+          <NoTeamGuard />
         </main>
       </div>
     </div>

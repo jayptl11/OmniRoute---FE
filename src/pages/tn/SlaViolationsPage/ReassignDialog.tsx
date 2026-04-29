@@ -19,7 +19,7 @@ export function ReassignDialog({ leadId, leadCode, currentAssigneeName, onClose,
   const { data: members } = useTeamMembers();
   const reassign = useReassignLead();
 
-  const activeSAs = (members ?? []).filter((m) => m.isActive && m.roleName === 'SA');
+  const activeMembers = (members ?? []).filter((m) => m.isActive);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,17 +59,17 @@ export function ReassignDialog({ leadId, leadCode, currentAssigneeName, onClose,
           )}
 
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="reassign-user">SA mới *</label>
+            <label className={styles.label} htmlFor="reassign-user">Thành viên mới *</label>
             <select
               id="reassign-user"
               className={styles.select}
               value={newUserId}
               onChange={(e) => setNewUserId(e.target.value)}
             >
-              <option value="">-- Chọn Sales Associate --</option>
-              {activeSAs.map((m) => (
+              <option value="">-- Chọn thành viên --</option>
+              {activeMembers.map((m) => (
                 <option key={m.userId} value={m.userId}>
-                  {m.fullName} (Workload: {m.currentWorkload})
+                  {m.fullName} [{m.roleName}] — {m.currentWorkload} lead
                 </option>
               ))}
             </select>
