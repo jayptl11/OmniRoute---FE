@@ -197,13 +197,25 @@ export interface StoreDto {
   storeName: string;
   address: string | null;
   region: string | null;
-  managerId: string | null;
+  managerId: string | null;           // uuid — QL hiện tại
+  managerName: string | null;         // tên đầy đủ QL (null nếu chưa có)
+  managerUsername: string | null;     // username QL (null nếu chưa có)
   maxCapacity: number;
   isActive: boolean;
   createdAt: string;
 }
 
+/** Kết quả tìm kiếm QL để gán làm quản lý (API 1) */
+export interface StoreManagerDto {
+  userId: string;
+  fullName: string;
+  username: string;
+  hasStore: boolean;               // đang quản lý cửa hàng khác
+  currentStore: string | null;     // tên cửa hàng hiện tại
+}
+
 export interface GetStoresParams {
+  search?: string;
   region?: string;
   isActive?: boolean;
 }
@@ -214,7 +226,7 @@ export interface CreateStoreRequest {
   maxCapacity: number;
   address?: string | null;
   region?: string | null;
-  managerId?: string | null;
+  managerUsername?: string | null; // username của QL (không phải id)
 }
 
 export interface UpdateStoreRequest {
@@ -223,7 +235,7 @@ export interface UpdateStoreRequest {
   maxCapacity: number;
   address?: string | null;
   region?: string | null;
-  managerId?: string | null;
+  managerUsername?: string | null; // null → xóa quản lý hiện tại
 }
 
 // ─── Teams ────────────────────────────────────────────────────────────────────

@@ -6,6 +6,7 @@ export const storeKeys = {
   all: ['stores'] as const,
   list: (params?: GetStoresParams) => ['stores', 'list', params] as const,
   detail: (id: string) => ['stores', 'detail', id] as const,
+  managers: (q?: string) => ['stores', 'managers', q] as const,
 };
 
 export function useStores(params?: GetStoresParams) {
@@ -20,6 +21,15 @@ export function useStore(id: string) {
     queryKey: storeKeys.detail(id),
     queryFn: () => storeService.getStore(id),
     enabled: !!id,
+  });
+}
+
+/** Tìm kiếm QL để gán làm quản lý cửa hàng (debounce ở UI) */
+export function useSearchStoreManagers(q?: string) {
+  return useQuery({
+    queryKey: storeKeys.managers(q),
+    queryFn: () => storeService.searchManagers(q),
+    staleTime: 30_000,
   });
 }
 

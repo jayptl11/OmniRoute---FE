@@ -1,0 +1,1 @@
+export { QlReportPage } from './QlReportPage';

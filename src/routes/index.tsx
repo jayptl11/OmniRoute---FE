@@ -7,6 +7,7 @@ import { SaLayout } from '@/layouts/SaLayout';
 import { DpLayout } from '@/layouts/DpLayout';
 import { CsLayout } from '@/layouts/CsLayout';
 import { TnLayout } from '@/layouts/TnLayout';
+import { QlLayout } from '@/layouts/QlLayout';
 import { PublicRoute } from './PublicRoute';
 import { PrivateRoute } from './PrivateRoute';
 import { AdminRoute } from './AdminRoute';
@@ -15,6 +16,7 @@ import { SaRoute } from './SaRoute';
 import { DpRoute } from './DpRoute';
 import { CsRoute } from './CsRoute';
 import { TnRoute } from './TnRoute';
+import { QlRoute } from './QlRoute';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })));
 const RegisterPage = lazy(() => import('@/pages/RegisterPage').then((m) => ({ default: m.RegisterPage })));
@@ -59,6 +61,13 @@ const TeamReportPage = lazy(() => import('@/pages/tn/TeamReportPage').then((m) =
 const EscalateHistoryPage = lazy(() => import('@/pages/tn/EscalateHistoryPage').then((m) => ({ default: m.EscalateHistoryPage })));
 const TeamManagementPage = lazy(() => import('@/pages/tn/TeamManagementPage').then((m) => ({ default: m.TeamManagementPage })));
 const MemberPerformancePage = lazy(() => import('@/pages/tn/MemberPerformancePage').then((m) => ({ default: m.MemberPerformancePage })));
+
+// QL pages
+const QlDashboardPage = lazy(() => import('@/pages/ql/QlDashboardPage').then((m) => ({ default: m.QlDashboardPage })));
+const QlLeadsPage = lazy(() => import('@/pages/ql/QlLeadsPage').then((m) => ({ default: m.QlLeadsPage })));
+const QlMembersPage = lazy(() => import('@/pages/ql/QlMembersPage').then((m) => ({ default: m.QlMembersPage })));
+const QlHistoryPage = lazy(() => import('@/pages/ql/QlHistoryPage').then((m) => ({ default: m.QlHistoryPage })));
+const QlReportPage = lazy(() => import('@/pages/ql/QlReportPage').then((m) => ({ default: m.QlReportPage })));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -186,6 +195,24 @@ export const router = createBrowserRouter([
           { path: '/tn/escalate-history', element: withSuspense(<EscalateHistoryPage />) },
           { path: '/tn/team', element: withSuspense(<TeamManagementPage />) },
           { path: '/tn/team/:userId/performance', element: withSuspense(<MemberPerformancePage />) },
+        ],
+      },
+    ],
+  },
+
+  // QL routes — role QL only
+  {
+    element: <QlRoute />,
+    children: [
+      {
+        element: <QlLayout />,
+        children: [
+          { path: '/ql', element: <Navigate to="/ql/dashboard" replace /> },
+          { path: '/ql/dashboard', element: withSuspense(<QlDashboardPage />) },
+          { path: '/ql/leads',     element: withSuspense(<QlLeadsPage />) },
+          { path: '/ql/members',   element: withSuspense(<QlMembersPage />) },
+          { path: '/ql/history',   element: withSuspense(<QlHistoryPage />) },
+          { path: '/ql/report',    element: withSuspense(<QlReportPage />) },
         ],
       },
     ],

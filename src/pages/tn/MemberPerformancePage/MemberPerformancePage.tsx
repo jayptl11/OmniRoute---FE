@@ -251,7 +251,7 @@ export function MemberPerformancePage() {
                   />
                   <Tooltip
                     contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8, color: '#f1f5f9', fontSize: 12 }}
-                    formatter={(v: number) => [`${v.toFixed(1)}%`, 'Điểm']}
+                    formatter={(v) => [typeof v === 'number' ? `${v.toFixed(1)}%` : '—', 'Điểm']}
                   />
                 </RadarChart>
               </ResponsiveContainer>

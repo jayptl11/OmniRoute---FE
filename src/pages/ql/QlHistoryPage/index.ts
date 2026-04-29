@@ -1,0 +1,1 @@
+export { QlHistoryPage } from './QlHistoryPage';

@@ -1,0 +1,1 @@
+export { QlLeadsPage } from './QlLeadsPage';

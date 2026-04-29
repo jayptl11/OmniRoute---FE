@@ -39,5 +39,10 @@ export function PrivateRoute() {
     return <Navigate to={getDefaultRouteForRole('TN')} replace />;
   }
 
+  // QL role belongs in the QL module
+  if (user?.roleName === 'QL') {
+    return <Navigate to={getDefaultRouteForRole('QL')} replace />;
+  }
+
   return <Outlet />;
 }
