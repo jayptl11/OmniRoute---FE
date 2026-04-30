@@ -280,10 +280,11 @@ export function DispatchLeadDetailPage() {
   });
 
   const sortedLogs = lead
-    ? [...lead.activityLogs].sort(
+    ? [...(lead.activityLogs ?? [])].sort(
         (a, b) => new Date(a.performedAt).getTime() - new Date(b.performedAt).getTime()
       )
     : [];
+
 
   if (isLoading) {
     return (
@@ -376,11 +377,11 @@ export function DispatchLeadDetailPage() {
                   {lead.customerEmail ?? 'Chưa có'}
                 </span>
               </div>
-              {lead.productInterest.length > 0 && (
+              {(lead.productInterest ?? []).length > 0 && (
                 <div className={styles.field}>
                   <span className={styles.fieldLabel}><Tag size={10} /> Sản phẩm quan tâm</span>
                   <div className={styles.tagsWrap}>
-                    {lead.productInterest.map((t) => <span key={t} className={styles.tag}>{t}</span>)}
+                    {(lead.productInterest ?? []).map((t) => <span key={t} className={styles.tag}>{t}</span>)}
                   </div>
                 </div>
               )}

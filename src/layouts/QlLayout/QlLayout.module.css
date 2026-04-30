@@ -291,3 +291,28 @@
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.noStoreLogoutBtn:hover { background: #4f46e5; transform: translateY(-1px); }
+.noStoreLogoutBtn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.noStoreNote {
+  font-size: 0.775rem;
+  color: #94a3b8;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 0;
+  line-height: 1.5;
+  text-align: left;
+  width: 100%;
+}
+
+.noStoreNote code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  background: #e2e8f0;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
