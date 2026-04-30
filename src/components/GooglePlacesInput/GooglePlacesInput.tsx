@@ -1,30 +1,52 @@
 /**
- * GooglePlacesInput — reusable address autocomplete input
- * Dùng @googlemaps/js-api-loader (functional API v2) để load đúng cách.
- * setOptions() cài shim, importLibrary() load library lazy khi cần.
+ * AddressAutocomplete — address search input powered by OpenStreetMap / Nominatim
+ * - Hoàn toàn miễn phí, không cần API key
+ * - Nominatim là geocoding service chính thức của OpenStreetMap
+ * - Debounce 500ms để tuân thủ usage policy (max 1 req/s)
+ *
+ * Export name giữ nguyên GooglePlacesInput để không phải sửa import ở 3 nơi.
  */
 
-import { useEffect, useRef } from 'react';
-import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import styles from './GooglePlacesInput.module.css';
 
-// ── Cấu hình một lần ở module level ─────────────────────────────────────────
+// ── Nominatim result ──────────────────────────────────────────────────────────
 
-setOptions({
-  key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string,
-  v: 'weekly',
-  language: 'vi',
-  region: 'VN',
-});
+interface NominatimResult {
+  place_id: number;
+  display_name: string;
+  type: string;
+  lat: string;
+  lon: string;
+}
 
-// ── Singleton promise — chỉ load Places library 1 lần ────────────────────────
+// ── Nominatim search ─────────────────────────────────────────────────────────
 
-let placesReady: Promise<google.maps.PlacesLibrary> | null = null;
+async function searchNominatim(
+  query: string,
+  countryCode: string,
+): Promise<NominatimResult[]> {
+  const params = new URLSearchParams({
+    q: query,
+    format: 'json',
+    limit: '6',
+    countrycodes: countryCode,
+    'accept-language': 'vi',
+    addressdetails: '0',
+  });
 
-function loadPlaces(): Promise<google.maps.PlacesLibrary> {
-  if (!placesReady) {
-    placesReady = importLibrary('places') as Promise<google.maps.PlacesLibrary>;
-  }
-  return placesReady;
+  const res = await fetch(
+    `https://nominatim.openstreetmap.org/search?${params}`,
+    {
+      headers: {
+        // Nominatim yêu cầu User-Agent để nhận dạng ứng dụng
+        'User-Agent': 'OmniRoute/1.0',
+      },
+    },
+  );
+
+  if (!res.ok) throw new Error('Nominatim error');
+  return res.json();
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -46,51 +68,121 @@ export function GooglePlacesInput({
   placeholder = 'Nhập địa chỉ...',
   country = 'vn',
 }: GooglePlacesInputProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const acRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const [suggestions, setSuggestions] = useState<NominatimResult[]>([]);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(-1);
 
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Đóng dropdown khi click ngoài
   useEffect(() => {
-    let mounted = true;
-
-    loadPlaces().then(({ Autocomplete }) => {
-      if (!mounted || !inputRef.current || acRef.current) return;
-
-      const ac = new Autocomplete(inputRef.current, {
-        types: ['address'],
-        componentRestrictions: { country },
-        fields: ['formatted_address'],
-      });
-
-      acRef.current = ac;
-
-      ac.addListener('place_changed', () => {
-        const place = ac.getPlace();
-        if (place?.formatted_address) {
-          onChange(place.formatted_address);
-        }
-      });
-    }).catch(console.warn); // Không crash nếu API key lỗi
-
-    return () => {
-      mounted = false;
-      if (acRef.current) {
-        google.maps.event.clearInstanceListeners(acRef.current);
-        acRef.current = null;
+    const handler = (e: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
+        setOpen(false);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  const doSearch = useCallback(
+    async (q: string) => {
+      if (q.trim().length < 3) {
+        setSuggestions([]);
+        setOpen(false);
+        return;
+      }
+      setLoading(true);
+      try {
+        const results = await searchNominatim(q, country);
+        setSuggestions(results);
+        setOpen(results.length > 0);
+        setActiveIdx(-1);
+      } catch {
+        setSuggestions([]);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [country],
+  );
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    onChange(val);
+    // Debounce 500ms
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => doSearch(val), 500);
+  };
+
+  const handleSelect = (result: NominatimResult) => {
+    onChange(result.display_name);
+    setSuggestions([]);
+    setOpen(false);
+    setActiveIdx(-1);
+  };
+
+  // Keyboard navigation
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!open || suggestions.length === 0) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveIdx((i) => Math.min(i + 1, suggestions.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveIdx((i) => Math.max(i - 1, -1));
+    } else if (e.key === 'Enter' && activeIdx >= 0) {
+      e.preventDefault();
+      handleSelect(suggestions[activeIdx]);
+    } else if (e.key === 'Escape') {
+      setOpen(false);
+    }
+  };
+
   return (
-    <input
-      ref={inputRef}
-      id={id}
-      type="text"
-      className={className}
-      placeholder={placeholder}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      autoComplete="off"
-    />
+    <div ref={wrapRef} className={styles.wrap}>
+      <input
+        id={id}
+        type="text"
+        className={className}
+        placeholder={placeholder}
+        value={value}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        onFocus={() => suggestions.length > 0 && setOpen(true)}
+        autoComplete="off"
+        aria-autocomplete="list"
+        aria-expanded={open}
+      />
+
+      {(loading || open) && (
+        <div className={styles.dropdown} role="listbox">
+          {loading && (
+            <div className={styles.loadingRow}>
+              <span className={styles.spinner} />
+              Đang tìm kiếm...
+            </div>
+          )}
+          {!loading && suggestions.map((s, i) => (
+            <button
+              key={s.place_id}
+              role="option"
+              aria-selected={i === activeIdx}
+              className={`${styles.option} ${i === activeIdx ? styles.optionActive : ''}`}
+              onMouseDown={(e) => e.preventDefault()} // không blur input
+              onClick={() => handleSelect(s)}
+            >
+              <span className={styles.optionPin}>📍</span>
+              <span className={styles.optionText}>{s.display_name}</span>
+            </button>
+          ))}
+          {!loading && open && suggestions.length === 0 && (
+            <div className={styles.noResult}>Không tìm thấy địa chỉ</div>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
