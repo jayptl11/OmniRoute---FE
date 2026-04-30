@@ -1,13 +1,13 @@
 /**
- * AddressAutocomplete — address search input powered by OpenStreetMap / Nominatim
- * - Hoàn toàn miễn phí, không cần API key
- * - Nominatim là geocoding service chính thức của OpenStreetMap
- * - Debounce 500ms để tuân thủ usage policy (max 1 req/s)
+ * AddressAutocomplete — address search + map picker
+ * - Text autocomplete: Nominatim (OpenStreetMap, miễn phí, không cần API key)
+ * - Map picker: Leaflet với OpenStreetMap tiles + reverse geocode
  *
  * Export name giữ nguyên GooglePlacesInput để không phải sửa import ở 3 nơi.
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { MapPickerModal } from './MapPickerModal';
 import styles from './GooglePlacesInput.module.css';
 
 // ── Nominatim result ──────────────────────────────────────────────────────────
@@ -15,9 +15,6 @@ import styles from './GooglePlacesInput.module.css';
 interface NominatimResult {
   place_id: number;
   display_name: string;
-  type: string;
-  lat: string;
-  lon: string;
 }
 
 // ── Nominatim search ─────────────────────────────────────────────────────────
@@ -37,12 +34,7 @@ async function searchNominatim(
 
   const res = await fetch(
     `https://nominatim.openstreetmap.org/search?${params}`,
-    {
-      headers: {
-        // Nominatim yêu cầu User-Agent để nhận dạng ứng dụng
-        'User-Agent': 'OmniRoute/1.0',
-      },
-    },
+    { headers: { 'User-Agent': 'OmniRoute/1.0' } },
   );
 
   if (!res.ok) throw new Error('Nominatim error');
@@ -57,7 +49,7 @@ interface GooglePlacesInputProps {
   onChange: (value: string) => void;
   className?: string;
   placeholder?: string;
-  country?: string; // ISO alpha-2, default 'vn'
+  country?: string;
 }
 
 export function GooglePlacesInput({
@@ -72,8 +64,9 @@ export function GooglePlacesInput({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeIdx, setActiveIdx] = useState(-1);
+  const [mapOpen, setMapOpen] = useState(false);
 
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const wrapRef    = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Đóng dropdown khi click ngoài
@@ -87,34 +80,25 @@ export function GooglePlacesInput({
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const doSearch = useCallback(
-    async (q: string) => {
-      if (q.trim().length < 3) {
-        setSuggestions([]);
-        setOpen(false);
-        return;
-      }
-      setLoading(true);
-      try {
-        const results = await searchNominatim(q, country);
-        setSuggestions(results);
-        setOpen(results.length > 0);
-        setActiveIdx(-1);
-      } catch {
-        setSuggestions([]);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [country],
-  );
+  const doSearch = useCallback(async (q: string) => {
+    if (q.trim().length < 3) { setSuggestions([]); setOpen(false); return; }
+    setLoading(true);
+    try {
+      const results = await searchNominatim(q, country);
+      setSuggestions(results);
+      setOpen(results.length > 0);
+      setActiveIdx(-1);
+    } catch {
+      setSuggestions([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [country]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    onChange(val);
-    // Debounce 500ms
+    onChange(e.target.value);
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => doSearch(val), 500);
+    debounceRef.current = setTimeout(() => doSearch(e.target.value), 500);
   };
 
   const handleSelect = (result: NominatimResult) => {
@@ -124,65 +108,81 @@ export function GooglePlacesInput({
     setActiveIdx(-1);
   };
 
-  // Keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!open || suggestions.length === 0) return;
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setActiveIdx((i) => Math.min(i + 1, suggestions.length - 1));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setActiveIdx((i) => Math.max(i - 1, -1));
-    } else if (e.key === 'Enter' && activeIdx >= 0) {
-      e.preventDefault();
-      handleSelect(suggestions[activeIdx]);
-    } else if (e.key === 'Escape') {
-      setOpen(false);
-    }
+    if (e.key === 'ArrowDown') { e.preventDefault(); setActiveIdx((i) => Math.min(i + 1, suggestions.length - 1)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setActiveIdx((i) => Math.max(i - 1, -1)); }
+    else if (e.key === 'Enter' && activeIdx >= 0) { e.preventDefault(); handleSelect(suggestions[activeIdx]); }
+    else if (e.key === 'Escape') setOpen(false);
   };
 
   return (
-    <div ref={wrapRef} className={styles.wrap}>
-      <input
-        id={id}
-        type="text"
-        className={className}
-        placeholder={placeholder}
-        value={value}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        onFocus={() => suggestions.length > 0 && setOpen(true)}
-        autoComplete="off"
-        aria-autocomplete="list"
-        aria-expanded={open}
-      />
-
-      {(loading || open) && (
-        <div className={styles.dropdown} role="listbox">
-          {loading && (
-            <div className={styles.loadingRow}>
-              <span className={styles.spinner} />
-              Đang tìm kiếm...
-            </div>
-          )}
-          {!loading && suggestions.map((s, i) => (
-            <button
-              key={s.place_id}
-              role="option"
-              aria-selected={i === activeIdx}
-              className={`${styles.option} ${i === activeIdx ? styles.optionActive : ''}`}
-              onMouseDown={(e) => e.preventDefault()} // không blur input
-              onClick={() => handleSelect(s)}
-            >
-              <span className={styles.optionPin}>📍</span>
-              <span className={styles.optionText}>{s.display_name}</span>
-            </button>
-          ))}
-          {!loading && open && suggestions.length === 0 && (
-            <div className={styles.noResult}>Không tìm thấy địa chỉ</div>
-          )}
+    <>
+      <div ref={wrapRef} className={styles.wrap}>
+        {/* Text input */}
+        <div className={styles.inputRow}>
+          <input
+            id={id}
+            type="text"
+            className={`${className ?? ''} ${styles.input}`}
+            placeholder={placeholder}
+            value={value}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            onFocus={() => suggestions.length > 0 && setOpen(true)}
+            autoComplete="off"
+            aria-autocomplete="list"
+            aria-expanded={open}
+          />
+          {/* Nút mở bản đồ */}
+          <button
+            type="button"
+            className={styles.mapBtn}
+            onClick={() => setMapOpen(true)}
+            title="Chọn trên bản đồ"
+            aria-label="Mở bản đồ"
+          >
+            🗺
+          </button>
         </div>
+
+        {/* Dropdown suggestions */}
+        {(loading || open) && (
+          <div className={styles.dropdown} role="listbox">
+            {loading && (
+              <div className={styles.loadingRow}>
+                <span className={styles.spinner} />
+                Đang tìm kiếm...
+              </div>
+            )}
+            {!loading && suggestions.map((s, i) => (
+              <button
+                key={s.place_id}
+                role="option"
+                aria-selected={i === activeIdx}
+                className={`${styles.option} ${i === activeIdx ? styles.optionActive : ''}`}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => handleSelect(s)}
+              >
+                <span className={styles.optionPin}>📍</span>
+                <span className={styles.optionText}>{s.display_name}</span>
+              </button>
+            ))}
+            {!loading && open && suggestions.length === 0 && (
+              <div className={styles.noResult}>Không tìm thấy địa chỉ</div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Map picker modal */}
+      {mapOpen && (
+        <MapPickerModal
+          initialAddress={value}
+          onConfirm={(addr) => { onChange(addr); setMapOpen(false); }}
+          onClose={() => setMapOpen(false)}
+        />
       )}
-    </div>
+    </>
   );
 }
