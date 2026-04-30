@@ -1,54 +1,33 @@
 /**
  * GooglePlacesInput — reusable address autocomplete input
- * Dùng Google Maps JavaScript API (Places Autocomplete)
- * Không cần npm package bổ sung.
- *
- * Props:
- *   id          — html id cho input (accessibility)
- *   value       — giá trị hiện tại của field
- *   onChange    — callback khi user chọn hoặc gõ tay
- *   className   — CSS class cho input element
- *   placeholder — placeholder text
- *   country     — ISO 3166-1 alpha-2 để restrict kết quả (mặc định 'vn')
+ * Dùng @googlemaps/js-api-loader (functional API v2) để load đúng cách.
+ * setOptions() cài shim, importLibrary() load library lazy khi cần.
  */
 
 import { useEffect, useRef } from 'react';
+import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
 
-// ── Load Google Maps script (singleton) ──────────────────────────────────────
+// ── Cấu hình một lần ở module level ─────────────────────────────────────────
 
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
+setOptions({
+  key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string,
+  v: 'weekly',
+  language: 'vi',
+  region: 'VN',
+});
 
-let scriptLoaded = false;
-let loadCallbacks: (() => void)[] = [];
+// ── Singleton promise — chỉ load Places library 1 lần ────────────────────────
 
-function loadGoogleMapsScript(cb: () => void) {
-  if (typeof window === 'undefined') return;
+let placesReady: Promise<google.maps.PlacesLibrary> | null = null;
 
-  // Đã load xong
-  if (
-    window.google?.maps?.places
-  ) {
-    cb();
-    return;
+function loadPlaces(): Promise<google.maps.PlacesLibrary> {
+  if (!placesReady) {
+    placesReady = importLibrary('places') as Promise<google.maps.PlacesLibrary>;
   }
-
-  loadCallbacks.push(cb);
-
-  if (scriptLoaded) return; // đang load
-  scriptLoaded = true;
-
-  const script = document.createElement('script');
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&language=vi&region=VN`;
-  script.async = true;
-  script.defer = true;
-  script.onload = () => {
-    loadCallbacks.forEach((fn) => fn());
-    loadCallbacks = [];
-  };
-  document.head.appendChild(script);
+  return placesReady;
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Component ────────────────────────────────────────────────────────────────
 
 interface GooglePlacesInputProps {
   id?: string;
@@ -68,22 +47,21 @@ export function GooglePlacesInput({
   country = 'vn',
 }: GooglePlacesInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const acRef = useRef<google.maps.places.Autocomplete | null>(null);
 
   useEffect(() => {
-    let isMounted = true;
+    let mounted = true;
 
-    loadGoogleMapsScript(() => {
-      if (!isMounted || !inputRef.current) return;
-      if (autocompleteRef.current) return; // đã init
+    loadPlaces().then(({ Autocomplete }) => {
+      if (!mounted || !inputRef.current || acRef.current) return;
 
-      const ac = new window.google.maps.places.Autocomplete(inputRef.current, {
+      const ac = new Autocomplete(inputRef.current, {
         types: ['address'],
         componentRestrictions: { country },
         fields: ['formatted_address'],
       });
 
-      autocompleteRef.current = ac;
+      acRef.current = ac;
 
       ac.addListener('place_changed', () => {
         const place = ac.getPlace();
@@ -91,10 +69,14 @@ export function GooglePlacesInput({
           onChange(place.formatted_address);
         }
       });
-    });
+    }).catch(console.warn); // Không crash nếu API key lỗi
 
     return () => {
-      isMounted = false;
+      mounted = false;
+      if (acRef.current) {
+        google.maps.event.clearInstanceListeners(acRef.current);
+        acRef.current = null;
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
