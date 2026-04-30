@@ -17,6 +17,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useLeadDetail, useUpdateLead } from '@/features/tv/hooks/useLeads';
+import { GooglePlacesInput } from '@/components/GooglePlacesInput';
 import type {
   LeadStatus,
   PriorityLevel,
@@ -220,11 +221,11 @@ export function LeadDetailPage() {
             <div className={styles.field}>
               <span className={styles.fieldLabel}><MapPin size={10} /> Địa chỉ</span>
               {editing ? (
-                <input
+                <GooglePlacesInput
                   id="edit-address"
                   className={styles.editInput}
                   value={editForm.customerAddress}
-                  onChange={(e) => setEditForm((f) => ({ ...f, customerAddress: e.target.value }))}
+                  onChange={(val) => setEditForm((f) => ({ ...f, customerAddress: val }))}
                   placeholder="Địa chỉ khách hàng"
                 />
               ) : (

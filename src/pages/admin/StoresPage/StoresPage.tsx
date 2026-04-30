@@ -8,6 +8,7 @@ import {
 } from '@/features/admin/hooks/useStores';
 import type { StoreDto, GetStoresParams, StoreManagerDto } from '@/types/admin';
 import { Plus, Pencil, Power, RefreshCw, X, MapPin, Search, AlertTriangle } from 'lucide-react';
+import { GooglePlacesInput } from '@/components/GooglePlacesInput';
 import styles from '../UsersPage/UsersPage.module.css';
 
 // ── ManagerAutocomplete ────────────────────────────────────────────────────────
@@ -412,8 +413,13 @@ export function StoresPage() {
 
                 <div className={styles.formGroup}>
                   <label className={styles.label} htmlFor="store-address">Địa chỉ</label>
-                  <input id="store-address" className={styles.input}
-                    value={form.address} onChange={(e) => set('address', e.target.value)} />
+                  <GooglePlacesInput
+                    id="store-address"
+                    className={styles.input}
+                    value={form.address}
+                    onChange={(val) => set('address', val)}
+                    placeholder="123 Đường ABC, Quận X, TP.HCM"
+                  />
                 </div>
 
                 {/* Manager autocomplete */}

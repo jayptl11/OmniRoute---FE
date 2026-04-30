@@ -18,6 +18,7 @@ import {
   ShieldOff,
   RefreshCw,
 } from 'lucide-react';
+import { NotificationBell } from '@/features/notifications/components/NotificationBell';
 import styles from './TnLayout.module.css';
 
 const NAV_ITEMS = [
@@ -131,6 +132,7 @@ export function TnLayout() {
           </button>
 
           <div className={styles.topbarRight}>
+            <NotificationBell />
             <div className={styles.userInfo}>
               <span className={styles.userName}>{user?.username}</span>
               <span className={styles.roleBadge}>{user?.roleName}</span>

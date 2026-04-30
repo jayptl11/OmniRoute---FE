@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useLeads, useCreateLead } from '@/features/tv/hooks/useLeads';
 import { leadService } from '@/features/tv/api/leadService';
+import { GooglePlacesInput } from '@/components/GooglePlacesInput';
 import type {
   GetLeadsParams,
   LeadListItemDto,
@@ -302,12 +303,12 @@ function CreateLeadDialog({ onClose, onCreated }: CreateLeadDialogProps) {
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label className={styles.label}>Địa chỉ</label>
-              <input
+              <GooglePlacesInput
                 id="create-lead-address"
                 className={styles.input}
                 placeholder="123 Lê Lợi, Q1, TP.HCM"
                 value={form.customerAddress}
-                onChange={(e) => set('customerAddress', e.target.value)}
+                onChange={(val) => set('customerAddress', val)}
               />
             </div>
             <div className={styles.formGroup}>

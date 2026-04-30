@@ -10,6 +10,7 @@ import {
   ChevronRight,
   PhoneCall,
 } from 'lucide-react';
+import { NotificationBell } from '@/features/notifications/components/NotificationBell';
 import styles from './TvLayout.module.css';
 
 const NAV_ITEMS = [
@@ -78,6 +79,7 @@ export function TvLayout() {
           </button>
 
           <div className={styles.topbarRight}>
+            <NotificationBell />
             <div className={styles.userInfo}>
               <span className={styles.userName}>{user?.username}</span>
               <span className={styles.roleBadge}>{user?.roleName}</span>

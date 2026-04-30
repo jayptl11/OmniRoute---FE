@@ -14,16 +14,19 @@ import {
   ChevronLeft,
   ChevronRight,
   LayoutDashboard,
+  Bell,
 } from 'lucide-react';
+import { NotificationBell } from '@/features/notifications/components/NotificationBell';
 import styles from './AdminLayout.module.css';
 
 const NAV_ITEMS = [
-  { to: '/admin/users', icon: Users, label: 'Tài khoản' },
-  { to: '/admin/routing-rules', icon: Shuffle, label: 'Phân luồng' },
-  { to: '/admin/master-data', icon: Database, label: 'Danh mục hệ thống' },
-  { to: '/admin/stores', icon: Store, label: 'Cửa hàng' },
-  { to: '/admin/teams', icon: UsersRound, label: 'Nhóm' },
-  { to: '/admin/sla-config', icon: Timer, label: 'Cấu hình SLA' },
+  { to: '/admin/users',                 icon: Users,         label: 'Tài khoản' },
+  { to: '/admin/routing-rules',         icon: Shuffle,       label: 'Phân luồng' },
+  { to: '/admin/master-data',           icon: Database,      label: 'Danh mục hệ thống' },
+  { to: '/admin/stores',               icon: Store,         label: 'Cửa hàng' },
+  { to: '/admin/teams',                icon: UsersRound,    label: 'Nhóm' },
+  { to: '/admin/sla-config',           icon: Timer,         label: 'Cấu hình SLA' },
+  { to: '/admin/notification-configs', icon: Bell,          label: 'Cấu hình thông báo' },
 ];
 
 export function AdminLayout() {
@@ -88,6 +91,7 @@ export function AdminLayout() {
           </button>
 
           <div className={styles.topbarRight}>
+            <NotificationBell />
             <div className={styles.userInfo}>
               <span className={styles.userName}>{user?.username}</span>
               <span className={styles.roleBadge}>{user?.roleName}</span>

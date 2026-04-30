@@ -17,6 +17,7 @@ import { DpRoute } from './DpRoute';
 import { CsRoute } from './CsRoute';
 import { TnRoute } from './TnRoute';
 import { QlRoute } from './QlRoute';
+import { SignalRStarter } from './SignalRStarter';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })));
 const RegisterPage = lazy(() => import('@/pages/RegisterPage').then((m) => ({ default: m.RegisterPage })));
@@ -32,6 +33,7 @@ const MasterDataPage = lazy(() => import('@/pages/admin/MasterDataPage').then((m
 const StoresPage = lazy(() => import('@/pages/admin/StoresPage').then((m) => ({ default: m.StoresPage })));
 const TeamsPage = lazy(() => import('@/pages/admin/TeamsPage').then((m) => ({ default: m.TeamsPage })));
 const SlaConfigPage = lazy(() => import('@/pages/admin/SlaConfigPage').then((m) => ({ default: m.SlaConfigPage })));
+const NotificationConfigPage = lazy(() => import('@/pages/admin/NotificationConfigPage').then((m) => ({ default: m.NotificationConfigPage })));
 
 // TV pages
 const LeadsListPage = lazy(() => import('@/pages/tv/LeadsListPage').then((m) => ({ default: m.LeadsListPage })));
@@ -97,134 +99,141 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // Admin routes — role QT only
+  // ── Authenticated routes (SignalRStarter bao ngoài tất cả) ────────────────
   {
-    element: <AdminRoute />,
+    element: <SignalRStarter />,
     children: [
+      // Admin routes — role QT only
       {
-        element: <AdminLayout />,
+        element: <AdminRoute />,
         children: [
-          { path: '/admin', element: <Navigate to="/admin/users" replace /> },
-          { path: '/admin/users', element: withSuspense(<UsersPage />) },
-          { path: '/admin/routing-rules', element: withSuspense(<RoutingRulesPage />) },
-          { path: '/admin/master-data', element: withSuspense(<MasterDataPage />) },
-          { path: '/admin/stores', element: withSuspense(<StoresPage />) },
-          { path: '/admin/teams', element: withSuspense(<TeamsPage />) },
-          { path: '/admin/sla-config', element: withSuspense(<SlaConfigPage />) },
+          {
+            element: <AdminLayout />,
+            children: [
+              { path: '/admin', element: <Navigate to="/admin/users" replace /> },
+              { path: '/admin/users', element: withSuspense(<UsersPage />) },
+              { path: '/admin/routing-rules', element: withSuspense(<RoutingRulesPage />) },
+              { path: '/admin/master-data', element: withSuspense(<MasterDataPage />) },
+              { path: '/admin/stores', element: withSuspense(<StoresPage />) },
+              { path: '/admin/teams', element: withSuspense(<TeamsPage />) },
+              { path: '/admin/sla-config', element: withSuspense(<SlaConfigPage />) },
+              { path: '/admin/notification-configs', element: withSuspense(<NotificationConfigPage />) },
+            ],
+          },
         ],
       },
-    ],
-  },
 
-  // TV routes — role TV only
-  {
-    element: <TvRoute />,
-    children: [
+      // TV routes — role TV only
       {
-        element: <TvLayout />,
+        element: <TvRoute />,
         children: [
-          { path: '/tv', element: <Navigate to="/tv/leads" replace /> },
-          { path: '/tv/leads', element: withSuspense(<LeadsListPage />) },
-          { path: '/tv/leads/:id', element: withSuspense(<LeadDetailPage />) },
+          {
+            element: <TvLayout />,
+            children: [
+              { path: '/tv', element: <Navigate to="/tv/leads" replace /> },
+              { path: '/tv/leads', element: withSuspense(<LeadsListPage />) },
+              { path: '/tv/leads/:id', element: withSuspense(<LeadDetailPage />) },
+            ],
+          },
         ],
       },
-    ],
-  },
 
-  // SA routes — role SA only
-  {
-    element: <SaRoute />,
-    children: [
+      // SA routes — role SA only
       {
-        element: <SaLayout />,
+        element: <SaRoute />,
         children: [
-          { path: '/sa', element: <Navigate to="/sa/leads" replace /> },
-          { path: '/sa/leads', element: withSuspense(<SaleLeadsListPage />) },
-          { path: '/sa/leads/:id', element: withSuspense(<SaleLeadDetailPage />) },
-          { path: '/sa/follow-ups', element: withSuspense(<FollowUpsPage />) },
-          { path: '/sa/performance', element: withSuspense(<PerformancePage />) },
+          {
+            element: <SaLayout />,
+            children: [
+              { path: '/sa', element: <Navigate to="/sa/leads" replace /> },
+              { path: '/sa/leads', element: withSuspense(<SaleLeadsListPage />) },
+              { path: '/sa/leads/:id', element: withSuspense(<SaleLeadDetailPage />) },
+              { path: '/sa/follow-ups', element: withSuspense(<FollowUpsPage />) },
+              { path: '/sa/performance', element: withSuspense(<PerformancePage />) },
+            ],
+          },
         ],
       },
-    ],
-  },
 
-  // DP routes — role DP only
-  {
-    element: <DpRoute />,
-    children: [
+      // DP routes — role DP only
       {
-        element: <DpLayout />,
+        element: <DpRoute />,
         children: [
-          { path: '/dp', element: <Navigate to="/dp/queue" replace /> },
-          { path: '/dp/queue', element: withSuspense(<DispatchQueuePage />) },
-          { path: '/dp/queue/:id', element: withSuspense(<DispatchLeadDetailPage />) },
-          { path: '/dp/history', element: withSuspense(<DispatchHistoryPage />) },
+          {
+            element: <DpLayout />,
+            children: [
+              { path: '/dp', element: <Navigate to="/dp/queue" replace /> },
+              { path: '/dp/queue', element: withSuspense(<DispatchQueuePage />) },
+              { path: '/dp/queue/:id', element: withSuspense(<DispatchLeadDetailPage />) },
+              { path: '/dp/history', element: withSuspense(<DispatchHistoryPage />) },
+            ],
+          },
         ],
       },
-    ],
-  },
 
-  // CS routes — role CS only
-  {
-    element: <CsRoute />,
-    children: [
+      // CS routes — role CS only
       {
-        element: <CsLayout />,
+        element: <CsRoute />,
         children: [
-          { path: '/cs', element: <Navigate to="/cs/tickets" replace /> },
-          { path: '/cs/tickets', element: withSuspense(<TicketsListPage />) },
-          { path: '/cs/tickets/:id', element: withSuspense(<TicketDetailPage />) },
-          { path: '/cs/performance', element: withSuspense(<CsPerformancePage />) },
+          {
+            element: <CsLayout />,
+            children: [
+              { path: '/cs', element: <Navigate to="/cs/tickets" replace /> },
+              { path: '/cs/tickets', element: withSuspense(<TicketsListPage />) },
+              { path: '/cs/tickets/:id', element: withSuspense(<TicketDetailPage />) },
+              { path: '/cs/performance', element: withSuspense(<CsPerformancePage />) },
+            ],
+          },
         ],
       },
-    ],
-  },
 
-  // TN routes — role TN only
-  {
-    element: <TnRoute />,
-    children: [
+      // TN routes — role TN only
       {
-        element: <TnLayout />,
+        element: <TnRoute />,
         children: [
-          { path: '/tn', element: <Navigate to="/tn/overview" replace /> },
-          { path: '/tn/overview', element: withSuspense(<TnOverviewPage />) },
-          { path: '/tn/sla', element: withSuspense(<SlaViolationsPage />) },
-          { path: '/tn/leads', element: withSuspense(<TeamLeadsPage />) },
-          { path: '/tn/report', element: withSuspense(<TeamReportPage />) },
-          { path: '/tn/escalate-history', element: withSuspense(<EscalateHistoryPage />) },
-          { path: '/tn/team', element: withSuspense(<TeamManagementPage />) },
-          { path: '/tn/team/:userId/performance', element: withSuspense(<MemberPerformancePage />) },
+          {
+            element: <TnLayout />,
+            children: [
+              { path: '/tn', element: <Navigate to="/tn/overview" replace /> },
+              { path: '/tn/overview', element: withSuspense(<TnOverviewPage />) },
+              { path: '/tn/sla', element: withSuspense(<SlaViolationsPage />) },
+              { path: '/tn/leads', element: withSuspense(<TeamLeadsPage />) },
+              { path: '/tn/report', element: withSuspense(<TeamReportPage />) },
+              { path: '/tn/escalate-history', element: withSuspense(<EscalateHistoryPage />) },
+              { path: '/tn/team', element: withSuspense(<TeamManagementPage />) },
+              { path: '/tn/team/:userId/performance', element: withSuspense(<MemberPerformancePage />) },
+            ],
+          },
         ],
       },
-    ],
-  },
 
-  // QL routes — role QL only
-  {
-    element: <QlRoute />,
-    children: [
+      // QL routes — role QL only
       {
-        element: <QlLayout />,
+        element: <QlRoute />,
         children: [
-          { path: '/ql', element: <Navigate to="/ql/dashboard" replace /> },
-          { path: '/ql/dashboard', element: withSuspense(<QlDashboardPage />) },
-          { path: '/ql/leads',     element: withSuspense(<QlLeadsPage />) },
-          { path: '/ql/members',   element: withSuspense(<QlMembersPage />) },
-          { path: '/ql/history',   element: withSuspense(<QlHistoryPage />) },
-          { path: '/ql/report',    element: withSuspense(<QlReportPage />) },
+          {
+            element: <QlLayout />,
+            children: [
+              { path: '/ql', element: <Navigate to="/ql/dashboard" replace /> },
+              { path: '/ql/dashboard', element: withSuspense(<QlDashboardPage />) },
+              { path: '/ql/leads',     element: withSuspense(<QlLeadsPage />) },
+              { path: '/ql/members',   element: withSuspense(<QlMembersPage />) },
+              { path: '/ql/history',   element: withSuspense(<QlHistoryPage />) },
+              { path: '/ql/report',    element: withSuspense(<QlReportPage />) },
+            ],
+          },
         ],
       },
-    ],
-  },
 
-  // Private routes (non-QT, non-TV roles)
-  {
-    element: <PrivateRoute />,
-    children: [
+      // Private routes (non-QT, non-TV roles)
       {
-        path: '/',
-        element: withSuspense(<DashboardPage />),
+        element: <PrivateRoute />,
+        children: [
+          {
+            path: '/',
+            element: withSuspense(<DashboardPage />),
+          },
+        ],
       },
     ],
   },

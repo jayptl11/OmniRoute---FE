@@ -7,7 +7,7 @@ import { queryClient } from '@/lib/queryClient';
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />
       <Toaster position="top-right" richColors closeButton />
     </QueryClientProvider>
   );
