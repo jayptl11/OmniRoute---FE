@@ -37,7 +37,9 @@ function ProviderChip({ provider }: { provider: AiApiKeyDto['provider'] }) {
       ? styles.providerOpenAI
       : provider === 'Gemini'
       ? styles.providerGemini
-      : styles.providerAnthropic;
+      : provider === 'Anthropic'
+      ? styles.providerAnthropic
+      : styles.providerGroq;
   return <span className={`${styles.providerChip} ${cls}`}>{provider}</span>;
 }
 
@@ -63,7 +65,7 @@ export function AiApiKeysPage() {
     try {
       const result = await testKey.mutateAsync(key.id);
       if (result.success) {
-        toast.success(`Key hợp lệ — phản hồi ${result.latencyMs}ms`);
+        toast.success(`Key hợp lệ — phản hồi ${result.durationMs}ms`);
       } else {
         toast.error(`Lỗi: ${result.errorMessage ?? 'Không xác định'}`);
       }
@@ -111,6 +113,7 @@ export function AiApiKeysPage() {
                 <th>Provider</th>
                 <th>Tên hiển thị</th>
                 <th>Key</th>
+                <th>Model</th>
                 <th>Priority</th>
                 <th>Trạng thái</th>
                 <th>Lần lỗi</th>
@@ -120,7 +123,7 @@ export function AiApiKeysPage() {
             <tbody>
               {keys.length === 0 ? (
                 <tr>
-                  <td className={styles.emptyCell} colSpan={7}>
+                  <td className={styles.emptyCell} colSpan={8}>
                     Chưa có API key nào được cấu hình
                   </td>
                 </tr>
@@ -132,6 +135,7 @@ export function AiApiKeysPage() {
                     </td>
                     <td className={styles.cellBold}>{key.displayName}</td>
                     <td className={styles.cellMuted}>{key.maskedKey}</td>
+                    <td className={styles.cellMuted}>{key.config.model}</td>
                     <td>
                       <span
                         className={`${styles.priorityBadge} ${

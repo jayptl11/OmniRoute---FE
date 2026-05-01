@@ -22,6 +22,11 @@ export function EditAiApiKeyDialog({ keyItem, onClose }: Props) {
     displayName: keyItem.displayName,
     plainKeyValue: '',
     priority: keyItem.priority,
+    config: {
+      model: keyItem.config?.model ?? '',
+      temperature: keyItem.config?.temperature ?? 0,
+      maxTokens: keyItem.config?.maxTokens ?? 200,
+    },
   });
   const [showKey, setShowKey] = useState(false);
   const [error, setError] = useState('');
@@ -35,6 +40,10 @@ export function EditAiApiKeyDialog({ keyItem, onClose }: Props) {
       setError('API key mới phải có ít nhất 8 ký tự.');
       return;
     }
+    if (!form.config.model.trim()) {
+      setError('Model là bắt buộc.');
+      return;
+    }
     try {
       await update.mutateAsync({
         id: keyItem.id,
@@ -42,6 +51,11 @@ export function EditAiApiKeyDialog({ keyItem, onClose }: Props) {
           displayName: form.displayName,
           plainKeyValue: form.plainKeyValue || null,
           priority: form.priority,
+          config: {
+            model: form.config.model,
+            temperature: form.config.temperature,
+            maxTokens: form.config.maxTokens,
+          },
         },
       });
       onClose();
@@ -111,12 +125,56 @@ export function EditAiApiKeyDialog({ keyItem, onClose }: Props) {
                 id="eaak-priority"
                 className={styles.input}
                 value={form.priority}
-                onChange={(e) => setForm((f) => ({ ...f, priority: Number(e.target.value) as 1 | 2 }))}
+                onChange={(e) => setForm((f) => ({ ...f, priority: Number(e.target.value) }))}
                 required
               >
                 <option value={1}>1 — Primary (ưu tiên chính)</option>
                 <option value={2}>2 — Fallback (dự phòng)</option>
               </select>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.label} htmlFor="eaak-model">Model *</label>
+              <input
+                id="eaak-model"
+                className={styles.input}
+                required
+                value={form.config.model}
+                onChange={(e) => setForm((f) => ({ ...f, config: { ...f.config, model: e.target.value } }))}
+                placeholder="VD: gpt-4o-mini"
+              />
+            </div>
+
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
+                <label className={styles.label} htmlFor="eaak-temperature">
+                  Temperature <span className={styles.optional}>(0–2)</span>
+                </label>
+                <input
+                  id="eaak-temperature"
+                  type="number"
+                  className={styles.input}
+                  min={0}
+                  max={2}
+                  step={0.1}
+                  value={form.config.temperature}
+                  onChange={(e) => setForm((f) => ({ ...f, config: { ...f.config, temperature: Number(e.target.value) } }))}
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.label} htmlFor="eaak-maxTokens">
+                  Max Tokens <span className={styles.optional}>(tuỳ chọn)</span>
+                </label>
+                <input
+                  id="eaak-maxTokens"
+                  type="number"
+                  className={styles.input}
+                  min={1}
+                  step={1}
+                  value={form.config.maxTokens}
+                  onChange={(e) => setForm((f) => ({ ...f, config: { ...f.config, maxTokens: Number(e.target.value) } }))}
+                />
+              </div>
             </div>
 
             {error && <p className={styles.errorMsg}>{error}</p>}

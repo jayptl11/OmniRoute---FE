@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { aiApiKeyService } from '../api/aiApiKeyService';
-import type { AddAiApiKeyRequest, UpdateAiApiKeyRequest } from '@/types/admin';
+import type { CreateAiApiKeyRequest, UpdateAiApiKeyRequest } from '@/types/admin';
 
 // ─── Query Keys ───────────────────────────────────────────────────────────────
 
@@ -24,7 +24,7 @@ export function useAiApiKeys() {
 export function useAddAiApiKey() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: AddAiApiKeyRequest) => aiApiKeyService.add(data),
+    mutationFn: (data: CreateAiApiKeyRequest) => aiApiKeyService.add(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: qtAiKeys.list() });
     },

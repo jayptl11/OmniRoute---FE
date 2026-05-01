@@ -116,6 +116,11 @@
   color: #7c3aed;
 }
 
+.providerGroq {
+  background: rgba(245, 158, 11, 0.1);
+  color: #b45309;
+}
+
 /* ── Priority badges ──────────────────────────────────────────────────────────── */
 .priorityBadge {
   display: inline-flex;
@@ -441,4 +446,10 @@
   border-top-color: #6366f1;
   animation: spin 0.7s linear infinite;
   margin: 40px auto;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
 }

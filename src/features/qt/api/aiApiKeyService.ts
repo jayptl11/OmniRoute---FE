@@ -1,7 +1,7 @@
 import { api } from '@/lib/axios';
 import type {
   AiApiKeyDto,
-  AddAiApiKeyRequest,
+  CreateAiApiKeyRequest,
   UpdateAiApiKeyRequest,
   TestAiApiKeyResult,
 } from '@/types/admin';
@@ -12,7 +12,7 @@ export const aiApiKeyService = {
     api.get<AiApiKeyDto[]>('/api/ai-api-keys').then((r) => r.data),
 
   // API 2 — Thêm API key mới
-  add: (data: AddAiApiKeyRequest) =>
+  add: (data: CreateAiApiKeyRequest) =>
     api.post<string>('/api/ai-api-keys', data).then((r) => r.data),
 
   // API 3 — Cập nhật API key

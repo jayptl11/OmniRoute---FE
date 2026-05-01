@@ -294,37 +294,48 @@ export interface ToggleStatusRequest {
 
 // ─── AI API Keys ──────────────────────────────────────────────────────────────
 
-export type AiProvider = 'OpenAI' | 'Gemini' | 'Anthropic';
+export interface AiKeyConfig {
+  model: string;
+  temperature?: number;
+  maxTokens?: number;
+  [key: string]: unknown;
+}
+
+export type AiProvider = 'OpenAI' | 'Gemini' | 'Anthropic' | 'Groq';
 
 export interface AiApiKeyDto {
   id: string;
   provider: AiProvider;
   displayName: string;
   maskedKey: string;
-  priority: 1 | 2;
+  priority: number;
   isActive: boolean;
+  config: AiKeyConfig;
   failureCount: number;
   lastFailedAt: string | null;
   lastUsedAt: string | null;
   createdAt: string;
 }
 
-export interface AddAiApiKeyRequest {
+export interface CreateAiApiKeyRequest {
   provider: AiProvider;
   displayName: string;
   plainKeyValue: string;
-  priority: 1 | 2;
+  isActive: boolean;
+  priority: number;
+  config: AiKeyConfig;
 }
 
 export interface UpdateAiApiKeyRequest {
   displayName: string;
   plainKeyValue?: string | null;
-  priority: 1 | 2;
+  priority: number;
+  config: AiKeyConfig;
 }
 
 export interface TestAiApiKeyResult {
   success: boolean;
-  errorMessage: string | null;
-  latencyMs: number;
-  provider: AiProvider;
+  provider: string;
+  durationMs: number;
+  errorMessage?: string;
 }
