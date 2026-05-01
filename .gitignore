@@ -14,7 +14,7 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
-
+.env.example
 # Editor
 .vscode/
 .idea/
@@ -36,3 +36,6 @@ yarn-error.log*
 
 # TypeScript
 *.tsbuildinfo
+
+#Docs
+docs/
