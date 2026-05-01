@@ -453,3 +453,228 @@
   grid-template-columns: 1fr 1fr;
   gap: 14px;
 }
+
+/* ── Test Classification Result ────────────────────────────────────────────── */
+.resultCard {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resultRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.resultLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  min-width: 100px;
+}
+
+.resultValue {
+  font-size: 0.8125rem;
+  color: #0f172a;
+  font-weight: 500;
+}
+
+/* NeedType badges */
+.needTypeBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.needTypeSaleNew,
+.needTypeSaleUpgrade,
+.needTypeSaleRenew {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.needTypeCskhSupport {
+  background: rgba(59, 130, 246, 0.1);
+  color: #1d4ed8;
+}
+
+.needTypeCskhComplaint {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+.needTypeCskhWarranty {
+  background: rgba(245, 158, 11, 0.1);
+  color: #b45309;
+}
+
+.needTypeStoreVisit {
+  background: rgba(168, 85, 247, 0.1);
+  color: #7c3aed;
+}
+
+.needTypeOther {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+/* AssignedGroup badges */
+.groupBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.groupSale {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.groupCskh {
+  background: rgba(59, 130, 246, 0.1);
+  color: #1d4ed8;
+}
+
+.groupStoreSupport {
+  background: rgba(168, 85, 247, 0.1);
+  color: #7c3aed;
+}
+
+/* Confidence score */
+.confidenceBar {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.confidenceFill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.confidenceHigh {
+  background: #10b981;
+}
+
+.confidenceMedium {
+  background: #f59e0b;
+}
+
+.confidenceLow {
+  background: #ef4444;
+}
+
+.confidenceBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.confidenceBadgeHigh {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.confidenceBadgeMedium {
+  background: rgba(245, 158, 11, 0.1);
+  color: #b45309;
+}
+
+.confidenceBadgeLow {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+.confidenceRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+/* Reasoning */
+.reasoningText {
+  font-size: 0.8125rem;
+  color: #374151;
+  line-height: 1.5;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+/* Error result */
+.errorCard {
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.errorTitle {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.errorDetail {
+  font-size: 0.775rem;
+  color: #64748b;
+}
+
+/* Latency */
+.latencyText {
+  font-size: 0.775rem;
+  color: #64748b;
+}
+
+.providerText {
+  font-size: 0.775rem;
+  color: #64748b;
+}
+
+/* Textarea */
+.textarea {
+  padding: 8px 11px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: #0f172a;
+  background: #fff;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border 0.15s, box-shadow 0.15s;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.textarea:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}

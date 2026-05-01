@@ -4,6 +4,8 @@ import type {
   CreateAiApiKeyRequest,
   UpdateAiApiKeyRequest,
   TestAiApiKeyResult,
+  TestClassificationRequest,
+  TestClassificationResponse,
 } from '@/types/admin';
 
 export const aiApiKeyService = {
@@ -27,5 +29,14 @@ export const aiApiKeyService = {
   test: (id: string) =>
     api
       .post<TestAiApiKeyResult>(`/api/ai-api-keys/${id}/test`)
+      .then((r) => r.data),
+
+  // API 6 — Test Lead Classification
+  testClassification: (id: string, data: TestClassificationRequest) =>
+    api
+      .post<TestClassificationResponse>(
+        `/api/ai-api-keys/${id}/test-classification`,
+        data
+      )
       .then((r) => r.data),
 };

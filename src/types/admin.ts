@@ -339,3 +339,19 @@ export interface TestAiApiKeyResult {
   durationMs: number;
   errorMessage?: string;
 }
+
+export interface TestClassificationRequest {
+  needDescription: string;
+  channel: Channel;
+}
+
+export interface TestClassificationResponse {
+  success: boolean;
+  needType: NeedType | null;
+  confidenceScore: number;
+  reasoning: string;
+  assignedGroup: AssignedGroupString | null;
+  provider: string;
+  latencyMs: number;
+  errorMessage: string | null;
+}

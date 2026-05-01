@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { aiApiKeyService } from '../api/aiApiKeyService';
-import type { CreateAiApiKeyRequest, UpdateAiApiKeyRequest } from '@/types/admin';
+import type {
+  CreateAiApiKeyRequest,
+  UpdateAiApiKeyRequest,
+  TestClassificationRequest,
+} from '@/types/admin';
 
 // ─── Query Keys ───────────────────────────────────────────────────────────────
 
@@ -55,5 +59,12 @@ export function useToggleAiApiKeyStatus() {
 export function useTestAiApiKey() {
   return useMutation({
     mutationFn: (id: string) => aiApiKeyService.test(id),
+  });
+}
+
+export function useTestClassification() {
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: TestClassificationRequest }) =>
+      aiApiKeyService.testClassification(id, data),
   });
 }

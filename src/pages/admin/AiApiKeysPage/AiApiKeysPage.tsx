@@ -6,6 +6,7 @@ import {
   FlaskConical,
   Power,
   Loader2,
+  TestTube2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -16,6 +17,7 @@ import {
 import type { AiApiKeyDto } from '@/types/admin';
 import { AddAiApiKeyDialog } from './AddAiApiKeyDialog';
 import { EditAiApiKeyDialog } from './EditAiApiKeyDialog';
+import { TestClassificationDialog } from './TestClassificationDialog';
 import styles from './AiApiKeysPage.module.css';
 
 // ── helpers ───────────────────────────────────────────────────────────────────
@@ -48,6 +50,7 @@ function ProviderChip({ provider }: { provider: AiApiKeyDto['provider'] }) {
 export function AiApiKeysPage() {
   const [addOpen, setAddOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<AiApiKeyDto | null>(null);
+  const [testClassificationTarget, setTestClassificationTarget] = useState<AiApiKeyDto | null>(null);
   const [testingId, setTestingId] = useState<string | null>(null);
 
   const { data: keys = [], isLoading, isFetching, refetch } = useAiApiKeys();
@@ -183,6 +186,16 @@ export function AiApiKeysPage() {
                           Test
                         </button>
 
+                        {/* Test Classification */}
+                        <button
+                          className={`${styles.actionBtn} ${styles.actionBtnTest}`}
+                          onClick={() => setTestClassificationTarget(key)}
+                          title="Test Lead Classification"
+                        >
+                          <TestTube2 size={13} />
+                          Classification
+                        </button>
+
                         {/* Edit */}
                         <button
                           className={styles.actionBtn}
@@ -217,6 +230,12 @@ export function AiApiKeysPage() {
       {addOpen && <AddAiApiKeyDialog onClose={() => setAddOpen(false)} />}
       {editTarget && (
         <EditAiApiKeyDialog keyItem={editTarget} onClose={() => setEditTarget(null)} />
+      )}
+      {testClassificationTarget && (
+        <TestClassificationDialog
+          keyItem={testClassificationTarget}
+          onClose={() => setTestClassificationTarget(null)}
+        />
       )}
     </div>
   );
