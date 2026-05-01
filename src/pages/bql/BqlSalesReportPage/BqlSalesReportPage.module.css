@@ -51,6 +51,19 @@
 .exportBtn:hover { border-color: #10b981; color: #059669; }
 .exportBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+.formatSelect {
+  padding: 6px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 0.8rem;
+  color: #374151;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.formatSelect:focus { border-color: #10b981; }
+
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 

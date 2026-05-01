@@ -81,7 +81,7 @@ export function useSalesReport(
   });
 }
 
-// ── BQL-06: Xuất Excel ────────────────────────────────────────────────────────
+// ── BQL-06: Xuất Excel / PDF ────────────────────────────────────────────────────────────
 
 export function useExportReport() {
   return useMutation({
@@ -90,11 +90,13 @@ export function useExportReport() {
       period,
       dateFrom,
       dateTo,
+      format,
     }: {
       reportType: ExportReportType;
       period?: Period;
       dateFrom?: string;
       dateTo?: string;
-    }) => dashboardService.exportReport({ reportType, period, dateFrom, dateTo }),
+      format?: 'excel' | 'pdf';
+    }) => dashboardService.exportReport({ reportType, period, dateFrom, dateTo, format }),
   });
 }

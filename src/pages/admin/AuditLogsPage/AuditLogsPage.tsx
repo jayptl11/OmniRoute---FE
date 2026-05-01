@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useAuditLogs } from '@/features/qt/hooks/useAudit';
+import { useAuditLogs, useExportAuditLogs } from '@/features/qt/hooks/useAudit';
 import type { GetAuditLogsParams } from '@/types/dashboard';
-import { Search, RefreshCw, ChevronLeft, ChevronRight, Eye, X } from 'lucide-react';
+import { Search, RefreshCw, ChevronLeft, ChevronRight, Eye, X, Download } from 'lucide-react';
 import styles from './AuditLogsPage.module.css';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -116,6 +116,7 @@ export function AuditLogsPage() {
   };
 
   const { data, isLoading, isFetching, isError } = useAuditLogs(params);
+  const { mutate: exportLogs, isPending: isExporting } = useExportAuditLogs();
 
   const totalPages = data ? Math.ceil(data.totalCount / PAGE_SIZE) : 0;
 
@@ -135,6 +136,20 @@ export function AuditLogsPage() {
           <h1 className={styles.pageTitle}>Audit Log hệ thống</h1>
           <p className={styles.pageDesc}>Lịch sử toàn bộ hành động trên hệ thống</p>
         </div>
+        <button
+          className={styles.exportBtn}
+          onClick={() => exportLogs({
+            entityType: entityType || undefined,
+            action: actionDebounced || undefined,
+            dateFrom: dateFrom || undefined,
+            dateTo: dateTo || undefined,
+          })}
+          disabled={isExporting}
+          id="audit-export-btn"
+        >
+          {isExporting ? <RefreshCw size={14} className={styles.spin} /> : <Download size={14} />}
+          Xuất Excel
+        </button>
       </div>
 
       {/* Filter Bar */}

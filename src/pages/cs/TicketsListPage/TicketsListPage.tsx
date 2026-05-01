@@ -118,7 +118,7 @@ export function TicketsListPage() {
           <input
             id="cs-tickets-search"
             className={styles.searchInput}
-            placeholder="Tìm theo SĐT hoặc tên KH..."
+            placeholder="Tìm theo tên, SĐT hoặc mã ticket…"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />

@@ -32,16 +32,20 @@ export const dashboardService = {
   getSalesReport: (params?: DashboardPeriodParams) =>
     api.get<SalesReportDto>('/api/dashboard/sales-report', { params }).then((r) => r.data),
 
-  // BQL-06: Xuất báo cáo Excel
+  // BQL-06: Xuất báo cáo Excel / PDF
   exportReport: async (params: ExportParams): Promise<void> => {
     const res = await api.get('/api/dashboard/export', {
       params,
       responseType: 'blob',
     });
 
-    const blob = new Blob([res.data as BlobPart], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
+    const isPdf = params.format === 'pdf';
+    const mimeType = isPdf
+      ? 'application/pdf'
+      : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    const defaultExt = isPdf ? 'pdf' : 'xlsx';
+
+    const blob = new Blob([res.data as BlobPart], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -49,7 +53,7 @@ export const dashboardService = {
     // Try to get filename from Content-Disposition header
     const cd = (res.headers as Record<string, string>)['content-disposition'] ?? '';
     const match = cd.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-    a.download = match?.[1]?.replace(/['"]/g, '') ?? `report_${params.reportType}.xlsx`;
+    a.download = match?.[1]?.replace(/['"]/g, '') ?? `report_${params.reportType}.${defaultExt}`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

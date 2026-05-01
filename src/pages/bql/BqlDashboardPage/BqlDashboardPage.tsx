@@ -142,10 +142,11 @@ function KpiCard({
 
 function ExportMenu({ period }: { period: Period }) {
   const [open, setOpen] = useState(false);
+  const [format, setFormat] = useState<'excel' | 'pdf'>('excel');
   const { mutate, isPending } = useExportReport();
 
   function handleExport(reportType: 'overview' | 'unitComparison' | 'sales') {
-    mutate({ reportType, period });
+    mutate({ reportType, period, format });
     setOpen(false);
   }
 
@@ -158,10 +159,24 @@ function ExportMenu({ period }: { period: Period }) {
         id="bql-export-btn"
       >
         {isPending ? <RefreshCw size={14} className={styles.spin} /> : <Download size={14} />}
-        Xuất Excel
+        Xuất báo cáo
       </button>
       {open && (
         <div className={styles.exportDropdown}>
+          <div className={styles.exportDropdownFmt}>
+            <button
+              className={`${styles.exportDropdownFmtBtn} ${format === 'excel' ? styles.exportDropdownFmtBtnActive : ''}`}
+              onClick={() => setFormat('excel')}
+            >
+              Excel
+            </button>
+            <button
+              className={`${styles.exportDropdownFmtBtn} ${format === 'pdf' ? styles.exportDropdownFmtBtnActive : ''}`}
+              onClick={() => setFormat('pdf')}
+            >
+              PDF
+            </button>
+          </div>
           <button onClick={() => handleExport('overview')}>Tổng quan (Overview)</button>
           <button onClick={() => handleExport('unitComparison')}>So sánh đơn vị</button>
           <button onClick={() => handleExport('sales')}>Báo cáo bán hàng</button>

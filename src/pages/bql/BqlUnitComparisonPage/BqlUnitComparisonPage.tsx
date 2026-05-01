@@ -51,6 +51,7 @@ export function BqlUnitComparisonPage() {
   const [period, setPeriod] = useState<Period>('month');
   const [sortBy, setSortBy] = useState<UnitComparisonSortBy>('leadCount');
   const [localSort, setLocalSort] = useState<{ field: keyof UnitComparisonItemDto; dir: SortDir } | null>(null);
+  const [exportFormat, setExportFormat] = useState<'excel' | 'pdf'>('excel');
 
   const { data, isLoading, isError } = useUnitComparison(period, sortBy);
   const { mutate: exportReport, isPending: isExporting } = useExportReport();
@@ -111,15 +112,25 @@ export function BqlUnitComparisonPage() {
               <option key={o.value} value={o.value}>{o.label}</option>
             ))}
           </select>
+          {/* Export format */}
+          <select
+            className={styles.sortSelect}
+            value={exportFormat}
+            onChange={(e) => setExportFormat(e.target.value as 'excel' | 'pdf')}
+            id="unit-comparison-format-select"
+          >
+            <option value="excel">Excel</option>
+            <option value="pdf">PDF</option>
+          </select>
           {/* Export */}
           <button
             className={styles.exportBtn}
-            onClick={() => exportReport({ reportType: 'unitComparison', period })}
+            onClick={() => exportReport({ reportType: 'unitComparison', period, format: exportFormat })}
             disabled={isExporting}
             id="unit-comparison-export-btn"
           >
             {isExporting ? <RefreshCw size={14} className={styles.spin} /> : <Download size={14} />}
-            Xuất Excel
+            Xuất báo cáo
           </button>
         </div>
       </div>

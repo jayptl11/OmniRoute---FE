@@ -192,6 +192,7 @@ export interface ExportParams {
   period?: Period;
   dateFrom?: string;
   dateTo?: string;
+  format?: 'excel' | 'pdf';
 }
 
 // ── Shared Query Params ───────────────────────────────────────────────────────

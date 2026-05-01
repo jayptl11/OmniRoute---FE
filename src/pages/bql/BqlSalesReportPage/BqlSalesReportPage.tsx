@@ -66,6 +66,7 @@ function FunnelItem({
 
 export function BqlSalesReportPage() {
   const [period, setPeriod] = useState<Period>('month');
+  const [exportFormat, setExportFormat] = useState<'excel' | 'pdf'>('excel');
   const { data, isLoading, isError } = useSalesReport(period);
   const { mutate: exportReport, isPending: isExporting } = useExportReport();
 
@@ -105,14 +106,23 @@ export function BqlSalesReportPage() {
               </button>
             ))}
           </div>
+          <select
+            className={styles.formatSelect}
+            value={exportFormat}
+            onChange={(e) => setExportFormat(e.target.value as 'excel' | 'pdf')}
+            id="sales-report-format-select"
+          >
+            <option value="excel">Excel</option>
+            <option value="pdf">PDF</option>
+          </select>
           <button
             className={styles.exportBtn}
-            onClick={() => exportReport({ reportType: 'sales', period })}
+            onClick={() => exportReport({ reportType: 'sales', period, format: exportFormat })}
             disabled={isExporting}
             id="sales-report-export-btn"
           >
             {isExporting ? <RefreshCw size={14} className={styles.spin} /> : <Download size={14} />}
-            Xuất Excel
+            Xuất báo cáo
           </button>
         </div>
       </div>

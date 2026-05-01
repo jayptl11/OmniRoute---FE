@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { auditService } from '../api/auditService';
 import type { GetAuditLogsParams, Period } from '@/types/dashboard';
 
@@ -9,6 +9,17 @@ export function useAuditLogs(params?: GetAuditLogsParams) {
     queryKey: ['audit', 'logs', params],
     queryFn: () => auditService.getLogs(params),
     staleTime: 60 * 1000, // 1 phút — log thay đổi thường xuyên hơn
+  });
+}
+
+// ── QT-14: System Stats ───────────────────────────────────────────────────────
+
+// ── QT-13 Export ────────────────────────────────────────────────────────────
+
+export function useExportAuditLogs() {
+  return useMutation({
+    mutationFn: (params?: Omit<GetAuditLogsParams, 'page' | 'pageSize'>) =>
+      auditService.exportAuditLogs(params),
   });
 }
 
