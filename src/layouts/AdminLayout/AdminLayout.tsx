@@ -17,6 +17,7 @@ import {
   Bell,
   FileText,
   Activity,
+  KeyRound,
 } from 'lucide-react';
 import { NotificationBell } from '@/features/notifications/components/NotificationBell';
 import styles from './AdminLayout.module.css';
@@ -31,6 +32,7 @@ const NAV_ITEMS = [
   { to: '/admin/notification-configs', icon: Bell,          label: 'Cấu hình thông báo' },
   { to: '/admin/audit-logs',           icon: FileText,      label: 'Audit Log' },
   { to: '/admin/system-stats',         icon: Activity,      label: 'Thống kê hệ thống' },
+  { to: '/admin/ai-api-keys',          icon: KeyRound,      label: 'AI API Keys' },
 ];
 
 export function AdminLayout() {

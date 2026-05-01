@@ -82,6 +82,7 @@ const BqlSalesReportPage = lazy(() => import('@/pages/bql/BqlSalesReportPage').t
 // QT Audit pages
 const AuditLogsPage = lazy(() => import('@/pages/admin/AuditLogsPage').then((m) => ({ default: m.AuditLogsPage })));
 const SystemStatsPage = lazy(() => import('@/pages/admin/SystemStatsPage').then((m) => ({ default: m.SystemStatsPage })));
+const AiApiKeysPage = lazy(() => import('@/pages/admin/AiApiKeysPage').then((m) => ({ default: m.AiApiKeysPage })));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -132,6 +133,7 @@ export const router = createBrowserRouter([
               { path: '/admin/notification-configs', element: withSuspense(<NotificationConfigPage />) },
               { path: '/admin/audit-logs', element: withSuspense(<AuditLogsPage />) },
               { path: '/admin/system-stats', element: withSuspense(<SystemStatsPage />) },
+              { path: '/admin/ai-api-keys', element: withSuspense(<AiApiKeysPage />) },
             ],
           },
         ],
