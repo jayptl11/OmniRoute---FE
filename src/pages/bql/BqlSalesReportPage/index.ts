@@ -1,0 +1,1 @@
+export { BqlSalesReportPage } from './BqlSalesReportPage';

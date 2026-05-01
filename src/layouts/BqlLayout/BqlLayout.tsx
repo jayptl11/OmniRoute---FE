@@ -3,37 +3,26 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { useLogout } from '@/features/auth';
 import {
+  LayoutDashboard,
   GitBranch,
-  Users,
-  Shuffle,
-  Database,
-  Store,
-  UsersRound,
-  Timer,
+  BarChart2,
+  TrendingUp,
   LogOut,
   ChevronLeft,
   ChevronRight,
-  LayoutDashboard,
-  Bell,
-  FileText,
-  Activity,
+  Building2,
 } from 'lucide-react';
 import { NotificationBell } from '@/features/notifications/components/NotificationBell';
-import styles from './AdminLayout.module.css';
+import styles from './BqlLayout.module.css';
 
 const NAV_ITEMS = [
-  { to: '/admin/users',                 icon: Users,         label: 'Tài khoản' },
-  { to: '/admin/routing-rules',         icon: Shuffle,       label: 'Phân luồng' },
-  { to: '/admin/master-data',           icon: Database,      label: 'Danh mục hệ thống' },
-  { to: '/admin/stores',               icon: Store,         label: 'Cửa hàng' },
-  { to: '/admin/teams',                icon: UsersRound,    label: 'Nhóm' },
-  { to: '/admin/sla-config',           icon: Timer,         label: 'Cấu hình SLA' },
-  { to: '/admin/notification-configs', icon: Bell,          label: 'Cấu hình thông báo' },
-  { to: '/admin/audit-logs',           icon: FileText,      label: 'Audit Log' },
-  { to: '/admin/system-stats',         icon: Activity,      label: 'Thống kê hệ thống' },
+  { to: '/bql/dashboard',       icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/bql/drill-down',      icon: GitBranch,       label: 'Drill-down' },
+  { to: '/bql/unit-comparison', icon: BarChart2,       label: 'So sánh đơn vị' },
+  { to: '/bql/sales-report',    icon: TrendingUp,      label: 'Báo cáo bán hàng' },
 ];
 
-export function AdminLayout() {
+export function BqlLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const user = useAuthStore((s) => s.user);
   const logout = useLogout();
@@ -41,21 +30,16 @@ export function AdminLayout() {
 
   return (
     <div className={styles.shell}>
-      {/* Sidebar */}
       <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
-        {/* Logo */}
         <div className={styles.sidebarHeader}>
           <div className={styles.logoMark}>
-            <GitBranch size={16} strokeWidth={2.5} />
+            <Building2 size={15} strokeWidth={2.5} />
           </div>
-          {!collapsed && (
-            <span className={styles.logoText}>OmniRoute</span>
-          )}
+          {!collapsed && <span className={styles.logoText}>OmniRoute</span>}
         </div>
 
-        {/* Nav */}
         <nav className={styles.nav}>
-          <p className={styles.navSection}>{!collapsed && 'Quản trị'}</p>
+          <p className={styles.navSection}>{!collapsed && 'Ban quản lý'}</p>
           {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
@@ -71,7 +55,6 @@ export function AdminLayout() {
           ))}
         </nav>
 
-        {/* Collapse toggle */}
         <button
           className={styles.collapseBtn}
           onClick={() => setCollapsed((v) => !v)}
@@ -82,16 +65,14 @@ export function AdminLayout() {
         </button>
       </aside>
 
-      {/* Main area */}
       <div className={styles.main}>
-        {/* Topbar */}
         <header className={styles.topbar}>
           <button
             className={styles.breadcrumbBtn}
-            onClick={() => navigate('/admin/users')}
+            onClick={() => navigate('/bql/dashboard')}
           >
-            <LayoutDashboard size={14} />
-            <span>Admin</span>
+            <Building2 size={14} />
+            <span>Lãnh đạo</span>
           </button>
 
           <div className={styles.topbarRight}>
@@ -112,7 +93,6 @@ export function AdminLayout() {
           </div>
         </header>
 
-        {/* Content */}
         <main className={styles.content}>
           <Outlet />
         </main>

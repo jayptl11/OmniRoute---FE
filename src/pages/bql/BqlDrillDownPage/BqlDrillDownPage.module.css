@@ -1,0 +1,206 @@
+.page { display: flex; flex-direction: column; gap: 20px; }
+
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pageTitle {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+.pageDesc { font-size: 0.8rem; color: #94a3b8; margin: 4px 0 0; }
+
+.levelToggle {
+  display: flex;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.levelBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: none;
+  background: transparent;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.levelBtnActive {
+  background: #10b981 !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+}
+
+.breadcrumbItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #475569;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.breadcrumbItem:hover { border-color: #10b981; color: #059669; }
+
+.breadcrumbSep { color: #cbd5e1; }
+
+.breadcrumbCurrent {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Loading / Error */
+.loadingWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.errorCard {
+  padding: 16px 20px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+/* Content */
+.content { display: flex; flex-direction: column; gap: 20px; }
+
+.summaryCard {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.summaryMain { display: flex; flex-direction: column; gap: 2px; }
+
+.summaryLabel { font-size: 0.75rem; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; }
+.summaryValue { font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.03em; }
+
+.entityBadge {
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(16,185,129,0.1);
+  color: #059669;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.chartsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .chartsRow { grid-template-columns: 1fr; }
+}
+
+.chartCard {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.chartTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 16px;
+}
+
+.emptyText { font-size: 0.8125rem; color: #94a3b8; text-align: center; padding: 40px 0; }
+
+/* Children List */
+.childrenList { display: flex; flex-direction: column; gap: 6px; }
+
+.childItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #f1f5f9;
+  border-radius: 10px;
+  background: #fafafa;
+  cursor: pointer;
+  transition: all 0.15s;
+  width: 100%;
+  text-align: left;
+}
+.childItem:hover { border-color: #10b981; background: #f0fdf4; }
+
+.childLabel {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #374151;
+  min-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.childBarWrap {
+  flex: 1;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.childBar {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #6366f1);
+  border-radius: 99px;
+  transition: width 0.4s;
+}
+
+.childCount {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+  min-width: 36px;
+  text-align: right;
+}
+
+.childArrow { color: #94a3b8; flex-shrink: 0; }

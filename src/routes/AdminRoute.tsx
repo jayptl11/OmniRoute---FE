@@ -43,6 +43,8 @@ export function getDefaultRouteForRole(roleName: string | null | undefined): str
       return '/tn/overview';
     case 'QL':
       return '/ql/dashboard';
+    case 'BQL':
+      return '/bql/dashboard';
     default:
       return '/';
   }

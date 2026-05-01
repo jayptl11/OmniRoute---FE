@@ -44,5 +44,10 @@ export function PrivateRoute() {
     return <Navigate to={getDefaultRouteForRole('QL')} replace />;
   }
 
+  // BQL role belongs in the BQL module
+  if (user?.roleName === 'BQL') {
+    return <Navigate to={getDefaultRouteForRole('BQL')} replace />;
+  }
+
   return <Outlet />;
 }

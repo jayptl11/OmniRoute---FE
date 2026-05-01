@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AuthLayout } from '@/layouts/AuthLayout';
 import { AdminLayout } from '@/layouts/AdminLayout';
+import { BqlLayout } from '@/layouts/BqlLayout';
 import { TvLayout } from '@/layouts/TvLayout';
 import { SaLayout } from '@/layouts/SaLayout';
 import { DpLayout } from '@/layouts/DpLayout';
@@ -11,6 +12,7 @@ import { QlLayout } from '@/layouts/QlLayout';
 import { PublicRoute } from './PublicRoute';
 import { PrivateRoute } from './PrivateRoute';
 import { AdminRoute } from './AdminRoute';
+import { BqlRoute } from './BqlRoute';
 import { TvRoute } from './TvRoute';
 import { SaRoute } from './SaRoute';
 import { DpRoute } from './DpRoute';
@@ -71,6 +73,16 @@ const QlMembersPage = lazy(() => import('@/pages/ql/QlMembersPage').then((m) => 
 const QlHistoryPage = lazy(() => import('@/pages/ql/QlHistoryPage').then((m) => ({ default: m.QlHistoryPage })));
 const QlReportPage = lazy(() => import('@/pages/ql/QlReportPage').then((m) => ({ default: m.QlReportPage })));
 
+// BQL pages
+const BqlDashboardPage = lazy(() => import('@/pages/bql/BqlDashboardPage').then((m) => ({ default: m.BqlDashboardPage })));
+const BqlDrillDownPage = lazy(() => import('@/pages/bql/BqlDrillDownPage').then((m) => ({ default: m.BqlDrillDownPage })));
+const BqlUnitComparisonPage = lazy(() => import('@/pages/bql/BqlUnitComparisonPage').then((m) => ({ default: m.BqlUnitComparisonPage })));
+const BqlSalesReportPage = lazy(() => import('@/pages/bql/BqlSalesReportPage').then((m) => ({ default: m.BqlSalesReportPage })));
+
+// QT Audit pages
+const AuditLogsPage = lazy(() => import('@/pages/admin/AuditLogsPage').then((m) => ({ default: m.AuditLogsPage })));
+const SystemStatsPage = lazy(() => import('@/pages/admin/SystemStatsPage').then((m) => ({ default: m.SystemStatsPage })));
+
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">
     <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
@@ -118,6 +130,8 @@ export const router = createBrowserRouter([
               { path: '/admin/teams', element: withSuspense(<TeamsPage />) },
               { path: '/admin/sla-config', element: withSuspense(<SlaConfigPage />) },
               { path: '/admin/notification-configs', element: withSuspense(<NotificationConfigPage />) },
+              { path: '/admin/audit-logs', element: withSuspense(<AuditLogsPage />) },
+              { path: '/admin/system-stats', element: withSuspense(<SystemStatsPage />) },
             ],
           },
         ],
@@ -220,6 +234,23 @@ export const router = createBrowserRouter([
               { path: '/ql/members',   element: withSuspense(<QlMembersPage />) },
               { path: '/ql/history',   element: withSuspense(<QlHistoryPage />) },
               { path: '/ql/report',    element: withSuspense(<QlReportPage />) },
+            ],
+          },
+        ],
+      },
+
+      // BQL routes — role BQL only
+      {
+        element: <BqlRoute />,
+        children: [
+          {
+            element: <BqlLayout />,
+            children: [
+              { path: '/bql', element: <Navigate to="/bql/dashboard" replace /> },
+              { path: '/bql/dashboard',       element: withSuspense(<BqlDashboardPage />) },
+              { path: '/bql/drill-down',      element: withSuspense(<BqlDrillDownPage />) },
+              { path: '/bql/unit-comparison', element: withSuspense(<BqlUnitComparisonPage />) },
+              { path: '/bql/sales-report',    element: withSuspense(<BqlSalesReportPage />) },
             ],
           },
         ],
