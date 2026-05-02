@@ -14,6 +14,7 @@ import {
   FileText,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { extractErrorMessage } from '@/lib/errors';
 import { useTicketDetail, useUpdateTicketStatus, useAddTicketNote, useEscalateTicket, useRecordSatisfaction } from '@/features/cs/hooks/useTickets';
 import type {
   TicketStatus,
@@ -106,11 +107,7 @@ function UpdateStatusPanel({ ticket }: { ticket: TicketDetailDto }) {
       setSelectedStatus('');
       setNote('');
     } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { errorMessage?: string } } })?.response?.data?.errorMessage ??
-        (err as { message?: string })?.message ??
-        'Không thể cập nhật trạng thái';
-      toast.error(msg);
+      toast.error(extractErrorMessage(err));
     }
   }
 
@@ -187,11 +184,7 @@ function AddNotePanel({ ticket }: { ticket: TicketDetailDto }) {
       toast.success('Đã thêm ghi chú');
       setNote('');
     } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { errorMessage?: string } } })?.response?.data?.errorMessage ??
-        (err as { message?: string })?.message ??
-        'Không thể thêm ghi chú';
-      toast.error(msg);
+      toast.error(extractErrorMessage(err));
     }
   }
 
@@ -254,11 +247,7 @@ function EscalatePanel({ ticket }: { ticket: TicketDetailDto }) {
       setEscalatedTo('');
       setReason('');
     } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { errorMessage?: string } } })?.response?.data?.errorMessage ??
-        (err as { message?: string })?.message ??
-        'Không thể escalate ticket';
-      toast.error(msg);
+      toast.error(extractErrorMessage(err));
     }
   }
 
@@ -360,11 +349,7 @@ function SatisfactionPanel({ ticket }: { ticket: TicketDetailDto }) {
       });
       toast.success('Đã ghi nhận mức độ hài lòng');
     } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { errorMessage?: string } } })?.response?.data?.errorMessage ??
-        (err as { message?: string })?.message ??
-        'Không thể ghi nhận hài lòng';
-      toast.error(msg);
+      toast.error(extractErrorMessage(err));
     }
   }
 

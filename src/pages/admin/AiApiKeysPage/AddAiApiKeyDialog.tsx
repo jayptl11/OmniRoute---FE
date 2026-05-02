@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X, Eye, EyeOff } from 'lucide-react';
 import { useAddAiApiKey } from '@/features/qt/hooks/useAiApiKeys';
+import { extractErrorMessage } from '@/lib/errors';
 import type { AiProvider } from '@/types/admin';
 import styles from './AiApiKeysPage.module.css';
 
@@ -13,14 +14,6 @@ const providerModels: Record<AiProvider, string> = {
 
 interface Props {
   onClose: () => void;
-}
-
-function getErrorMessage(err: unknown): string {
-  const e = err as { response?: { data?: { errorMessage?: string } | string } };
-  const data = e?.response?.data;
-  if (typeof data === 'object' && data?.errorMessage) return data.errorMessage;
-  if (typeof data === 'string') return data;
-  return 'Có lỗi xảy ra. Vui lòng thử lại.';
 }
 
 export function AddAiApiKeyDialog({ onClose }: Props) {
@@ -70,7 +63,7 @@ export function AddAiApiKeyDialog({ onClose }: Props) {
       });
       onClose();
     } catch (err) {
-      setError(getErrorMessage(err));
+      setError(extractErrorMessage(err));
     }
   };
 

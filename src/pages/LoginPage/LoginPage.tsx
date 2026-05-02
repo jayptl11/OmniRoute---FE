@@ -17,13 +17,12 @@ export function LoginPage() {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isSubmitting },
   } = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
   });
 
-  const login = useLogin(setError);
+  const login = useLogin();
 
   const onSubmit = (data: LoginRequest) => {
     login.mutate(data);

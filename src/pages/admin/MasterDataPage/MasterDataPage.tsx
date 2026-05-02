@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 import {
   useMasterData,
   useCreateMasterData,
   useUpdateMasterData,
   useToggleMasterDataStatus,
 } from '@/features/admin/hooks/useMasterData';
-import { getAdminErrorMessage } from '@/features/admin/utils/errorMessages';
+import { extractErrorMessage } from '@/lib/errors';
 import { MasterDataCategory } from '@/types/admin';
 import type { MasterDataItemDto, CreateMasterDataRequest, UpdateMasterDataRequest } from '@/types/admin';
 import { Plus, Pencil, Eye, EyeOff, RefreshCw, X } from 'lucide-react';
@@ -68,8 +69,7 @@ export function MasterDataPage() {
       }
       setFormOpen(false);
     } catch (err: unknown) {
-      const e = err as { code?: string };
-      setError(getAdminErrorMessage(e?.code ?? ''));
+      setError(extractErrorMessage(err));
     }
   };
 
@@ -77,8 +77,7 @@ export function MasterDataPage() {
     try {
       await toggleStatus.mutateAsync({ id: item.id, isActive: !item.isActive });
     } catch (err: unknown) {
-      const e = err as { code?: string };
-      alert(getAdminErrorMessage(e?.code ?? ''));
+      toast.error(extractErrorMessage(err));
     }
   };
 

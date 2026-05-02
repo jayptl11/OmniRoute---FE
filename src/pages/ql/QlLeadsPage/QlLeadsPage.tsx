@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useStoreLeads, useStoreMembers, useStoreWorkload, useReassignStoreLead } from '@/features/ql/hooks/useStoreManager';
+import { extractErrorMessage } from '@/lib/errors';
 import type { GetStoreLeadsParams, StoreLeadListItemDto, LeadStatus } from '@/types/storemanager';
 import { LEAD_STATUS_LABELS } from '@/types/storemanager';
 import { AlertTriangle, Clock, RefreshCw, X, ChevronLeft, ChevronRight, Search } from 'lucide-react';
@@ -65,15 +66,7 @@ function ReassignDialog({ lead, onClose, onSuccess }: ReassignDialogProps) {
       onSuccess();
       onClose();
     } catch (err: unknown) {
-      const code = (err as { response?: { data?: { errorCode?: string } } })?.response?.data?.errorCode;
-      const messages: Record<string, string> = {
-        LEAD_NOT_FOUND: 'Không tìm thấy lead.',
-        NEW_USER_NOT_FOUND: 'Không tìm thấy nhân sự.',
-        LEAD_NOT_IN_STORE: 'Lead không thuộc đơn vị của bạn.',
-        NEW_USER_NOT_IN_STORE: 'Nhân sự không thuộc đơn vị của bạn.',
-        LEAD_TERMINAL_STATUS: 'Lead đã đóng, không thể reassign.',
-      };
-      setErrorMsg(messages[code ?? ''] ?? 'Có lỗi xảy ra, vui lòng thử lại.');
+      setErrorMsg(extractErrorMessage(err));
     }
   };
 

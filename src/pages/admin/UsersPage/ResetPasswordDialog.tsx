@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSendResetLink, useSetTemporaryPassword } from '@/features/admin/hooks/useUsers';
-import { getAdminErrorMessage } from '@/features/admin/utils/errorMessages';
+import { extractErrorMessage } from '@/lib/errors';
 import type { UserDto } from '@/types/admin';
 import { X, Mail, KeyRound, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import styles from './UsersPage.module.css';
@@ -27,8 +27,7 @@ export function ResetPasswordDialog({ user, onClose }: Props) {
       await sendLink.mutateAsync(user.userId);
       setDone(true);
     } catch (err: unknown) {
-      const e = err as { code?: string };
-      setError(getAdminErrorMessage(e?.code ?? ''));
+      setError(extractErrorMessage(err));
     }
   };
 
@@ -45,8 +44,7 @@ export function ResetPasswordDialog({ user, onClose }: Props) {
       await setTemp.mutateAsync({ id: user.userId, password: tempPwd });
       setDone(true);
     } catch (err: unknown) {
-      const e = err as { code?: string };
-      setError(getAdminErrorMessage(e?.code ?? ''));
+      setError(extractErrorMessage(err));
     }
   };
 

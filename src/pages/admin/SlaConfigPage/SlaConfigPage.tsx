@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSlaConfigs, useUpdateSlaConfig, useToggleSlaConfigStatus } from '@/features/admin/hooks/useSlaConfig';
-import { getAdminErrorMessage } from '@/features/admin/utils/errorMessages';
+import { extractErrorMessage } from '@/lib/errors';
 import type { SlaConfigDto, UpdateSlaConfigRequest } from '@/types/admin';
 import { Pencil, X, RefreshCw } from 'lucide-react';
 import styles from '../UsersPage/UsersPage.module.css';
@@ -45,8 +45,7 @@ export function SlaConfigPage() {
       await updateSla.mutateAsync({ id: editTarget!.id, data: payload });
       setEditTarget(null);
     } catch (err: unknown) {
-      const e = err as { code?: string };
-      setError(getAdminErrorMessage(e?.code ?? ''));
+      setError(extractErrorMessage(err));
     }
   };
 

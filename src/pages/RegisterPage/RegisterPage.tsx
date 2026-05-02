@@ -22,13 +22,12 @@ export function RegisterPage() {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isSubmitting },
   } = useForm<RegisterRequest>({
     resolver: zodResolver(registerSchema),
   });
 
-  const registerMutation = useRegister(setError);
+  const registerMutation = useRegister();
 
   const onSubmit = (data: RegisterRequest) => {
     registerMutation.mutate(data);

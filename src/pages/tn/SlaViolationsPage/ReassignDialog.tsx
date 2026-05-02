@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTeamMembers, useReassignLead } from '@/features/tn/hooks/useTeamLead';
+import { extractErrorMessage } from '@/lib/errors';
 import { X } from 'lucide-react';
 import styles from './ReassignDialog.module.css';
 
@@ -32,9 +33,8 @@ export function ReassignDialog({ leadId, leadCode, currentAssigneeName, onClose,
       await reassign.mutateAsync({ leadId, data: { newUserId, reason: reason.trim() } });
       onSuccess();
       onClose();
-    } catch (err: any) {
-      const msg = err?.response?.data?.errorMessage;
-      setError(msg || 'Đã xảy ra lỗi. Vui lòng thử lại.');
+    } catch (err: unknown) {
+      setError(extractErrorMessage(err));
     }
   };
 

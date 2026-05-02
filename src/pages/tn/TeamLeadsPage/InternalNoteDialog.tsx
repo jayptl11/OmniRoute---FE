@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAddLeadNote } from '@/features/tn/hooks/useTeamLead';
+import { extractErrorMessage } from '@/lib/errors';
 import { X, Lock } from 'lucide-react';
 import styles from '../SlaViolationsPage/ReassignDialog.module.css';
 
@@ -26,9 +27,8 @@ export function InternalNoteDialog({ leadId, leadCode, onClose, onSuccess }: Pro
       await addNote.mutateAsync({ leadId, data: { content: content.trim() } });
       onSuccess();
       onClose();
-    } catch (err: any) {
-      const msg = err?.response?.data?.errorMessage;
-      setError(msg || 'Đã xảy ra lỗi. Vui lòng thử lại.');
+    } catch (err: unknown) {
+      setError(extractErrorMessage(err));
     }
   };
 

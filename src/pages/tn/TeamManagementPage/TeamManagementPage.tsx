@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTeamMembers, useAddMember, useRemoveMember, useSearchMembers } from '@/features/tn/hooks/useTeamLead';
+import { extractErrorMessage } from '@/lib/errors';
 import type { AddableUserDto } from '@/types/teamlead';
 import { Users, Plus, Trash2, BarChart2, AlertTriangle, X } from 'lucide-react';
 import styles from './TeamManagementPage.module.css';
@@ -38,14 +39,8 @@ function AddMemberDialog({ onClose }: { onClose: () => void }) {
     try {
       await addMember.mutateAsync({ userId: selected.userId });
       onClose();
-    } catch (err: any) {
-      const code = err?.response?.data?.errorCode;
-      const msg = err?.response?.data?.errorMessage;
-      if (code === 'IN_OTHER_TEAM') setError('Người dùng đang thuộc đội khác.');
-      else if (code === 'ALREADY_IN_TEAM') setError('Người dùng đã là thành viên đội này.');
-      else if (code === 'INVALID_ROLE') setError('Role không phù hợp với loại đội này.');
-      else if (code === 'USER_INACTIVE') setError('Tài khoản người dùng đã bị khóa.');
-      else setError(msg || 'Đã xảy ra lỗi. Vui lòng thử lại.');
+    } catch (err: unknown) {
+      setError(extractErrorMessage(err));
     }
   };
 
@@ -193,13 +188,12 @@ export function TeamManagementPage() {
     setRemoveError('');
     try {
       await removeMember.mutateAsync(userId);
-    } catch (err: any) {
-      const code = err?.response?.data?.errorCode;
+    } catch (err: unknown) {
+      const code = (err as { code?: string })?.code;
       if (code === 'ACTIVE_LEADS_WARNING') {
         setActiveLeadsWarning({ userId, fullName });
       } else {
-        const msg = err?.response?.data?.errorMessage;
-        setRemoveError(msg || 'Không thể xóa thành viên.');
+        setRemoveError(extractErrorMessage(err));
       }
     }
   };

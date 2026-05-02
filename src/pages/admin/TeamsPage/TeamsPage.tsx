@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTeams, useCreateTeam, useUpdateTeam, useToggleTeamStatus } from '@/features/admin/hooks/useTeams';
 import { useUsers } from '@/features/admin/hooks/useUsers';
-import { getAdminErrorMessage } from '@/features/admin/utils/errorMessages';
+import { extractErrorMessage } from '@/lib/errors';
 import { AssignedGroup } from '@/types/admin';
 import type { TeamDto, CreateTeamRequest, UpdateTeamRequest } from '@/types/admin';
 import { Plus, Pencil, Power, RefreshCw, X, UserCheck } from 'lucide-react';
@@ -76,8 +76,7 @@ export function TeamsPage() {
       }
       setFormOpen(false);
     } catch (err: unknown) {
-      const e = err as { code?: string };
-      setError(getAdminErrorMessage(e?.code ?? ''));
+      setError(extractErrorMessage(err));
     }
   };
 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useEscalateLead, useEscalateTargets } from '@/features/tn/hooks/useTeamLead';
+import { extractErrorMessage } from '@/lib/errors';
 import { X, Search } from 'lucide-react';
 import styles from '../SlaViolationsPage/ReassignDialog.module.css';
 
@@ -40,9 +41,8 @@ export function EscalateDialog({ leadId, leadCode, onClose, onSuccess }: Props) 
       await escalate.mutateAsync({ leadId, data: { escalateTo, reason: reason.trim() } });
       onSuccess();
       onClose();
-    } catch (err: any) {
-      const msg = err?.response?.data?.errorMessage;
-      setError(msg || 'Đã xảy ra lỗi. Vui lòng thử lại.');
+    } catch (err: unknown) {
+      setError(extractErrorMessage(err));
     }
   };
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useCreateRule, useUpdateRule } from '@/features/admin/hooks/useRoutingRules';
-import { getAdminErrorMessage } from '@/features/admin/utils/errorMessages';
+import { extractErrorMessage } from '@/lib/errors';
 import type { RoutingRuleDto, CreateRuleRequest } from '@/types/admin';
 import { AssignedGroup } from '@/types/admin';
 import { X, Plus, XCircle } from 'lucide-react';
@@ -77,8 +77,7 @@ export function RuleFormDialog({ rule, onClose }: Props) {
       }
       onClose();
     } catch (err: unknown) {
-      const e = err as { code?: string };
-      setError(getAdminErrorMessage(e?.code ?? ''));
+      setError(extractErrorMessage(err));
     }
   };
 

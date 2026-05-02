@@ -9,6 +9,7 @@ import {
   TestTube2,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { extractErrorMessage } from '@/lib/errors';
 import {
   useAiApiKeys,
   useToggleAiApiKeyStatus,
@@ -59,7 +60,7 @@ export function AiApiKeysPage() {
 
   const handleToggle = (key: AiApiKeyDto) => {
     toggleStatus.mutate(key.id, {
-      onError: () => toast.error('Không thể thay đổi trạng thái. Vui lòng thử lại.'),
+      onError: (err) => toast.error(extractErrorMessage(err)),
     });
   };
 
@@ -72,8 +73,8 @@ export function AiApiKeysPage() {
       } else {
         toast.error(`Lỗi: ${result.errorMessage ?? 'Không xác định'}`);
       }
-    } catch {
-      toast.error('Không thể kết nối đến server. Vui lòng thử lại.');
+    } catch (err) {
+      toast.error(extractErrorMessage(err));
     } finally {
       setTestingId(null);
       refetch();

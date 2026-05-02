@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { authApi } from '../api/authApi';
 import { useAuthStore } from '@/stores/authStore';
+import { extractErrorMessage } from '@/lib/errors';
 
 export function useLogout() {
   const accessToken = useAuthStore((s) => s.accessToken);
@@ -24,8 +25,8 @@ export function useLogout() {
       navigate('/login', { replace: true });
     },
 
-    onError: () => {
-      toast.error('Đã có lỗi khi đăng xuất, nhưng bạn đã được đăng xuất khỏi thiết bị này.');
+    onError: (error) => {
+      toast.error(extractErrorMessage(error));
     },
   });
 }

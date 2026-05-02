@@ -67,32 +67,6 @@ export interface MessageResponse {
 
 // ---- Error types ----
 
-export type AuthErrorCode =
-  | 'IDENTIFIER_REQUIRED'
-  | 'PASSWORD_REQUIRED'
-  | 'INVALID_CREDENTIALS'
-  | 'ACCOUNT_LOCKED'
-  | 'INVALID_EMAIL_FORMAT'
-  | 'INVALID_USERNAME'
-  | 'INVALID_PASSWORD'
-  | 'INVALID_OTP'
-  | 'INVALID_TOKEN'
-  | 'USER_EXISTS'
-  | 'INVALID_PURPOSE'
-  | 'EMAIL_EXISTS'
-  | 'USERNAME_EXISTS'
-  | 'OTP_RATE_LIMITED'
-  | 'RESEND_RATE_LIMITED';
-
-export interface SingleErrorResponse {
-  errorCode: AuthErrorCode;
-  errorMessage: string;
-}
-
-export interface ValidationErrorResponse {
-  errors: Record<string, AuthErrorCode[]>;
-}
-
 // OTP flow context — passed via React Router state
 export type OtpFlow = 'register' | 'reset';
 

@@ -6,6 +6,7 @@ import {
   useToggleStoreStatus,
   useSearchStoreManagers,
 } from '@/features/admin/hooks/useStores';
+import { extractErrorMessage } from '@/lib/errors';
 import type { StoreDto, GetStoresParams, StoreManagerDto } from '@/types/admin';
 import { Plus, Pencil, Power, RefreshCw, X, MapPin, Search, AlertTriangle } from 'lucide-react';
 import { GooglePlacesInput } from '@/components/GooglePlacesInput';
@@ -132,13 +133,13 @@ function ManagerAutocomplete({ value, displayName, onChange, onClear }: ManagerA
 
 // ── StoresPage ─────────────────────────────────────────────────────────────────
 
-const ERROR_MESSAGES: Record<string, { field: 'storeCode' | 'manager' | 'general'; msg: string }> = {
-  CODE_TAKEN:            { field: 'storeCode',  msg: 'Mã cửa hàng đã tồn tại.' },
-  MANAGER_NOT_FOUND:     { field: 'manager',    msg: 'Không tìm thấy người dùng với username này.' },
-  INVALID_MANAGER_ROLE:  { field: 'manager',    msg: 'Chỉ có thể gán QL làm quản lý cửa hàng.' },
-  MANAGER_INACTIVE:      { field: 'manager',    msg: 'Tài khoản QL đã bị khóa, không thể gán.' },
-  NOT_FOUND:             { field: 'general',    msg: 'Không tìm thấy cửa hàng.' },
-  ID_MISMATCH:           { field: 'general',    msg: 'Lỗi ID không khớp — kiểm tra lại code.' },
+const ERROR_FIELDS: Record<string, 'storeCode' | 'manager' | 'general'> = {
+  CODE_TAKEN:            'storeCode',
+  MANAGER_NOT_FOUND:     'manager',
+  INVALID_MANAGER_ROLE:  'manager',
+  MANAGER_INACTIVE:      'manager',
+  NOT_FOUND:             'general',
+  ID_MISMATCH:           'general',
 };
 
 const BLANK_FORM = {
@@ -218,12 +219,13 @@ export function StoresPage() {
       }
       setFormOpen(false);
     } catch (err: unknown) {
-      const code = (err as { response?: { data?: { errorCode?: string } } })?.response?.data?.errorCode ?? '';
-      const mapped = ERROR_MESSAGES[code];
-      if (mapped) {
-        setFieldErrors({ [mapped.field]: mapped.msg });
+      const code = (err as { code?: string })?.code ?? '';
+      const field = ERROR_FIELDS[code];
+      const msg = extractErrorMessage(err);
+      if (field) {
+        setFieldErrors({ [field]: msg });
       } else {
-        setFieldErrors({ general: 'Có lỗi xảy ra, vui lòng thử lại.' });
+        setFieldErrors({ general: msg });
       }
     }
   };

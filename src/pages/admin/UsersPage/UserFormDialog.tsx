@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useCreateUser, useUpdateUser, useRoles } from '@/features/admin/hooks/useUsers';
-import { getAdminErrorMessage } from '@/features/admin/utils/errorMessages';
+import { extractErrorMessage } from '@/lib/errors';
 import type { UserDto, CreateUserRequest, UpdateUserRequest } from '@/types/admin';
 import { X, Eye, EyeOff } from 'lucide-react';
 import styles from './UsersPage.module.css';
@@ -52,8 +52,7 @@ export function UserFormDialog({ user, onClose }: Props) {
         await createUser.mutateAsync(payload);
         onClose();
       } catch (err: unknown) {
-        const e = err as { code?: string };
-        setError(getAdminErrorMessage(e?.code ?? ''));
+        setError(extractErrorMessage(err));
       }
     } else {
       try {
@@ -67,8 +66,7 @@ export function UserFormDialog({ user, onClose }: Props) {
         await updateUser.mutateAsync({ id: user.userId, data: payload });
         onClose();
       } catch (err: unknown) {
-        const e = err as { code?: string };
-        setError(getAdminErrorMessage(e?.code ?? ''));
+        setError(extractErrorMessage(err));
       }
     }
   };

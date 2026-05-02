@@ -11,11 +11,9 @@ export type {
   OtpFlow,
   OtpPageState,
   ResetPasswordPageState,
-  AuthErrorCode,
 } from './types';
 
 export { authApi } from './api/authApi';
-export { getErrorMessage } from './utils/errorMessages';
 
 export { useLogin } from './hooks/useLogin';
 export { useRegister } from './hooks/useRegister';

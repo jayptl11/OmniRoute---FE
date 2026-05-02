@@ -6,6 +6,7 @@ import {
   useAddStoreMember,
   useRemoveStoreMember,
 } from '@/features/ql/hooks/useStoreManager';
+import { extractErrorMessage } from '@/lib/errors';
 import type { StoreStaffDto, AddableStoreUserDto } from '@/types/storemanager';
 import { UserPlus, Trash2, X, AlertTriangle, Search } from 'lucide-react';
 import styles from './QlMembersPage.module.css';
@@ -56,15 +57,7 @@ function AddMemberDialog({ onClose }: AddMemberDialogProps) {
       await addMember.mutateAsync({ userId: selectedUser.userId });
       onClose();
     } catch (err: unknown) {
-      const code = (err as { response?: { data?: { errorCode?: string } } })?.response?.data?.errorCode;
-      const messages: Record<string, string> = {
-        USER_NOT_FOUND: 'Không tìm thấy người dùng.',
-        USER_INACTIVE: 'Người dùng đã bị khóa, không thể thêm.',
-        INVALID_ROLE: 'Role không hợp lệ (chỉ SA/CS/DP).',
-        ALREADY_IN_STORE: 'Nhân viên đã có mặt trong đơn vị.',
-        IN_OTHER_STORE: 'Nhân viên đang thuộc đơn vị khác, cần xóa khỏi đơn vị đó trước.',
-      };
-      setErrorMsg(messages[code ?? ''] ?? 'Có lỗi xảy ra, vui lòng thử lại.');
+      setErrorMsg(extractErrorMessage(err));
     }
   };
 
@@ -205,18 +198,13 @@ export function QlMembersPage() {
       await removeMember.mutateAsync(member.userId);
       showToast(`Đã xóa ${member.fullName} khỏi đơn vị.`);
     } catch (err: unknown) {
-      const status = (err as { response?: { status?: number } })?.response?.status;
-      const code = (err as { response?: { data?: { errorCode?: string } } })?.response?.data?.errorCode;
+      const code = (err as { code?: string })?.code;
 
-      if (status === 409 && code === 'ACTIVE_LEADS_WARNING') {
+      if (code === 'ACTIVE_LEADS_WARNING') {
         setWarningMember({ userId: member.userId, userName: member.fullName });
         return;
       }
-      const messages: Record<string, string> = {
-        USER_NOT_FOUND: 'Không tìm thấy người dùng.',
-        USER_NOT_IN_STORE: 'Nhân viên không thuộc đơn vị này.',
-      };
-      showToast(messages[code ?? ''] ?? 'Có lỗi xảy ra.');
+      showToast(extractErrorMessage(err));
     }
   };
 
