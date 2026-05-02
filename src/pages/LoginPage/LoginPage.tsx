@@ -11,7 +11,7 @@ const loginSchema = z.object({
 });
 
 const inputCls =
-  'w-full rounded-lg border border-slate-200 bg-slate-50/50 px-4 py-3 text-[15px] text-slate-900 placeholder:text-slate-400 outline-none transition-all duration-300 hover:border-slate-300 hover:bg-slate-50 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 disabled:bg-slate-100 disabled:opacity-60';
+  'w-full rounded border border-slate-200 bg-slate-50/50 px-4 py-3 text-[15px] text-slate-900 placeholder:text-slate-400 outline-none transition-colors hover:border-slate-300 hover:bg-slate-50 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 disabled:bg-slate-100 disabled:opacity-60';
 
 export function LoginPage() {
   const {
@@ -29,10 +29,10 @@ export function LoginPage() {
   };
 
   return (
-    <div className="animate-fade-in-up">
+    <div>
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-6 lg:hidden">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shadow-md">
+          <div className="w-8 h-8 rounded bg-indigo-600 flex items-center justify-center">
             <span className="text-white text-xs font-bold">O</span>
           </div>
           <span className="font-bold text-slate-900 text-[15px]">OmniRoute</span>
@@ -84,7 +84,7 @@ export function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting || login.isPending}
-          className="mt-2 w-full rounded-lg bg-slate-900 px-4 py-3.5 text-[15px] font-semibold text-white shadow-md shadow-slate-900/10 transition-all duration-300 hover:bg-slate-800 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-900/20 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-900/10 disabled:pointer-events-none disabled:opacity-50"
+          className="mt-2 w-full rounded bg-slate-900 px-4 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/20 disabled:pointer-events-none disabled:opacity-50"
         >
           {login.isPending ? (
             <span className="flex items-center justify-center gap-2">

@@ -12,7 +12,7 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 const inputClass =
-  'w-full rounded-lg border border-slate-200 bg-slate-50/50 px-4 py-3 text-[15px] text-slate-900 placeholder:text-slate-400 outline-none transition-all duration-300 hover:border-slate-300 hover:bg-slate-50 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 disabled:bg-slate-100 disabled:opacity-60';
+  'w-full rounded border border-slate-200 bg-slate-50/50 px-4 py-3 text-[15px] text-slate-900 placeholder:text-slate-400 outline-none transition-colors hover:border-slate-300 hover:bg-slate-50 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 disabled:bg-slate-100 disabled:opacity-60';
 
 export function ForgotPasswordPage() {
   const {
@@ -30,14 +30,14 @@ export function ForgotPasswordPage() {
   };
 
   return (
-    <div className="animate-fade-in-up">
+    <div>
       <Link to="/login" className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors mb-6 group">
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
         Quay lại đăng nhập
       </Link>
-      
+
       <div className="mb-8">
-        <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-5 shadow-inner">
+        <div className="w-12 h-12 rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-5">
           <Mail className="w-6 h-6 text-indigo-600" />
         </div>
         <h2 className="text-2xl sm:text-[28px] font-bold text-slate-900 tracking-tight">Quên mật khẩu?</h2>
@@ -67,7 +67,7 @@ export function ForgotPasswordPage() {
         <button
           type="submit"
           disabled={isSubmitting || forgotPassword.isPending}
-          className="mt-2 w-full rounded-lg bg-slate-900 px-4 py-3.5 text-[15px] font-semibold text-white shadow-md shadow-slate-900/10 transition-all duration-300 hover:bg-slate-800 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-900/20 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-900/10 disabled:pointer-events-none disabled:opacity-50"
+          className="mt-2 w-full rounded bg-slate-900 px-4 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/20 disabled:pointer-events-none disabled:opacity-50"
         >
           {forgotPassword.isPending ? (
             <span className="flex items-center justify-center gap-2">
