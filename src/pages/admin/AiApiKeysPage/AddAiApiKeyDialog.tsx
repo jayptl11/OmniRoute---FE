@@ -68,7 +68,7 @@ export function AddAiApiKeyDialog({ onClose }: Props) {
   };
 
   return (
-    <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div className={styles.overlay}>
       <div className={styles.dialog} role="dialog" aria-modal="true">
         <div className={styles.dialogHeader}>
           <h2 className={styles.dialogTitle}>Thêm AI API Key</h2>

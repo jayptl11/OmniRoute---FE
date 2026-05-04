@@ -98,7 +98,7 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
     : null;
 
   return (
-    <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div className={styles.overlay}>
       <div className={styles.dialog} role="dialog" aria-modal="true" style={{ maxWidth: 520 }}>
         <div className={styles.dialogHeader}>
           <h2 className={styles.dialogTitle}>Test Lead Classification</h2>
