@@ -32,6 +32,7 @@ export function getDefaultRouteForRole(roleName: string | null | undefined): str
     // case 'SA': return '/sale/dashboard';
     // case 'CS': return '/cs/dashboard';
     case 'SA':
+    case 'SS':
       return '/sa/leads';
     case 'TV':
       return '/tv/leads';

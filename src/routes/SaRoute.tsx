@@ -14,7 +14,7 @@ export function SaRoute() {
     return <Navigate to="/login" replace />;
   }
 
-  if (user?.roleName !== 'SA') {
+  if (user?.roleName !== 'SA' && user?.roleName !== 'SS') {
     return <Navigate to={getDefaultRouteForRole(user?.roleName)} replace />;
   }
 

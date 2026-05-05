@@ -19,9 +19,9 @@ export function PrivateRoute() {
     return <Navigate to={getDefaultRouteForRole('TV')} replace />;
   }
 
-  // SA role belongs in the SA module
-  if (user?.roleName === 'SA') {
-    return <Navigate to={getDefaultRouteForRole('SA')} replace />;
+  // SA and SS roles belong in the SA module
+  if (user?.roleName === 'SA' || user?.roleName === 'SS') {
+    return <Navigate to={getDefaultRouteForRole(user?.roleName)} replace />;
   }
 
   // DP role belongs in the DP module
