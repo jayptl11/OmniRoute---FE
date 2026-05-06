@@ -378,8 +378,8 @@ display: inline-flex;
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(2px);
+  background: rgba(15, 23, 42, 0.25);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -388,10 +388,11 @@ display: inline-flex;
 }
 
 .dialog {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   width: 100%;
   max-width: 480px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
@@ -406,7 +407,7 @@ display: inline-flex;
   align-items: center;
   justify-content: space-between;
   padding: 18px 20px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .dialogTitle {
@@ -446,7 +447,7 @@ display: inline-flex;
 
 .dialogFooter {
   padding: 14px 20px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
   display: flex;
   justify-content: flex-end;
   gap: 8px;
@@ -478,13 +479,13 @@ display: inline-flex;
 
 .input {
   padding: 8px 11px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   font-size: 0.8125rem;
   color: #0f172a;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   outline: none;
   width: 100%;
   box-sizing: border-box;
@@ -789,3 +790,5 @@ display: inline-flex;
   color: #475569;
   line-height: 1.5;
 }
+
+.selectFullWidth { width: 100%; display: block; }

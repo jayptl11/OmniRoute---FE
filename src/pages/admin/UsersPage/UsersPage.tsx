@@ -20,7 +20,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import styles from './UsersPage.module.css';
-import { GlassButton } from '@/components/glass';
+import { GlassButton, GlassSelect } from '@/components/glass';
 
 const PAGE_SIZE = 20;
 
@@ -87,32 +87,25 @@ export function UsersPage() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <select
-          id="users-role-filter"
-          className={styles.select}
-          onChange={(e) => handleFilter('roleName', e.target.value)}
-          disabled={rolesLoading}
-        >
-          <option value="">{rolesLoading ? 'Đang tải role...' : 'Tất cả role'}</option>
-          {roles.map((r) => (
-            <option key={r.roleId} value={r.roleName}>{r.roleName}</option>
-          ))}
-        </select>
-        <select
-          id="users-status-filter"
-          className={styles.select}
-          onChange={(e) =>
-            setParams((p) => ({
-              ...p,
-              page: 1,
-              isActive: e.target.value === '' ? undefined : e.target.value === 'true',
-            }))
-          }
-        >
-          <option value="">Tất cả trạng thái</option>
-          <option value="true">Đang hoạt động</option>
-          <option value="false">Đã khóa</option>
-        </select>
+        <GlassSelect
+          value={params.roleName ?? ''}
+          onChange={(val) => handleFilter('roleName', val)}
+          options={[
+            { value: '', label: rolesLoading ? 'Đang tải role...' : 'Tất cả role' },
+            ...roles.map(r => ({ value: r.roleName, label: r.roleName }))
+          ]}
+        />
+        <GlassSelect
+          value={params.isActive === undefined ? '' : String(params.isActive)}
+          onChange={(val) => setParams(p => ({
+            ...p, page: 1, isActive: val === '' ? undefined : val === 'true'
+          }))}
+          options={[
+            { value: '', label: 'Tất cả trạng thái' },
+            { value: 'true', label: 'Đang hoạt động' },
+            { value: 'false', label: 'Đã khóa' }
+          ]}
+        />
         <GlassButton className={styles.btnIcon} onClick={() => refetch()} title="Làm mới">
           <RefreshCw size={14} className={isFetching ? styles.spinning : ''} />
         </GlassButton>

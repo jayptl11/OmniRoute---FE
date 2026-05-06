@@ -6,7 +6,7 @@ import { AssignedGroup } from '@/types/admin';
 import type { TeamDto, CreateTeamRequest, UpdateTeamRequest } from '@/types/admin';
 import { Plus, Pencil, Power, RefreshCw, X, UserCheck } from 'lucide-react';
 import styles from '../UsersPage/UsersPage.module.css';
-import { GlassButton } from '@/components/glass';
+import { GlassButton, GlassSelect } from '@/components/glass';
 
 const TEAM_TYPES = [
   { label: 'Sale', value: AssignedGroup.Sale },
@@ -105,12 +105,14 @@ export function TeamsPage() {
       </div>
 
       <div className={styles.filters}>
-        <select className={styles.select} value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-          <option value="">Tất cả loại nhóm</option>
-          {TEAM_TYPES.map(({ label, value }) => (
-            <option key={value} value={value}>{label}</option>
-          ))}
-        </select>
+        <GlassSelect
+          value={typeFilter}
+          onChange={setTypeFilter}
+          options={[
+            { value: '', label: 'Tất cả loại nhóm' },
+            ...TEAM_TYPES.map(({ label, value }) => ({ value: String(value), label }))
+          ]}
+        />
         <GlassButton className={styles.btnIcon} onClick={() => refetch()} title="Làm mới">
           <RefreshCw size={14} className={isFetching ? styles.spinning : ''} />
         </GlassButton>
@@ -201,11 +203,15 @@ export function TeamsPage() {
                 {!editTarget && (
                   <div className={styles.formGroup}>
                     <label className={styles.label} htmlFor="team-type">Loại nhóm *</label>
-                    <select id="team-type" className={styles.input} required
-                      value={form.teamType} onChange={(e) => set('teamType', parseInt(e.target.value, 10))}>
-                      <option value={0}>Sale</option>
-                      <option value={1}>CSKH</option>
-                    </select>
+                    <GlassSelect
+                      value={String(form.teamType)}
+                      onChange={(val) => set('teamType', parseInt(val, 10))}
+                      className={styles.selectFullWidth}
+                      options={[
+                        { value: '0', label: 'Sale' },
+                        { value: '1', label: 'CSKH' },
+                      ]}
+                    />
                   </div>
                 )}
 
@@ -215,20 +221,18 @@ export function TeamsPage() {
                     Team Lead (TN)
                     {' '}<span style={{ fontWeight: 400, color: '#94a3b8', fontSize: '0.75rem' }}>— tùy chọn</span>
                   </label>
-                  <select
-                    id="team-leader"
-                    className={styles.input}
+                  <GlassSelect
                     value={form.leaderId}
-                    onChange={(e) => set('leaderId', e.target.value)}
-                  >
-                    <option value="">-- Chưa gán Team Lead --</option>
-                    {tnUsers.map((u) => (
-                      <option key={u.userId} value={u.userId}>
-                        {[u.firstName, u.lastName].filter(Boolean).join(' ') || u.username}
-                        {' '}(@{u.username})
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) => set('leaderId', val)}
+                    className={styles.selectFullWidth}
+                    options={[
+                      { value: '', label: '-- Chưa gán Team Lead --' },
+                      ...tnUsers.map(u => ({
+                        value: u.userId,
+                        label: `${[u.firstName, u.lastName].filter(Boolean).join(' ') || u.username} (@${u.username})`
+                      }))
+                    ]}
+                  />
                   {tnUsers.length === 0 && (
                     <p style={{ fontSize: '0.75rem', color: '#94a3b8', margin: '4px 0 0' }}>
                       Không có tài khoản TN nào đang hoạt động.

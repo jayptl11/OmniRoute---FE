@@ -3,6 +3,7 @@ import { useAuditLogs, useExportAuditLogs } from '@/features/qt/hooks/useAudit';
 import type { GetAuditLogsParams } from '@/types/dashboard';
 import { Search, RefreshCw, ChevronLeft, ChevronRight, Eye, X, Download } from 'lucide-react';
 import styles from './AuditLogsPage.module.css';
+import { GlassSelect } from '@/components/glass';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -156,17 +157,15 @@ export function AuditLogsPage() {
       <div className={styles.filterBar}>
         <div className={styles.filterGroup}>
           <label className={styles.filterLabel}>Loại entity</label>
-          <select
+          <GlassSelect
             className={styles.filterSelect}
             value={entityType}
-            onChange={(e) => { setEntityType(e.target.value); resetPage(); }}
-            id="audit-filter-entitytype"
-          >
-            <option value="">Tất cả</option>
-            {ENTITY_TYPE_OPTIONS.filter(Boolean).map((t) => (
-              <option key={t} value={t}>{t}</option>
-            ))}
-          </select>
+            onChange={(val) => { setEntityType(val); resetPage(); }}
+            options={[
+              { value: '', label: 'Tất cả' },
+              ...ENTITY_TYPE_OPTIONS.filter(Boolean).map(t => ({ value: t, label: t }))
+            ]}
+          />
         </div>
 
         <div className={styles.filterGroup}>

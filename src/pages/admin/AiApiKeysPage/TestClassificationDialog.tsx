@@ -9,7 +9,7 @@ import type {
   AssignedGroupString,
 } from '@/types/admin';
 import styles from './AiApiKeysPage.module.css';
-import { GlassButton } from '@/components/glass';
+import { GlassButton, GlassSelect } from '@/components/glass';
 
 interface Props {
   keyItem: AiApiKeyDto;
@@ -131,18 +131,12 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
           {/* Channel dropdown */}
           <div className={styles.formGroup}>
             <label className={styles.label} htmlFor="tc-channel">Channel *</label>
-            <select
-              id="tc-channel"
-              className={styles.input}
+            <GlassSelect
               value={channel}
-              onChange={(e) => setChannel(e.target.value as Channel)}
-            >
-              {channelOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              onChange={(val) => setChannel(val as Channel)}
+              className={styles.selectFullWidth}
+              options={channelOptions.map(opt => ({ value: String(opt.value), label: opt.label }))}
+            />
           </div>
 
           {/* Need description textarea */}

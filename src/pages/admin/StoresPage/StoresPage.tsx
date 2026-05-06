@@ -11,7 +11,7 @@ import type { StoreDto, GetStoresParams, StoreManagerDto } from '@/types/admin';
 import { Plus, Pencil, Power, RefreshCw, X, MapPin, Search, AlertTriangle } from 'lucide-react';
 import { GooglePlacesInput } from '@/components/GooglePlacesInput';
 import styles from '../UsersPage/UsersPage.module.css';
-import { GlassButton } from '@/components/glass';
+import { GlassButton, GlassSelect } from '@/components/glass';
 
 // ── ManagerAutocomplete ────────────────────────────────────────────────────────
 
@@ -264,27 +264,27 @@ export function StoresPage() {
           </GlassButton>
         </div>
 
-        <select
-          className={styles.select}
+        <GlassSelect
           value={filterParams.region ?? ''}
-          onChange={(e) => setFilterParams((p) => ({ ...p, region: e.target.value || undefined }))}
-        >
-          <option value="">Tất cả khu vực</option>
-          {regions.map((r) => <option key={r!} value={r!}>{r}</option>)}
-        </select>
+          onChange={(val) => setFilterParams((p) => ({ ...p, region: val || undefined }))}
+          options={[
+            { value: '', label: 'Tất cả khu vực' },
+            ...regions.map(r => ({ value: r!, label: r! }))
+          ]}
+        />
 
-        <select
-          className={styles.select}
+        <GlassSelect
           value={filterParams.isActive === undefined ? '' : String(filterParams.isActive)}
-          onChange={(e) => setFilterParams((p) => ({
+          onChange={(val) => setFilterParams((p) => ({
             ...p,
-            isActive: e.target.value === '' ? undefined : e.target.value === 'true',
+            isActive: val === '' ? undefined : val === 'true',
           }))}
-        >
-          <option value="">Tất cả trạng thái</option>
-          <option value="true">Đang hoạt động</option>
-          <option value="false">Vô hiệu</option>
-        </select>
+          options={[
+            { value: '', label: 'Tất cả trạng thái' },
+            { value: 'true', label: 'Đang hoạt động' },
+            { value: 'false', label: 'Vô hiệu' }
+          ]}
+        />
 
         <GlassButton className={styles.btnIcon} onClick={() => refetch()} title="Làm mới">
           <RefreshCw size={14} className={isFetching ? styles.spinning : ''} />

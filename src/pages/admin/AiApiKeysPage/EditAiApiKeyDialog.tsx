@@ -4,7 +4,7 @@ import { useUpdateAiApiKey } from '@/features/qt/hooks/useAiApiKeys';
 import { extractErrorMessage } from '@/lib/errors';
 import type { AiApiKeyDto } from '@/types/admin';
 import styles from './AiApiKeysPage.module.css';
-import { GlassButton } from '@/components/glass';
+import { GlassButton, GlassSelect } from '@/components/glass';
 
 interface Props {
   keyItem: AiApiKeyDto;
@@ -115,16 +115,15 @@ export function EditAiApiKeyDialog({ keyItem, onClose }: Props) {
 
             <div className={styles.formGroup}>
               <label className={styles.label} htmlFor="eaak-priority">Priority *</label>
-              <select
-                id="eaak-priority"
-                className={styles.input}
-                value={form.priority}
-                onChange={(e) => setForm((f) => ({ ...f, priority: Number(e.target.value) }))}
-                required
-              >
-                <option value={1}>1 — Primary (ưu tiên chính)</option>
-                <option value={2}>2 — Fallback (dự phòng)</option>
-              </select>
+              <GlassSelect
+                value={String(form.priority)}
+                onChange={(val) => setForm(f => ({ ...f, priority: Number(val) }))}
+                className={styles.selectFullWidth}
+                options={[
+                  { value: '1', label: '1 — Primary (ưu tiên chính)' },
+                  { value: '2', label: '2 — Fallback (dự phòng)' }
+                ]}
+              />
             </div>
 
             <div className={styles.formGroup}>

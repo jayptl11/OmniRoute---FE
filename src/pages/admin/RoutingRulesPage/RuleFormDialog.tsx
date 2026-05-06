@@ -5,7 +5,7 @@ import type { RoutingRuleDto, CreateRuleRequest } from '@/types/admin';
 import { AssignedGroup } from '@/types/admin';
 import { X, Plus, XCircle } from 'lucide-react';
 import styles from '../UsersPage/UsersPage.module.css';
-import { GlassButton } from '@/components/glass';
+import { GlassButton, GlassSelect } from '@/components/glass';
 
 const CHANNELS = ['Hotline', 'Walkin', 'Webform', 'Chat', 'Email', 'Zalo', 'Referral'];
 
@@ -109,13 +109,16 @@ export function RuleFormDialog({ rule, onClose }: Props) {
               </div>
               <div className={styles.formGroup}>
                 <label className={styles.label} htmlFor="rule-group">Nhóm xử lý *</label>
-                <select id="rule-group" className={styles.input} required
-                  value={form.actionGroup}
-                  onChange={(e) => set('actionGroup', parseInt(e.target.value, 10))}>
-                  <option value={0}>Sale</option>
-                  <option value={1}>Cskh</option>
-                  <option value={2}>StoreSupport</option>
-                </select>
+                <GlassSelect
+                  value={String(form.actionGroup)}
+                  onChange={(val) => set('actionGroup', parseInt(val, 10))}
+                  className={styles.selectFullWidth}
+                  options={[
+                    { value: '0', label: 'Sale' },
+                    { value: '1', label: 'Cskh' },
+                    { value: '2', label: 'StoreSupport' }
+                  ]}
+                />
               </div>
             </div>
 

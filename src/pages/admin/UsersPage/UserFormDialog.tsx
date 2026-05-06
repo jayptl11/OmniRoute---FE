@@ -4,7 +4,7 @@ import { extractErrorMessage } from '@/lib/errors';
 import type { UserDto, CreateUserRequest, UpdateUserRequest } from '@/types/admin';
 import { X, Eye, EyeOff } from 'lucide-react';
 import styles from './UsersPage.module.css';
-import { GlassButton } from '@/components/glass';
+import { GlassButton, GlassSelect } from '@/components/glass';
 
 interface Props {
   user: UserDto | null; // null = create mode
@@ -140,21 +140,15 @@ export function UserFormDialog({ user, onClose }: Props) {
 
             <div className={styles.formGroup}>
               <label className={styles.label} htmlFor="user-role">Role *</label>
-              <select
-                id="user-role"
-                className={styles.input}
-                required
+              <GlassSelect
                 value={form.roleId}
-                onChange={(e) => set('roleId', e.target.value)}
-                disabled={rolesLoading}
-              >
-                <option value="">{rolesLoading ? 'Đang tải...' : '— Chọn role —'}</option>
-                {roles.map((r) => (
-                  <option key={r.roleId} value={r.roleId}>
-                    {r.roleName}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => set('roleId', val)}
+                className={styles.selectFullWidth}
+                options={[
+                  { value: '', label: rolesLoading ? 'Đang tải...' : '— Chọn role —' },
+                  ...roles.map(r => ({ value: r.roleId, label: r.roleName }))
+                ]}
+              />
               {isEdit && (
                 <p className={styles.cellMuted} style={{ marginTop: 4, fontSize: '0.75rem' }}>
                   Role hiện tại: <strong>{user.roleName}</strong>

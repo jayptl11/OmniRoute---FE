@@ -9,7 +9,7 @@ import type { RoutingRuleDto } from '@/types/admin';
 import { Plus, Pencil, Power, RefreshCw, SendHorizonal, FlaskConical } from 'lucide-react';
 import styles from '../UsersPage/UsersPage.module.css';
 import ruleStyles from './RoutingRulesPage.module.css';
-import { GlassButton } from '@/components/glass';
+import { GlassButton, GlassSelect } from '@/components/glass';
 
 export function RoutingRulesPage() {
   const { data: rules = [], isLoading, refetch, isFetching } = useRoutingRules();
@@ -165,17 +165,14 @@ export function RoutingRulesPage() {
               value={testDesc}
               onChange={(e) => setTestDesc(e.target.value)}
             />
-            <select
-              id="test-channel"
-              className={styles.select}
+            <GlassSelect
               value={testChannel}
-              onChange={(e) => setTestChannel(e.target.value)}
-            >
-              <option value="">Tất cả kênh</option>
-              {['Hotline','Walkin','Webform','Chat','Email','Zalo','Referral'].map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
+              onChange={setTestChannel}
+              options={[
+                { value: '', label: 'Tất cả kênh' },
+                ...['Hotline','Walkin','Webform','Chat','Email','Zalo','Referral'].map(c => ({ value: c, label: c }))
+              ]}
+            />
             <GlassButton type="submit" className={styles.btnPrimary} disabled={testRule.isPending}>
               <SendHorizonal size={14} />
               {testRule.isPending ? 'Đang test...' : 'Test'}
