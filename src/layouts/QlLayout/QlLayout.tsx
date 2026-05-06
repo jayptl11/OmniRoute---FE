@@ -86,7 +86,7 @@ export function QlLayout() {
         {/* Logo */}
         <div className={styles.sidebarHeader}>
           <div className={styles.logoMark}>
-            <Store size={26} strokeWidth={2} />
+            <img src="/viettel-logo.jpg" alt="Viettel" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
         </div>
 

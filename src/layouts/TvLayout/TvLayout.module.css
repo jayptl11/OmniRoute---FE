@@ -47,14 +47,13 @@
 }
 
 .logoMark {
-  width: 52px;
-  height: 52px;
+  width: 60px;
+  height: 60px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  overflow: hidden;
   box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
   flex-shrink: 0;
 }

@@ -47,15 +47,13 @@
 }
 
 .logoMark {
-  width: 52px;
-  height: 52px;
+  width: 60px;
+  height: 60px;
   border-radius: 16px;
-  /* Cyan gradient — CS accent */
-  background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  overflow: hidden;
   box-shadow: 0 4px 14px rgba(8, 145, 178, 0.35);
   flex-shrink: 0;
 }

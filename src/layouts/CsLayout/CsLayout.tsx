@@ -31,7 +31,7 @@ export function CsLayout() {
         {/* Logo */}
         <div className={styles.sidebarHeader}>
           <div className={styles.logoMark}>
-            <GitBranch size={22} strokeWidth={2.5} />
+            <img src="/viettel-logo.jpg" alt="Viettel" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
         </div>
 

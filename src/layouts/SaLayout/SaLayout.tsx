@@ -32,7 +32,7 @@ export function SaLayout() {
       <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
         <div className={styles.sidebarHeader}>
           <div className={styles.logoMark}>
-            <GitBranch size={16} strokeWidth={2.5} />
+            <img src="/viettel-logo.jpg" alt="Viettel" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           {!collapsed && <span className={styles.logoText}>OmniRoute</span>}
         </div>
