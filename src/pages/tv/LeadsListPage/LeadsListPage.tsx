@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Plus,
   Search,
   RefreshCw,
   ChevronLeft,
@@ -14,6 +13,7 @@ import {
 import { useLeads, useCreateLead } from '@/features/tv/hooks/useLeads';
 import { leadService } from '@/features/tv/api/leadService';
 import { GooglePlacesInput } from '@/components/GooglePlacesInput';
+import { GlassSelect } from '@/components/glass';
 import type {
   GetLeadsParams,
   LeadListItemDto,
@@ -62,10 +62,29 @@ function formatDate(iso: string) {
   });
 }
 
-// ─── Create Lead Dialog ───────────────────────────────────────────────────────
+// ─── GlassSelect option builders ─────────────────────────────────────────────
 
-interface CreateLeadDialogProps {
-  onClose: () => void;
+const STATUS_OPTIONS = [
+  { value: '', label: 'Tất cả trạng thái' },
+  ...(Object.entries(LEAD_STATUS_LABELS) as [LeadStatus, string][]).map(([val, label]) => ({
+    value: val,
+    label,
+  })),
+];
+
+const CHANNEL_OPTIONS = [
+  { value: '', label: 'Tất cả kênh' },
+  ...ALL_LEAD_CHANNELS.map((c) => ({ value: c, label: c })),
+];
+
+const CHANNEL_FORM_OPTIONS = [
+  { value: '', label: 'Chọn kênh...' },
+  ...ALL_LEAD_CHANNELS.map((c) => ({ value: c, label: c })),
+];
+
+// ─── Create Lead Panel ────────────────────────────────────────────────────────
+
+interface CreateLeadPanelProps {
   onCreated: (leadId: string) => void;
 }
 
@@ -91,7 +110,7 @@ const EMPTY_FORM: FormState = {
   productInterest: [],
 };
 
-function CreateLeadDialog({ onClose, onCreated }: CreateLeadDialogProps) {
+function CreateLeadPanel({ onCreated }: CreateLeadPanelProps) {
   const navigate = useNavigate();
   const createLead = useCreateLead();
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
@@ -185,7 +204,7 @@ function CreateLeadDialog({ onClose, onCreated }: CreateLeadDialogProps) {
           <div className={styles.confirmActions}>
             <button
               className={styles.btnSecondary}
-              onClick={() => { setPendingForce(null); onClose(); navigate(`/tv/leads/${pendingForce.existingLeadId}`); }}
+              onClick={() => { setPendingForce(null); navigate(`/tv/leads/${pendingForce.existingLeadId}`); }}
             >
               <Eye size={13} /> Xem lead cũ
             </button>
@@ -204,16 +223,12 @@ function CreateLeadDialog({ onClose, onCreated }: CreateLeadDialogProps) {
   }
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.dialog}>
-        <div className={styles.dialogHeader}>
-          <h2 className={styles.dialogTitle}>Tạo lead mới</h2>
-          <button className={styles.dialogClose} onClick={onClose} aria-label="Đóng">
-            <X size={16} />
-          </button>
-        </div>
+    <div className={styles.panel}>
+      <div className={styles.panelHeader}>
+        <h2 className={styles.panelTitle}>Tạo lead mới</h2>
+      </div>
 
-        <div className={styles.dialogBody}>
+      <div className={styles.panelBody}>
           {/* Row 1: Tên KH + SĐT */}
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
@@ -257,7 +272,7 @@ function CreateLeadDialog({ onClose, onCreated }: CreateLeadDialogProps) {
                 ({LEAD_STATUS_LABELS[dupCheck.existingLeadStatus!]}).{' '}
                 <button
                   className={styles.duplicateBannerLink}
-                  onClick={() => { onClose(); navigate(`/tv/leads/${dupCheck.existingLeadId}`); }}
+                  onClick={() => { navigate(`/tv/leads/${dupCheck.existingLeadId}`); }}
                 >
                   Xem lead cũ
                 </button>
@@ -270,17 +285,12 @@ function CreateLeadDialog({ onClose, onCreated }: CreateLeadDialogProps) {
             <label className={styles.label}>
               Kênh tiếp nhận <span className={styles.required}>*</span>
             </label>
-            <select
-              id="create-lead-channel"
-              className={`${styles.formSelect} ${errors.channel ? styles.error : ''}`}
+            <GlassSelect
               value={form.channel}
-              onChange={(e) => set('channel', e.target.value)}
-            >
-              <option value="">Chọn kênh...</option>
-              {ALL_LEAD_CHANNELS.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
+              onChange={(val) => set('channel', val)}
+              options={CHANNEL_FORM_OPTIONS}
+              placeholder="Chọn kênh..."
+            />
             {errors.channel && <span className={styles.fieldError}>{errors.channel}</span>}
           </div>
 
@@ -341,7 +351,7 @@ function CreateLeadDialog({ onClose, onCreated }: CreateLeadDialogProps) {
                 type="button"
                 className={styles.btnSecondary}
                 onClick={handleAddTag}
-                style={{ padding: '8px 12px' }}
+                style={{ padding: '8px 12px', whiteSpace: 'nowrap' }}
               >
                 Thêm
               </button>
@@ -364,33 +374,29 @@ function CreateLeadDialog({ onClose, onCreated }: CreateLeadDialogProps) {
             )}
           </div>
         </div>
-
-        <div className={styles.dialogFooter}>
-          <button className={styles.btnSecondary} onClick={onClose} disabled={createLead.isPending}>
-            Huỷ
-          </button>
-          <button
-            id="create-lead-submit"
-            className={styles.btnSubmit}
-            onClick={() => handleSubmit(false)}
-            disabled={createLead.isPending}
-          >
-            {createLead.isPending && <Loader2 size={13} className={styles.spinning} />}
-            Tạo lead
-          </button>
-        </div>
+      
+      <div className={styles.panelFooter}>
+        <button
+          id="create-lead-submit"
+          className={styles.btnSubmit}
+          onClick={() => handleSubmit(false)}
+          disabled={createLead.isPending}
+          style={{ width: '100%', justifyContent: 'center' }}
+        >
+          {createLead.isPending && <Loader2 size={13} className={styles.spinning} />}
+          Tạo lead
+        </button>
       </div>
     </div>
   );
 }
 
-// ─── Main page ────────────────────────────────────────────────────────────────
-
 export function LeadsListPage() {
   const navigate = useNavigate();
   const [params, setParams] = useState<GetLeadsParams>({ page: 1, pageSize: PAGE_SIZE });
   const [searchInput, setSearchInput] = useState('');
-  const [createOpen, setCreateOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('');
+  const [channelFilter, setChannelFilter] = useState('');
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { data, isLoading, isFetching, refetch } = useLeads(params);
@@ -412,7 +418,6 @@ export function LeadsListPage() {
   const handleRowClick = (leadId: string) => navigate(`/tv/leads/${leadId}`);
 
   const handleCreated = (leadId: string) => {
-    setCreateOpen(false);
     navigate(`/tv/leads/${leadId}`);
   };
 
@@ -424,15 +429,14 @@ export function LeadsListPage() {
           <h1 className={styles.title}>Danh sách Lead</h1>
           <p className={styles.subtitle}>Quản lý và tìm kiếm lead do bạn tiếp nhận</p>
         </div>
-        <button
-          id="btn-create-lead"
-          className={styles.btnPrimary}
-          onClick={() => setCreateOpen(true)}
-        >
-          <Plus size={15} />
-          Tạo lead mới
-        </button>
       </div>
+
+      <div className={styles.pageContent}>
+        {/* Create Lead Panel (Left) */}
+        <CreateLeadPanel onCreated={handleCreated} />
+
+        {/* Main Content (Right) */}
+        <div className={styles.mainContent}>
 
       {/* Filters — TV-07 */}
       <div className={styles.filters}>
@@ -446,30 +450,24 @@ export function LeadsListPage() {
             onChange={(e) => setSearchInput(e.target.value)}
           />
         </div>
-        <select
-          id="leads-status-filter"
-          className={styles.select}
-          onChange={(e) =>
-            setParams((p) => ({ ...p, page: 1, status: (e.target.value as LeadStatus) || undefined }))
-          }
-        >
-          <option value="">Tất cả trạng thái</option>
-          {(Object.entries(LEAD_STATUS_LABELS) as [LeadStatus, string][]).map(([val, label]) => (
-            <option key={val} value={val}>{label}</option>
-          ))}
-        </select>
-        <select
-          id="leads-channel-filter"
-          className={styles.select}
-          onChange={(e) =>
-            setParams((p) => ({ ...p, page: 1, channel: (e.target.value as LeadChannel) || undefined }))
-          }
-        >
-          <option value="">Tất cả kênh</option>
-          {ALL_LEAD_CHANNELS.map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
+        <GlassSelect
+          value={statusFilter}
+          onChange={(val) => {
+            setStatusFilter(val);
+            setParams((p) => ({ ...p, page: 1, status: (val as LeadStatus) || undefined }));
+          }}
+          options={STATUS_OPTIONS}
+          placeholder="Tất cả trạng thái"
+        />
+        <GlassSelect
+          value={channelFilter}
+          onChange={(val) => {
+            setChannelFilter(val);
+            setParams((p) => ({ ...p, page: 1, channel: (val as LeadChannel) || undefined }));
+          }}
+          options={CHANNEL_OPTIONS}
+          placeholder="Tất cả kênh"
+        />
         <input
           id="leads-date-from"
           type="date"
@@ -578,13 +576,8 @@ export function LeadsListPage() {
         </div>
       )}
 
-      {/* Create Lead Dialog — TV-01 + TV-02 */}
-      {createOpen && (
-        <CreateLeadDialog
-          onClose={() => setCreateOpen(false)}
-          onCreated={handleCreated}
-        />
-      )}
+      </div>
+      </div>
     </div>
   );
 }

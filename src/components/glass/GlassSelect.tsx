@@ -9,6 +9,7 @@ interface Option {
 }
 
 interface GlassSelectProps {
+  id?: string;
   value: string;
   onChange: (value: string) => void;
   options: Option[];
@@ -16,7 +17,7 @@ interface GlassSelectProps {
   className?: string;
 }
 
-export function GlassSelect({ value, onChange, options, placeholder = 'Select...', className = '' }: GlassSelectProps) {
+export function GlassSelect({ id, value, onChange, options, placeholder = 'Select...', className = '' }: GlassSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -89,6 +90,7 @@ export function GlassSelect({ value, onChange, options, placeholder = 'Select...
   return (
     <div className={`${styles.container} ${className}`} ref={containerRef}>
       <button
+        id={id}
         type="button"
         className={`${styles.trigger} ${isOpen ? styles.triggerOpen : ''}`}
         onClick={toggleOpen}
