@@ -1,22 +1,26 @@
-/* shared dialog styles used by ReassignDialog, EscalateDialog, InternalNoteDialog */
+/* ReassignDialog, EscalateDialog, InternalNoteDialog shared glass dialog styles */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(15, 23, 42, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
   padding: 16px;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .dialog {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 16px;
   width: 100%;
   max-width: 480px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   animation: dialogIn 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -46,7 +50,7 @@
 }
 
 .closeBtn {
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   background: transparent;
   color: #94a3b8;
   cursor: pointer;
@@ -56,7 +60,7 @@
   flex-shrink: 0;
 }
 
-.closeBtn:hover { color: #0f172a; background: #f1f5f9; }
+.closeBtn:hover { color: #0f172a; background: rgba(255, 255, 255, 0.5); }
 
 .form {
   padding: 16px 20px 20px;
@@ -70,7 +74,8 @@
   color: #64748b;
   margin: 0;
   padding: 8px 12px;
-  background: #f8fafc;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 8px;
 }
 
@@ -85,15 +90,18 @@
 .select,
 .input {
   height: 38px;
-  border: 1.5px solid #e2e8f0;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   padding: 0 12px;
   font-size: 0.875rem;
   color: #0f172a;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .select:focus,
@@ -103,15 +111,17 @@
 }
 
 .textarea {
-  border: 1.5px solid #e2e8f0;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   padding: 9px 12px;
   font-size: 0.875rem;
   color: #0f172a;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   outline: none;
   resize: vertical;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
   font-family: inherit;
   width: 100%;
   box-sizing: border-box;
@@ -130,12 +140,12 @@
 
 .errorMsg {
   font-size: 0.8125rem;
-  color: #ef4444;
+  color: #dc2626;
   margin: 0;
   padding: 8px 12px;
-  background: #fef2f2;
+  background: rgba(239, 68, 68, 0.07);
+  border: 1px solid rgba(239, 68, 68, 0.2);
   border-radius: 8px;
-  border: 1px solid #fecaca;
 }
 
 .actions {
@@ -146,9 +156,11 @@
 }
 
 .cancelBtn {
-  border: 1.5px solid #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 8px;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: #475569;
   font-size: 0.875rem;
   font-weight: 500;
@@ -157,13 +169,15 @@
   transition: all 0.15s;
 }
 
-.cancelBtn:hover { background: #f8fafc; border-color: #cbd5e1; }
+.cancelBtn:hover { background: rgba(255, 255, 255, 0.65); color: #0f172a; }
 
 .submitBtn {
-  border: none;
+  border: 1px solid rgba(217, 119, 6, 0.4);
   border-radius: 8px;
-  background: #d97706;
-  color: #fff;
+  background: rgba(217, 119, 6, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #92400e;
   font-size: 0.875rem;
   font-weight: 600;
   padding: 8px 20px;
@@ -171,6 +185,6 @@
   transition: background 0.15s, transform 0.1s;
 }
 
-.submitBtn:hover { background: #b45309; }
+.submitBtn:hover { background: rgba(217, 119, 6, 0.28); }
 .submitBtn:active { transform: scale(0.98); }
 .submitBtn:disabled { opacity: 0.6; cursor: not-allowed; }

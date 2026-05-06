@@ -29,10 +29,13 @@
 
 /* ── Table ───────────────────────────────────────────────────────────────── */
 .tableWrap {
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 14px;
   overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .table {
@@ -42,7 +45,7 @@
 }
 
 .table thead tr {
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .table th {
@@ -54,19 +57,19 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   white-space: nowrap;
-  background: #f8fafc;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .table td {
   padding: 12px 14px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   vertical-align: middle;
 }
 
 .table tbody tr:last-child td { border-bottom: none; }
 
-.rowViolated td { background: #fef2f2; }
-.rowWarning td  { background: #fff7ed; }
+.rowViolated td { background: rgba(239, 68, 68, 0.06); }
+.rowWarning td  { background: rgba(245, 158, 11, 0.06); }
 
 /* ── Cell content ────────────────────────────────────────────────────────── */
 .leadCode {
@@ -96,9 +99,9 @@
   font-weight: 600;
 }
 
-.priorityBadge[data-priority='High']   { background: #fef2f2; color: #dc2626; }
-.priorityBadge[data-priority='Medium'] { background: #fffbeb; color: #d97706; }
-.priorityBadge[data-priority='Low']    { background: #f0fdf4; color: #16a34a; }
+.priorityBadge[data-priority='High']   { background: rgba(220, 38, 38, 0.1); color: #dc2626; }
+.priorityBadge[data-priority='Medium'] { background: rgba(217, 119, 6, 0.1); color: #d97706; }
+.priorityBadge[data-priority='Low']    { background: rgba(22, 163, 74, 0.1); color: #16a34a; }
 
 .statusBadge {
   font-size: 0.75rem;
@@ -120,18 +123,18 @@
   white-space: nowrap;
 }
 
-.badgeRed    { background: #fef2f2; color: #dc2626; }
-.badgeOrange { background: #fff7ed; color: #ea580c; }
-.badgeGray   { background: #f8fafc; color: #64748b; }
+.badgeRed    { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
+.badgeOrange { background: rgba(234, 88, 12, 0.1); color: #ea580c; }
+.badgeGray   { background: rgba(100, 116, 139, 0.1); color: #64748b; }
 
 .assigneeCell { color: #374151; font-size: 0.825rem; }
 
 .unassigned { color: #94a3b8; font-style: italic; }
 
 .actionBtn {
-  border: 1.5px solid #d97706;
+  border: 1.5px solid rgba(217, 119, 6, 0.4);
   border-radius: 7px;
-  background: transparent;
+  background: rgba(217, 119, 6, 0.08);
   color: #d97706;
   font-size: 0.775rem;
   font-weight: 600;
@@ -141,7 +144,7 @@
   white-space: nowrap;
 }
 
-.actionBtn:hover { background: #d97706; color: #fff; }
+.actionBtn:hover { background: rgba(217, 119, 6, 0.2); border-color: #d97706; }
 
 .emptyRow {
   text-align: center;
@@ -158,9 +161,11 @@
 }
 
 .pageBtn {
-  border: 1.5px solid #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 8px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: #475569;
   padding: 6px 10px;
   cursor: pointer;
@@ -169,7 +174,7 @@
   align-items: center;
 }
 
-.pageBtn:hover:not(:disabled) { border-color: #d97706; color: #d97706; }
+.pageBtn:hover:not(:disabled) { border-color: rgba(217, 119, 6, 0.5); color: #d97706; }
 .pageBtn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .pageInfo { font-size: 0.8375rem; color: #64748b; }
@@ -186,7 +191,7 @@
 .spinner {
   width: 28px;
   height: 28px;
-  border: 3px solid #e2e8f0;
+  border: 3px solid rgba(255, 255, 255, 0.4);
   border-top-color: #d97706;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;

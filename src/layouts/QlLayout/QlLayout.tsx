@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { useLogout } from '@/features/auth';
@@ -10,8 +9,6 @@ import {
   Clock,
   BarChart2,
   LogOut,
-  ChevronLeft,
-  ChevronRight,
   Store,
   ShieldOff,
   RefreshCw,
@@ -21,16 +18,13 @@ import styles from './QlLayout.module.css';
 
 const NAV_ITEMS = [
   { to: '/ql/dashboard', icon: LayoutDashboard, label: 'Tổng quan' },
-  { to: '/ql/leads',     icon: List,            label: 'Danh sách lead' },
+  { to: '/ql/leads',     icon: List,            label: 'Danh sách' },
   { to: '/ql/members',   icon: Users,           label: 'Nhân sự' },
   { to: '/ql/history',   icon: Clock,           label: 'Lịch sử' },
   { to: '/ql/report',    icon: BarChart2,       label: 'Báo cáo' },
 ];
 
 // ── No Store Guard ─────────────────────────────────────────────────────────────
-// Detect NO_STORE / STORE_NOT_FOUND error từ capacity API.
-// Nếu có, hiển thị màn hình hướng dẫn thay vì <Outlet />.
-
 function NoStoreGuard() {
   const { error, isError } = useStoreCapacity();
   const logout = useLogout();
@@ -81,23 +75,23 @@ function NoStoreGuard() {
 // ── QlLayout ──────────────────────────────────────────────────────────────────
 
 export function QlLayout() {
-  const [collapsed, setCollapsed] = useState(false);
   const user = useAuthStore((s) => s.user);
   const logout = useLogout();
   const navigate = useNavigate();
 
   return (
     <div className={styles.shell}>
-      <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
+      {/* Sidebar */}
+      <aside className={styles.sidebar}>
+        {/* Logo */}
         <div className={styles.sidebarHeader}>
           <div className={styles.logoMark}>
-            <Store size={15} strokeWidth={2.5} />
+            <Store size={26} strokeWidth={2} />
           </div>
-          {!collapsed && <span className={styles.logoText}>OmniRoute</span>}
         </div>
 
+        {/* Nav */}
         <nav className={styles.nav}>
-          <p className={styles.navSection}>{!collapsed && 'Store Manager'}</p>
           {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
@@ -105,25 +99,17 @@ export function QlLayout() {
               className={({ isActive }) =>
                 `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
               }
-              title={collapsed ? label : undefined}
             >
-              <Icon size={17} strokeWidth={1.8} className={styles.navIcon} />
-              {!collapsed && <span className={styles.navLabel}>{label}</span>}
+              <Icon size={20} strokeWidth={2} className={styles.navIcon} />
+              <span className={styles.navLabel}>{label}</span>
             </NavLink>
           ))}
         </nav>
-
-        <button
-          className={styles.collapseBtn}
-          onClick={() => setCollapsed((v) => !v)}
-          aria-label={collapsed ? 'Mở rộng sidebar' : 'Thu nhỏ sidebar'}
-        >
-          {collapsed ? <ChevronRight size={15} /> : <ChevronLeft size={15} />}
-          {!collapsed && <span>Thu nhỏ</span>}
-        </button>
       </aside>
 
+      {/* Main area */}
       <div className={styles.main}>
+        {/* Topbar */}
         <header className={styles.topbar}>
           <button
             className={styles.breadcrumbBtn}
@@ -151,6 +137,7 @@ export function QlLayout() {
           </div>
         </header>
 
+        {/* Content */}
         <main className={styles.content}>
           <NoStoreGuard />
         </main>

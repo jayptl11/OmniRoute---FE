@@ -7,19 +7,33 @@
 
 /* Controls */
 .controlRow { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-.periodTabs { display: flex; gap: 4px; background: #f1f5f9; border-radius: 10px; padding: 4px; }
+
+.periodTabs {
+  display: flex; gap: 4px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px; padding: 4px;
+}
 .periodTab {
   border: none; background: transparent; color: #64748b;
   font-size: 0.8125rem; font-weight: 500; padding: 6px 14px;
   border-radius: 7px; cursor: pointer; transition: all 0.15s;
 }
-.periodTab:hover { color: #0f172a; background: rgba(255,255,255,0.6); }
-.periodTabActive { background: #fff !important; color: #d97706 !important; font-weight: 600; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.periodTab:hover { color: #0f172a; background: rgba(255,255,255,0.5); }
+.periodTabActive {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  color: #d97706 !important; font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
 
 .dateRange { display: flex; align-items: center; gap: 8px; }
 .dateInput {
-  height: 36px; padding: 0 10px; border: 1.5px solid #e2e8f0;
-  border-radius: 8px; font-size: 0.8125rem; color: #374151;
+  height: 36px; padding: 0 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 8px;
+  font-size: 0.8125rem; color: #374151;
+  background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   outline: none; transition: border-color 0.15s;
 }
 .dateInput:focus { border-color: #d97706; }
@@ -29,8 +43,11 @@
 @media (max-width: 900px) { .statsGrid { grid-template-columns: repeat(2, 1fr); } }
 
 .statCard {
-  background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
-  padding: 18px 20px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 14px; padding: 18px 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 .statLabel { font-size: 0.8rem; color: #64748b; font-weight: 500; margin: 0 0 6px; }
 .statValue { font-size: 1.8rem; font-weight: 700; color: #0f172a; margin: 0; line-height: 1; }
@@ -40,7 +57,13 @@
 .chartsRow { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 800px) { .chartsRow { grid-template-columns: 1fr; } }
 
-.chartCard { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px; }
+.chartCard {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 14px; padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
 .chartTitle { font-size: 0.95rem; font-weight: 600; color: #0f172a; margin: 0 0 16px; }
 .chartEmpty { color: #94a3b8; text-align: center; margin: 60px 0; font-size: 0.875rem; }
 
@@ -48,6 +71,6 @@
 
 /* Loading / Error */
 .loadingWrap, .errorWrap { display: flex; align-items: center; justify-content: center; height: 200px; color: #64748b; }
-.spinner { width: 28px; height: 28px; border: 3px solid #e2e8f0; border-top-color: #d97706; border-radius: 50%; animation: spin 0.8s linear infinite; }
+.spinner { width: 28px; height: 28px; border: 3px solid rgba(255, 255, 255, 0.4); border-top-color: #d97706; border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .retryBtn { background: none; border: none; color: #d97706; font-weight: 600; cursor: pointer; text-decoration: underline; font-size: inherit; }

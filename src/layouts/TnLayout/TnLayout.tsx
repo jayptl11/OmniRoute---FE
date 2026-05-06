@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { useLogout } from '@/features/auth';
@@ -12,8 +11,6 @@ import {
   ArrowUpCircle,
   Users,
   LogOut,
-  ChevronLeft,
-  ChevronRight,
   GitBranch,
   ShieldOff,
   RefreshCw,
@@ -24,16 +21,13 @@ import styles from './TnLayout.module.css';
 const NAV_ITEMS = [
   { to: '/tn/overview',         icon: LayoutDashboard, label: 'Tổng quan' },
   { to: '/tn/sla',              icon: AlertTriangle,   label: 'SLA Alert' },
-  { to: '/tn/leads',            icon: List,            label: 'Danh sách lead' },
-  { to: '/tn/report',           icon: BarChart2,       label: 'Báo cáo đội' },
-  { to: '/tn/escalate-history', icon: ArrowUpCircle,   label: 'Lịch sử escalate' },
-  { to: '/tn/team',             icon: Users,           label: 'Quản lý đội' },
+  { to: '/tn/leads',            icon: List,            label: 'Danh sách' },
+  { to: '/tn/report',           icon: BarChart2,       label: 'Báo cáo' },
+  { to: '/tn/escalate-history', icon: ArrowUpCircle,   label: 'Escalate' },
+  { to: '/tn/team',             icon: Users,           label: 'Đội nhóm' },
 ];
 
 // ── No Team Guard ─────────────────────────────────────────────────────────────
-// Gọi overview để detect lỗi NO_TEAM. Nếu có, hiện banner hướng dẫn re-login
-// thay vì render <Outlet /> với dữ liệu lỗi.
-
 function NoTeamGuard() {
   const { error, isError } = useTeamLeadOverview();
   const logout = useLogout();
@@ -79,23 +73,23 @@ function NoTeamGuard() {
 }
 
 export function TnLayout() {
-  const [collapsed, setCollapsed] = useState(false);
   const user = useAuthStore((s) => s.user);
   const logout = useLogout();
   const navigate = useNavigate();
 
   return (
     <div className={styles.shell}>
-      <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
+      {/* Sidebar */}
+      <aside className={styles.sidebar}>
+        {/* Logo */}
         <div className={styles.sidebarHeader}>
           <div className={styles.logoMark}>
-            <GitBranch size={16} strokeWidth={2.5} />
+            <GitBranch size={26} strokeWidth={2} />
           </div>
-          {!collapsed && <span className={styles.logoText}>OmniRoute</span>}
         </div>
 
+        {/* Nav */}
         <nav className={styles.nav}>
-          <p className={styles.navSection}>{!collapsed && 'Team Lead'}</p>
           {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
@@ -103,25 +97,17 @@ export function TnLayout() {
               className={({ isActive }) =>
                 `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
               }
-              title={collapsed ? label : undefined}
             >
-              <Icon size={17} strokeWidth={1.8} className={styles.navIcon} />
-              {!collapsed && <span className={styles.navLabel}>{label}</span>}
+              <Icon size={20} strokeWidth={2} className={styles.navIcon} />
+              <span className={styles.navLabel}>{label}</span>
             </NavLink>
           ))}
         </nav>
-
-        <button
-          className={styles.collapseBtn}
-          onClick={() => setCollapsed((v) => !v)}
-          aria-label={collapsed ? 'Mở rộng sidebar' : 'Thu nhỏ sidebar'}
-        >
-          {collapsed ? <ChevronRight size={15} /> : <ChevronLeft size={15} />}
-          {!collapsed && <span>Thu nhỏ</span>}
-        </button>
       </aside>
 
+      {/* Main area */}
       <div className={styles.main}>
+        {/* Topbar */}
         <header className={styles.topbar}>
           <button
             className={styles.breadcrumbBtn}
@@ -149,6 +135,7 @@ export function TnLayout() {
           </div>
         </header>
 
+        {/* Content */}
         <main className={styles.content}>
           <NoTeamGuard />
         </main>
