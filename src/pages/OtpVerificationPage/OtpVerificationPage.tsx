@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { ShieldCheck } from 'lucide-react';
 import { useVerifyOtp, useResendOtp } from '@/features/auth';
 import type { OtpPageState } from '@/features/auth';
+import styles from '@/layouts/AuthLayout/AuthPages.module.css';
 
 const RESEND_COOLDOWN = 60;
 
@@ -81,20 +81,17 @@ export function OtpVerificationPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <div className="w-12 h-12 rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-5">
-          <ShieldCheck className="w-6 h-6 text-indigo-600" />
-        </div>
-        <h2 className="text-2xl sm:text-[28px] font-bold text-slate-900 tracking-tight">Xác thực OTP</h2>
-        <p className="mt-2 text-[15px] text-slate-500 leading-relaxed">
+      <div className={styles.headerArea}>
+        <h2 className={styles.title}>Xác thực OTP</h2>
+        <p className={styles.subtitle}>
           Chúng tôi đã gửi mã {flowLabel} đến{' '}
-          <span className="font-semibold text-slate-900">{state.email}</span>
+          <strong style={{ color: '#0f172a' }}>{state.email}</strong>
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="space-y-2">
-          <label htmlFor="otp" className="block text-sm font-semibold text-slate-700">
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label htmlFor="otp" className={styles.label}>
             Mã OTP (6 chữ số)
           </label>
           <input
@@ -105,35 +102,38 @@ export function OtpVerificationPage() {
             maxLength={6}
             value={otp}
             onChange={handleOtpInput}
-            className="w-full rounded border border-slate-200 bg-slate-50/50 px-4 py-3 text-center text-2xl font-bold tracking-[0.5em] text-slate-900 outline-none transition-colors hover:border-slate-300 hover:bg-slate-50 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 disabled:bg-slate-100 disabled:opacity-60 font-mono"
+            className={styles.input}
+            style={{ textAlign: 'center', fontSize: '1.5rem', letterSpacing: '0.5em', fontWeight: 700, fontFamily: 'monospace' }}
             placeholder="------"
+            disabled={verifyOtp.isPending}
           />
         </div>
 
         <button
           type="submit"
           disabled={otp.length !== 6 || verifyOtp.isPending}
-          className="mt-2 w-full rounded bg-slate-900 px-4 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/20 disabled:pointer-events-none disabled:opacity-50"
+          className={styles.submitBtn}
         >
           {verifyOtp.isPending ? (
-            <span className="flex items-center justify-center gap-2">
-              <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+            <>
+              <div className={styles.spinner} />
               Đang xác thực...
-            </span>
+            </>
           ) : (
             'Xác nhận'
           )}
         </button>
       </form>
 
-      <div className="mt-8 text-center">
-        <p className="text-[15px] text-slate-500">
+      <div className={styles.footerArea}>
+        <p className={styles.footerText}>
           Không nhận được mã?{' '}
           <button
             type="button"
             onClick={handleResend}
             disabled={cooldown > 0 || resendOtp.isPending}
-            className="font-semibold text-indigo-600 transition-colors hover:text-indigo-700 hover:underline disabled:pointer-events-none disabled:opacity-50 disabled:no-underline"
+            className={styles.primaryLink}
+            style={{ opacity: cooldown > 0 || resendOtp.isPending ? 0.5 : 1, border: 'none', background: 'none', cursor: cooldown > 0 || resendOtp.isPending ? 'not-allowed' : 'pointer' }}
           >
             {cooldown > 0 ? `Gửi lại sau ${cooldown}s` : 'Gửi lại'}
           </button>

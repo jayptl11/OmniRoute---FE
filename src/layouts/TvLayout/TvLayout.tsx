@@ -8,7 +8,6 @@ import {
   ChevronLeft,
   ChevronRight,
   PhoneCall,
-  GitBranch,
 } from 'lucide-react';
 import { NotificationBell } from '@/features/notifications/components/NotificationBell';
 import styles from './TvLayout.module.css';

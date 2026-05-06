@@ -11,7 +11,6 @@ import {
   ArrowUpCircle,
   Users,
   LogOut,
-  GitBranch,
   ShieldOff,
   RefreshCw,
 } from 'lucide-react';

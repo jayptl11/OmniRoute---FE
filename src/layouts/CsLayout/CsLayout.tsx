@@ -9,7 +9,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Headphones,
-  GitBranch,
 } from 'lucide-react';
 import { NotificationBell } from '@/features/notifications/components/NotificationBell';
 import styles from './CsLayout.module.css';

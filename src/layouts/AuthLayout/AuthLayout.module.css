@@ -1,0 +1,222 @@
+/* ── Shell ─────────────────────────────────────────────────────────────────── */
+.shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  /* Stunning modern mesh gradient background */
+  background: linear-gradient(135deg, #a5b4fc 0%, #fbcfe8 50%, #fed7aa 100%);
+  font-family: 'Inter', system-ui, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle animated background shapes for depth */
+.shell::before,
+.shell::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: 0;
+  opacity: 0.6;
+  animation: float 20s infinite ease-in-out alternate;
+}
+
+.shell::before {
+  top: -10%;
+  left: -10%;
+  width: 50vw;
+  height: 50vw;
+  background: rgba(165, 180, 252, 0.6); /* Indigo light */
+}
+
+.shell::after {
+  bottom: -20%;
+  right: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: rgba(253, 164, 175, 0.4); /* Rose light */
+  animation-delay: -10s;
+}
+
+@keyframes float {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(5%, 10%) scale(1.1); }
+  100% { transform: translate(-5%, -5%) scale(0.9); }
+}
+
+/* ── Main Container ────────────────────────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 1080px;
+  min-height: 640px;
+  display: flex;
+  position: relative;
+  z-index: 10;
+  /* Ultimate Liquid Glass Card */
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.15),
+              0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+}
+
+/* ── Left Column (Form Area) ─────────────────────────────────────────────── */
+.mainCol {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.5); /* Slightly more opaque for readability */
+}
+
+.formWrap {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Right Column (Info Area) ────────────────────────────────────────────── */
+.asideCol {
+  display: none;
+  width: 480px;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px;
+  background: rgba(255, 255, 255, 0.1); /* Very transparent to show gradient */
+  border-left: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+@media (min-width: 1024px) {
+  .asideCol { display: flex; }
+}
+
+.logoArea {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.viettelCommerceLogo {
+  height: 54px;
+  width: auto;
+  object-fit: contain;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #e11d48;
+  margin-bottom: 12px;
+}
+
+.heading {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #0f172a;
+  margin-bottom: 40px;
+  letter-spacing: -0.02em;
+}
+
+.headingHighlight {
+  background: linear-gradient(135deg, #e11d48 0%, #fb7185 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.featuresGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.featureCard {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.featureCard:hover {
+  background: rgba(255, 255, 255, 0.65);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.featureIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(225, 29, 72, 0.1);
+  color: #e11d48;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.featureTitle {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px;
+}
+
+.featureDesc {
+  font-size: 0.8125rem;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Footer / Viettel badge */
+.footer {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.viettelLogo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footerText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.footerTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.footerSubtitle {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}

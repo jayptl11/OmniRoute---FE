@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { Link } from 'react-router-dom';
 import { useRegister } from '@/features/auth';
 import type { RegisterRequest } from '@/features/auth';
+import styles from '@/layouts/AuthLayout/AuthPages.module.css';
 
 const registerSchema = z.object({
   email: z.string().min(1, 'Vui lòng nhập email.').email('Email không hợp lệ.'),
@@ -33,59 +34,55 @@ export function RegisterPage() {
     registerMutation.mutate(data);
   };
 
-  const inputClass =
-    'w-full rounded border border-slate-200 bg-slate-50/50 px-4 py-3 text-[15px] text-slate-900 placeholder:text-slate-400 outline-none transition-colors hover:border-slate-300 hover:bg-slate-50 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 disabled:bg-slate-100 disabled:opacity-60';
-
   return (
     <div>
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-6 lg:hidden">
-          <div className="w-8 h-8 rounded bg-indigo-600 flex items-center justify-center">
-            <span className="text-white text-xs font-bold">O</span>
-          </div>
-          <span className="font-bold text-slate-900 text-[15px]">OmniRoute</span>
+      <div className={styles.headerArea}>
+        <div className={styles.mobileLogo}>
+          <img src="/viettel-commerce.png" alt="Viettel Commerce" className={styles.viettelCommerceLogoMobile} />
         </div>
-        <h2 className="text-2xl sm:text-[28px] font-bold text-slate-900 tracking-tight">Tạo tài khoản mới</h2>
-        <p className="mt-2 text-[15px] text-slate-500">Điền thông tin để bắt đầu sử dụng.</p>
+        <h2 className={styles.title}>Tạo tài khoản mới</h2>
+        <p className={styles.subtitle}>Điền thông tin để bắt đầu sử dụng.</p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label htmlFor="firstName" className="block text-sm font-semibold text-slate-700">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className={styles.form}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div className={styles.formGroup}>
+            <label htmlFor="firstName" className={styles.label}>
               Họ
             </label>
             <input
               id="firstName"
               type="text"
               {...register('firstName')}
-              className={inputClass}
+              className={styles.input}
               placeholder="Nguyễn"
+              disabled={isSubmitting || registerMutation.isPending}
             />
             {errors.firstName && (
-              <p role="alert" className="text-[13px] font-medium text-red-500 animate-in fade-in slide-in-from-top-1">{errors.firstName.message}</p>
+              <p role="alert" className={styles.errorText}>{errors.firstName.message}</p>
             )}
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="lastName" className="block text-sm font-semibold text-slate-700">
+          <div className={styles.formGroup}>
+            <label htmlFor="lastName" className={styles.label}>
               Tên
             </label>
             <input
               id="lastName"
               type="text"
               {...register('lastName')}
-              className={inputClass}
+              className={styles.input}
               placeholder="Văn A"
+              disabled={isSubmitting || registerMutation.isPending}
             />
             {errors.lastName && (
-              <p role="alert" className="text-[13px] font-medium text-red-500 animate-in fade-in slide-in-from-top-1">{errors.lastName.message}</p>
+              <p role="alert" className={styles.errorText}>{errors.lastName.message}</p>
             )}
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="email" className="block text-sm font-semibold text-slate-700">
+        <div className={styles.formGroup}>
+          <label htmlFor="email" className={styles.label}>
             Email
           </label>
           <input
@@ -93,16 +90,17 @@ export function RegisterPage() {
             type="email"
             autoComplete="email"
             {...register('email')}
-            className={inputClass}
+            className={styles.input}
             placeholder="example@email.com"
+            disabled={isSubmitting || registerMutation.isPending}
           />
           {errors.email && (
-            <p role="alert" className="text-[13px] font-medium text-red-500 animate-in fade-in slide-in-from-top-1">{errors.email.message}</p>
+            <p role="alert" className={styles.errorText}>{errors.email.message}</p>
           )}
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="username" className="block text-sm font-semibold text-slate-700">
+        <div className={styles.formGroup}>
+          <label htmlFor="username" className={styles.label}>
             Tên đăng nhập
           </label>
           <input
@@ -110,16 +108,17 @@ export function RegisterPage() {
             type="text"
             autoComplete="username"
             {...register('username')}
-            className={inputClass}
+            className={styles.input}
             placeholder="username"
+            disabled={isSubmitting || registerMutation.isPending}
           />
           {errors.username && (
-            <p role="alert" className="text-[13px] font-medium text-red-500 animate-in fade-in slide-in-from-top-1">{errors.username.message}</p>
+            <p role="alert" className={styles.errorText}>{errors.username.message}</p>
           )}
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="password" className="block text-sm font-semibold text-slate-700">
+        <div className={styles.formGroup}>
+          <label htmlFor="password" className={styles.label}>
             Mật khẩu
           </label>
           <input
@@ -127,36 +126,39 @@ export function RegisterPage() {
             type="password"
             autoComplete="new-password"
             {...register('password')}
-            className={inputClass}
+            className={styles.input}
             placeholder="Ít nhất 8 ký tự, gồm hoa, thường, số"
+            disabled={isSubmitting || registerMutation.isPending}
           />
           {errors.password && (
-            <p role="alert" className="text-[13px] font-medium text-red-500 animate-in fade-in slide-in-from-top-1">{errors.password.message}</p>
+            <p role="alert" className={styles.errorText}>{errors.password.message}</p>
           )}
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting || registerMutation.isPending}
-          className="mt-2 w-full rounded bg-slate-900 px-4 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/20 disabled:pointer-events-none disabled:opacity-50"
+          className={styles.submitBtn}
         >
           {registerMutation.isPending ? (
-            <span className="flex items-center justify-center gap-2">
-              <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+            <>
+              <div className={styles.spinner} />
               Đang xử lý...
-            </span>
+            </>
           ) : (
             'Đăng ký tài khoản'
           )}
         </button>
       </form>
 
-      <p className="mt-8 text-center text-[15px] text-slate-500">
-        Đã có tài khoản?{' '}
-        <Link to="/login" className="font-semibold text-indigo-600 transition-colors hover:text-indigo-700 hover:underline">
-          Đăng nhập ngay
-        </Link>
-      </p>
+      <div className={styles.footerArea}>
+        <p className={styles.footerText}>
+          Đã có tài khoản?{' '}
+          <Link to="/login" className={styles.primaryLink}>
+            Đăng nhập ngay
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
