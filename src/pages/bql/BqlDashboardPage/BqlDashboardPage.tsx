@@ -27,6 +27,7 @@ import {
   Calendar,
   Clock,
 } from 'lucide-react';
+import { GlassButton } from '@/components/glass';
 import styles from './BqlDashboardPage.module.css';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -152,7 +153,7 @@ function ExportMenu({ period }: { period: Period }) {
 
   return (
     <div className={styles.exportWrap}>
-      <button
+      <GlassButton
         className={styles.exportBtn}
         onClick={() => setOpen((v) => !v)}
         disabled={isPending}
@@ -160,7 +161,7 @@ function ExportMenu({ period }: { period: Period }) {
       >
         {isPending ? <RefreshCw size={14} className={styles.spin} /> : <Download size={14} />}
         Xuất báo cáo
-      </button>
+      </GlassButton>
       {open && (
         <div className={styles.exportDropdown}>
           <div className={styles.exportDropdownFmt}>
@@ -292,7 +293,7 @@ export function BqlDashboardPage() {
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#94a3b8' }} interval="preserveStartEnd" />
                 <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} />
                 <Tooltip
-                  contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}
+                  contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid rgba(255,255,255,0.6)', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)' }}
                 />
                 <Line
                   type="monotone"
@@ -327,7 +328,7 @@ export function BqlDashboardPage() {
                 </Pie>
                 <Tooltip
                   formatter={(v: unknown) => [(v as number).toLocaleString('vi-VN'), 'Leads']}
-                  contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}
+                  contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid rgba(255,255,255,0.6)', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)' }}
                 />
                 <Legend
                   iconType="circle"
@@ -347,7 +348,7 @@ export function BqlDashboardPage() {
                 <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#64748b' }} width={60} />
                 <Tooltip
                   formatter={(v: unknown) => [(v as number).toLocaleString('vi-VN'), 'Leads']}
-                  contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}
+                  contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid rgba(255,255,255,0.6)', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)' }}
                 />
                 <Bar dataKey="value" radius={[0, 4, 4, 0]}>
                   {needTypeData.map((_, i) => (

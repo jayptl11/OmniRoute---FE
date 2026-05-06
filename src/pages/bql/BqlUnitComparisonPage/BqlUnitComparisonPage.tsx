@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useUnitComparison, useExportReport } from '@/features/dashboard/hooks/useDashboard';
 import type { Period, UnitComparisonSortBy, UnitComparisonItemDto } from '@/types/dashboard';
 import { Download, RefreshCw, ChevronUp, ChevronDown } from 'lucide-react';
+import { GlassButton, GlassSelect } from '@/components/glass';
 import styles from './BqlUnitComparisonPage.module.css';
 
 const PERIOD_LABELS: Record<Period, string> = { week: 'Tuần', month: 'Tháng', quarter: 'Quý' };
@@ -11,6 +12,11 @@ const SORT_OPTIONS: { value: UnitComparisonSortBy; label: string }[] = [
   { value: 'winRate',          label: 'Win rate cao nhất' },
   { value: 'slaAchievedRate',  label: 'SLA tốt nhất' },
   { value: 'avgProcessingTime', label: 'Xử lý nhanh nhất' },
+];
+
+const FORMAT_OPTIONS = [
+  { value: 'excel', label: 'Excel' },
+  { value: 'pdf', label: 'PDF' },
 ];
 
 type SortDir = 'asc' | 'desc';
@@ -101,29 +107,22 @@ export function BqlUnitComparisonPage() {
               </button>
             ))}
           </div>
-          {/* Sort by */}
-          <select
-            className={styles.sortSelect}
+          {/* Sort by — GlassSelect */}
+          <GlassSelect
             value={sortBy}
-            onChange={(e) => { setSortBy(e.target.value as UnitComparisonSortBy); setLocalSort(null); }}
-            id="unit-comparison-sortby"
-          >
-            {SORT_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
-          </select>
-          {/* Export format */}
-          <select
-            className={styles.sortSelect}
+            onChange={(v) => { setSortBy(v as UnitComparisonSortBy); setLocalSort(null); }}
+            options={SORT_OPTIONS}
+            placeholder="Sắp xếp theo"
+          />
+          {/* Export format — GlassSelect */}
+          <GlassSelect
             value={exportFormat}
-            onChange={(e) => setExportFormat(e.target.value as 'excel' | 'pdf')}
-            id="unit-comparison-format-select"
-          >
-            <option value="excel">Excel</option>
-            <option value="pdf">PDF</option>
-          </select>
-          {/* Export */}
-          <button
+            onChange={(v) => setExportFormat(v as 'excel' | 'pdf')}
+            options={FORMAT_OPTIONS}
+            placeholder="Định dạng"
+          />
+          {/* Export — GlassButton */}
+          <GlassButton
             className={styles.exportBtn}
             onClick={() => exportReport({ reportType: 'unitComparison', period, format: exportFormat })}
             disabled={isExporting}
@@ -131,7 +130,7 @@ export function BqlUnitComparisonPage() {
           >
             {isExporting ? <RefreshCw size={14} className={styles.spin} /> : <Download size={14} />}
             Xuất báo cáo
-          </button>
+          </GlassButton>
         </div>
       </div>
 

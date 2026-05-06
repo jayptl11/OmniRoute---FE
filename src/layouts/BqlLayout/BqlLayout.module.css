@@ -1,154 +1,151 @@
-/* BqlLayout — same structure as QlLayout but with teal/emerald accent for BQL role */
-
 /* ── Shell ─────────────────────────────────────────────────────────────────── */
 .shell {
   display: flex;
   height: 100vh;
   overflow: hidden;
-  background: #f1f5f9;
+  /* BQL-specific blue-violet gradient — distinct from Admin's pink-teal */
+  background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 55%, #fce7f3 100%);
   font-family: 'Inter', system-ui, sans-serif;
+  padding: 16px;
+  gap: 16px;
 }
 
 /* ── Sidebar ───────────────────────────────────────────────────────────────── */
 .sidebar {
-  width: 220px;
-  min-width: 220px;
-  background: #0f172a;
+  width: 110px;
+  min-width: 110px;
+  /* Liquid glass effect */
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 28px;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1),
-              min-width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  padding-bottom: 20px;
   position: relative;
   z-index: 20;
 }
 
-.sidebar.collapsed {
-  width: 60px;
-  min-width: 60px;
-}
-
+/* Logo header */
 .sidebarHeader {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 18px 16px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  min-height: 58px;
-}
-
-.logoMark {
-  width: 30px;
-  height: 30px;
-  min-width: 30px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: transparent;
+  margin: 10px 10px 0;
+  padding: 10px 0;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.logoMark {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
   color: #fff;
-  flex-shrink: 0;
 }
 
 .logoText {
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: #f1f5f9;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
+  display: none;
 }
 
-/* ── Nav ───────────────────────────────────────────────────────────────────── */
+/* Nav section label */
+.navSection {
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  text-align: center;
+  padding: 0 4px;
+  margin: 0 0 2px;
+  min-height: 10px;
+}
+
+/* Nav */
 .nav {
   flex: 1;
-  padding: 10px 8px;
+  padding: 10px 0;
   overflow-y: auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
-.navSection {
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #475569;
-  padding: 8px 8px 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  min-height: 28px;
+/* Hide scrollbar */
+.nav::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
 }
 
 .navItem {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  margin-bottom: 2px;
-  color: #94a3b8;
+  gap: 6px;
+  width: 86px;
+  padding: 14px 4px;
+  border-radius: 16px;
+  color: #64748b;
   text-decoration: none;
-  font-size: 0.825rem;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  transition: background 0.15s, color 0.15s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .navItem:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.6);
+  color: #0f172a;
+  transform: translateY(-2px);
 }
 
-/* emerald active state */
 .navItemActive {
-  background: rgba(16, 185, 129, 0.18) !important;
-  color: #6ee7b7 !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #2563eb !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
 }
 
-.navIcon { min-width: 17px; }
+.navIcon {
+  /* size handled by Lucide component */
+}
 
 .navLabel {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1.2;
 }
 
-/* ── Collapse button ───────────────────────────────────────────────────────── */
-.collapseBtn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  background: transparent;
-  color: #475569;
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: color 0.15s, background 0.15s;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.collapseBtn:hover {
-  color: #94a3b8;
-  background: rgba(255, 255, 255, 0.04);
-}
 
 /* ── Main ──────────────────────────────────────────────────────────────────── */
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 28px;
   overflow: hidden;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
 }
 
-/* ── Topbar ────────────────────────────────────────────────────────────────── */
+/* Topbar */
 .topbar {
   height: 54px;
   min-height: 54px;
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -169,7 +166,10 @@
   padding: 4px 0;
   transition: color 0.15s;
 }
-.breadcrumbBtn:hover { color: #0f172a; }
+
+.breadcrumbBtn:hover {
+  color: #0f172a;
+}
 
 .topbarRight {
   display: flex;
@@ -194,38 +194,48 @@
   align-items: center;
   padding: 2px 8px;
   border-radius: 20px;
-  background: rgba(16, 185, 129, 0.12);
-  color: #059669;
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
 
+/* Glass logout button */
 .logoutBtn {
   display: flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: #475569;
   font-size: 0.8125rem;
   font-weight: 500;
   padding: 6px 12px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
-.logoutBtn:hover {
-  border-color: #ef4444;
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.05);
-}
-.logoutBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ── Content ───────────────────────────────────────────────────────────────── */
+.logoutBtn:hover {
+  background: rgba(255, 255, 255, 0.65);
+  border-color: rgba(255, 255, 255, 0.9);
+  color: #0f172a;
+  transform: translateY(-1px);
+}
+
+.logoutBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Content */
 .content {
   flex: 1;
   overflow-y: auto;
   padding: 28px 32px;
-  background: #f1f5f9;
 }

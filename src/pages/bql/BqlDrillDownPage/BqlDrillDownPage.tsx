@@ -10,6 +10,7 @@ import {
 import { useDrillDown } from '@/features/dashboard/hooks/useDashboard';
 import type { DrillDownLevel } from '@/types/dashboard';
 import { ChevronRight, Home, GitBranch, RefreshCw } from 'lucide-react';
+import { GlassButton } from '@/components/glass';
 import styles from './BqlDrillDownPage.module.css';
 
 const CHART_COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899'];
@@ -39,8 +40,6 @@ export function BqlDrillDownPage() {
     : [];
 
   function handleClickChild(childLabel: string) {
-    // For unit level, use label as id (the backend accepts storeName or storeId)
-    // When clicking a child, drill into it
     setSelectedId(childLabel);
     setSelectedLabel(childLabel);
   }
@@ -64,6 +63,7 @@ export function BqlDrillDownPage() {
           <p className={styles.pageDesc}>Xem chi tiết theo đơn vị hoặc kênh</p>
         </div>
 
+        {/* Level toggle — glass */}
         <div className={styles.levelToggle}>
           <button
             id="drill-level-unit"
@@ -82,11 +82,11 @@ export function BqlDrillDownPage() {
         </div>
       </div>
 
-      {/* Breadcrumb */}
+      {/* Breadcrumb — glass pill */}
       <div className={styles.breadcrumb}>
-        <button className={styles.breadcrumbItem} onClick={handleReset}>
+        <GlassButton className={styles.breadcrumbItem} onClick={handleReset}>
           <Home size={13} /> Tất cả {level === 'unit' ? 'đơn vị' : 'kênh'}
-        </button>
+        </GlassButton>
         {selectedLabel && (
           <>
             <ChevronRight size={13} className={styles.breadcrumbSep} />
@@ -144,7 +144,7 @@ export function BqlDrillDownPage() {
                     </Pie>
                     <Tooltip
                       formatter={(v: unknown) => [(v as number).toLocaleString('vi-VN'), 'Leads']}
-                      contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}
+                      contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid rgba(255,255,255,0.6)', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)' }}
                     />
                     <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11 }} />
                   </PieChart>

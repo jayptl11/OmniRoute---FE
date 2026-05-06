@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { useLogout } from '@/features/auth';
@@ -8,9 +7,7 @@ import {
   BarChart2,
   TrendingUp,
   LogOut,
-  ChevronLeft,
-  ChevronRight,
-  Building2,
+  Store,
 } from 'lucide-react';
 import { NotificationBell } from '@/features/notifications/components/NotificationBell';
 import styles from './BqlLayout.module.css';
@@ -23,23 +20,21 @@ const NAV_ITEMS = [
 ];
 
 export function BqlLayout() {
-  const [collapsed, setCollapsed] = useState(false);
   const user = useAuthStore((s) => s.user);
   const logout = useLogout();
   const navigate = useNavigate();
 
   return (
     <div className={styles.shell}>
-      <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
+      <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
           <div className={styles.logoMark}>
-            <Building2 size={15} strokeWidth={2.5} />
+            <img src="/viettel-logo.jpg" alt="Viettel" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
-          {!collapsed && <span className={styles.logoText}>OmniRoute</span>}
         </div>
 
         <nav className={styles.nav}>
-          <p className={styles.navSection}>{!collapsed && 'Ban quản lý'}</p>
+          <p className={styles.navSection}>Ban quản lý</p>
           {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
@@ -47,22 +42,13 @@ export function BqlLayout() {
               className={({ isActive }) =>
                 `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
               }
-              title={collapsed ? label : undefined}
             >
               <Icon size={17} strokeWidth={1.8} className={styles.navIcon} />
-              {!collapsed && <span className={styles.navLabel}>{label}</span>}
+              <span className={styles.navLabel}>{label}</span>
             </NavLink>
           ))}
         </nav>
 
-        <button
-          className={styles.collapseBtn}
-          onClick={() => setCollapsed((v) => !v)}
-          aria-label={collapsed ? 'Mở rộng sidebar' : 'Thu nhỏ sidebar'}
-        >
-          {collapsed ? <ChevronRight size={15} /> : <ChevronLeft size={15} />}
-          {!collapsed && <span>Thu nhỏ</span>}
-        </button>
       </aside>
 
       <div className={styles.main}>
@@ -71,7 +57,7 @@ export function BqlLayout() {
             className={styles.breadcrumbBtn}
             onClick={() => navigate('/bql/dashboard')}
           >
-            <Building2 size={14} />
+            <Store size={14} />
             <span>Lãnh đạo</span>
           </button>
 

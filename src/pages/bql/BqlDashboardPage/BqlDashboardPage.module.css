@@ -1,8 +1,4 @@
-.page {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
+.page { display: flex; flex-direction: column; gap: 24px; }
 
 /* ── Header ── */
 .pageHeader {
@@ -13,34 +9,20 @@
   flex-wrap: wrap;
 }
 
-.pageTitle {
-  font-size: 1.375rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0;
-  letter-spacing: -0.02em;
-}
+.pageTitle { font-size: 1.375rem; font-weight: 700; color: #0f172a; margin: 0; letter-spacing: -0.02em; }
+.pageDesc { font-size: 0.8rem; color: #64748b; margin: 4px 0 0; }
+.headerActions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-.pageDesc {
-  font-size: 0.8rem;
-  color: #94a3b8;
-  margin: 4px 0 0;
-}
-
-.headerActions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* ── Period selector ── */
+/* ── Period selector — glass ── */
 .periodSelector {
   display: flex;
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .periodBtn {
@@ -53,16 +35,10 @@
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
+.periodBtn:hover { background: rgba(255, 255, 255, 0.5); color: #0f172a; }
+.periodBtnActive { background: rgba(255, 255, 255, 0.9) !important; color: #2563eb !important; font-weight: 700; }
 
-.periodBtn:hover { background: #f8fafc; }
-
-.periodBtnActive {
-  background: #10b981 !important;
-  color: #fff !important;
-  font-weight: 600;
-}
-
-/* ── Export ── */
+/* ── Export — glass ── */
 .exportWrap { position: relative; }
 
 .exportBtn {
@@ -70,31 +46,36 @@
   align-items: center;
   gap: 6px;
   padding: 7px 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 10px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   color: #374151;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
-.exportBtn:hover { border-color: #10b981; color: #059669; }
-.exportBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.exportBtn:hover { background: rgba(255, 255, 255, 0.7); border-color: rgba(37, 99, 235, 0.35); color: #2563eb; transform: translateY(-1px); }
+.exportBtn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
+/* Export dropdown — liquid glass */
 .exportDropdown {
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
   z-index: 50;
-  min-width: 200px;
+  min-width: 210px;
   overflow: hidden;
 }
-
 .exportDropdown button {
   display: block;
   width: 100%;
@@ -107,33 +88,20 @@
   cursor: pointer;
   transition: background 0.12s;
 }
-.exportDropdown button:hover { background: #f0fdf4; color: #059669; }
-
-.exportDropdownFmt {
-  display: flex;
-  gap: 4px;
-  padding: 8px 10px 6px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
+.exportDropdown button:hover { background: rgba(37, 99, 235, 0.07); color: #2563eb; }
+.exportDropdownFmt { display: flex; gap: 4px; padding: 8px 10px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.5); }
 .exportDropdownFmtBtn {
   flex: 1;
   padding: 4px 8px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 6px;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.4);
   font-size: 0.75rem;
   color: #64748b;
   cursor: pointer;
   transition: all 0.12s;
 }
-
-.exportDropdownFmtBtnActive {
-  background: #10b981 !important;
-  color: #fff !important;
-  border-color: #10b981 !important;
-  font-weight: 600;
-}
+.exportDropdownFmtBtnActive { background: rgba(37, 99, 235, 0.15) !important; color: #2563eb !important; border-color: rgba(37, 99, 235, 0.3) !important; font-weight: 600; }
 
 /* ── Loading ── */
 .loadingBanner {
@@ -141,293 +109,117 @@
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
+  background: rgba(219, 234, 254, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(147, 197, 253, 0.5);
   border-radius: 10px;
-  color: #15803d;
+  color: #1d4ed8;
   font-size: 0.8125rem;
 }
-
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── KPI Cards ── */
-.kpiGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-}
+/* ── KPI Cards — glass ── */
+.kpiGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
 
 .kpiCard {
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 16px;
   padding: 20px;
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.2s, transform 0.2s;
 }
-.kpiCard:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
+.kpiCard:hover { box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); transform: translateY(-2px); }
 
-.kpiIconWrap {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
+.kpiIconWrap { width: 44px; height: 44px; min-width: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
 .kpiInfo { flex: 1; min-width: 0; }
-
-.kpiLabel {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #64748b;
-  margin: 0 0 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.kpiValue {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0;
-  letter-spacing: -0.02em;
-}
-
+.kpiLabel { font-size: 0.75rem; font-weight: 500; color: #64748b; margin: 0 0 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+.kpiValue { font-size: 1.5rem; font-weight: 700; color: #0f172a; margin: 0; letter-spacing: -0.02em; }
 .kpiSub { margin-top: 4px; }
-
-.violatedHint {
-  font-size: 0.72rem;
-  color: #ef4444;
-  font-weight: 500;
-}
+.violatedHint { font-size: 0.72rem; color: #ef4444; font-weight: 500; }
 
 /* ── Delta indicators ── */
-.deltaUp {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #10b981;
-}
-.deltaDown {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #ef4444;
-}
-.deltaNeutral {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 0.78rem;
-  color: #94a3b8;
-}
+.deltaUp { display: inline-flex; align-items: center; gap: 3px; font-size: 0.78rem; font-weight: 600; color: #10b981; }
+.deltaDown { display: inline-flex; align-items: center; gap: 3px; font-size: 0.78rem; font-weight: 600; color: #ef4444; }
+.deltaNeutral { display: inline-flex; align-items: center; gap: 3px; font-size: 0.78rem; color: #94a3b8; }
 
-/* ── Charts ── */
-.chartsGrid {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 16px;
-}
-
-@media (max-width: 1100px) {
-  .chartsGrid { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 720px) {
-  .chartsGrid { grid-template-columns: 1fr; }
-}
+/* ── Charts — glass cards ── */
+.chartsGrid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; }
+@media (max-width: 1100px) { .chartsGrid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 720px) { .chartsGrid { grid-template-columns: 1fr; } }
 
 .chartCard {
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
+.chartTitle { font-size: 0.875rem; font-weight: 600; color: #0f172a; margin: 0 0 16px; }
 
-.chartTitle {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #0f172a;
-  margin: 0 0 16px;
-}
-
-/* ── Section Card ── */
+/* ── Section Card — glass ── */
 .sectionCard {
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 16px;
   padding: 20px 24px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
-
-.sectionTitle {
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.updatedAt {
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: #94a3b8;
-  margin-left: auto;
-}
+.sectionTitle { font-size: 0.9375rem; font-weight: 700; color: #0f172a; margin: 0 0 16px; display: flex; align-items: center; gap: 10px; }
+.updatedAt { font-size: 0.75rem; font-weight: 400; color: #94a3b8; margin-left: auto; }
 
 /* ── Top 5 Stores ── */
 .storeList { display: flex; flex-direction: column; gap: 10px; }
+.storeRow { display: flex; align-items: center; gap: 12px; }
+.storeRank { font-size: 0.75rem; font-weight: 700; color: #94a3b8; width: 28px; text-align: center; }
+.storeName { font-size: 0.8125rem; font-weight: 500; color: #374151; width: 140px; min-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.storeBarWrap { flex: 1; height: 10px; background: rgba(255, 255, 255, 0.4); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 99px; overflow: hidden; }
+.storeBar { height: 100%; background: linear-gradient(90deg, #6366f1, #8b5cf6); border-radius: 99px; transition: width 0.5s ease; }
+.storeCount { font-size: 0.8rem; font-weight: 600; color: #374151; min-width: 40px; text-align: right; }
 
-.storeRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.storeRank {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #94a3b8;
-  width: 28px;
-  text-align: center;
-}
-
-.storeName {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: #374151;
-  width: 140px;
-  min-width: 140px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.storeBarWrap {
-  flex: 1;
-  height: 10px;
-  background: #f1f5f9;
-  border-radius: 99px;
-  overflow: hidden;
-}
-
-.storeBar {
-  height: 100%;
-  background: linear-gradient(90deg, #6366f1, #8b5cf6);
-  border-radius: 99px;
-  transition: width 0.5s ease;
-}
-
-.storeCount {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #374151;
-  min-width: 40px;
-  text-align: right;
-}
-
-/* ── Routing KPI ── */
-.kpiRoutingGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 12px;
-}
-
-@media (max-width: 900px) {
-  .kpiRoutingGrid { grid-template-columns: repeat(2, 1fr); }
-}
+/* ── Routing KPI — inner glass ── */
+.kpiRoutingGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 12px; }
+@media (max-width: 900px) { .kpiRoutingGrid { grid-template-columns: repeat(2, 1fr); } }
 
 .kpiRoutingItem {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
   border-radius: 12px;
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
-
-.kpiRoutingLabel {
-  font-size: 0.75rem;
-  color: #64748b;
-  font-weight: 500;
-}
-
-.kpiRoutingValue {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.02em;
-}
-
-.comparisonNote {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.775rem;
-  color: #94a3b8;
-  margin: 0;
-}
+.kpiRoutingLabel { font-size: 0.75rem; color: #64748b; font-weight: 500; }
+.kpiRoutingValue { font-size: 1.25rem; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; }
+.comparisonNote { display: flex; align-items: center; gap: 5px; font-size: 0.775rem; color: #94a3b8; margin: 0; }
 
 /* ── SLA Table ── */
 .tableWrapper { overflow-x: auto; }
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.8125rem;
-}
-
-.table th {
-  padding: 8px 12px;
-  text-align: left;
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #64748b;
-  border-bottom: 2px solid #f1f5f9;
-}
-
-.table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #f1f5f9;
-  color: #374151;
-  vertical-align: middle;
-}
-
+.table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+.table th { padding: 8px 12px; text-align: left; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; border-bottom: 1px solid rgba(255, 255, 255, 0.5); }
+.table td { padding: 10px 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.35); color: #374151; vertical-align: middle; }
 .table tr:last-child td { border-bottom: none; }
-.table tbody tr:hover td { background: #f8fafc; }
-
+.table tbody tr:hover td { background: rgba(255, 255, 255, 0.45); }
 .storeNameCell { font-weight: 500; }
-
 .slaGood  { color: #059669; font-weight: 700; }
 .slaWarn  { color: #d97706; font-weight: 700; }
 .slaBad   { color: #dc2626; font-weight: 700; }
-
-.slaBarWrap {
-  width: 100%;
-  max-width: 160px;
-  height: 8px;
-  background: #f1f5f9;
-  border-radius: 99px;
-  overflow: hidden;
-}
-
+.slaBarWrap { width: 100%; max-width: 160px; height: 8px; background: rgba(255, 255, 255, 0.4); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 99px; overflow: hidden; }
 .slaBar       { height: 100%; border-radius: 99px; transition: width 0.4s; }
 .slaBarGood   { background: #10b981; }
 .slaBarWarn   { background: #f59e0b; }

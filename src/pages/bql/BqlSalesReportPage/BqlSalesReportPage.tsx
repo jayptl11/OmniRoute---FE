@@ -16,11 +16,17 @@ import {
 import { useSalesReport, useExportReport } from '@/features/dashboard/hooks/useDashboard';
 import type { Period } from '@/types/dashboard';
 import { Download, RefreshCw, TrendingUp, Phone, CheckCircle2 } from 'lucide-react';
+import { GlassButton, GlassSelect } from '@/components/glass';
 import styles from './BqlSalesReportPage.module.css';
 
 const CHART_COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
 
 const PERIOD_LABELS: Record<Period, string> = { week: 'Tuần', month: 'Tháng', quarter: 'Quý' };
+
+const FORMAT_OPTIONS = [
+  { value: 'excel', label: 'Excel' },
+  { value: 'pdf', label: 'PDF' },
+];
 
 function fmtDate(yyyyMmDd: string): string {
   const [, m, d] = yyyyMmDd.split('-');
@@ -106,16 +112,13 @@ export function BqlSalesReportPage() {
               </button>
             ))}
           </div>
-          <select
-            className={styles.formatSelect}
+          <GlassSelect
             value={exportFormat}
-            onChange={(e) => setExportFormat(e.target.value as 'excel' | 'pdf')}
-            id="sales-report-format-select"
-          >
-            <option value="excel">Excel</option>
-            <option value="pdf">PDF</option>
-          </select>
-          <button
+            onChange={(v) => setExportFormat(v as 'excel' | 'pdf')}
+            options={FORMAT_OPTIONS}
+            placeholder="Định dạng"
+          />
+          <GlassButton
             className={styles.exportBtn}
             onClick={() => exportReport({ reportType: 'sales', period, format: exportFormat })}
             disabled={isExporting}
@@ -123,7 +126,7 @@ export function BqlSalesReportPage() {
           >
             {isExporting ? <RefreshCw size={14} className={styles.spin} /> : <Download size={14} />}
             Xuất báo cáo
-          </button>
+          </GlassButton>
         </div>
       </div>
 
@@ -177,7 +180,7 @@ export function BqlSalesReportPage() {
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#94a3b8' }} interval="preserveStartEnd" />
                 <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} />
                 <Tooltip
-                  contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}
+                  contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid rgba(255,255,255,0.6)', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)' }}
                 />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
                 <Line type="monotone" dataKey="Tổng lead" stroke="#6366f1" strokeWidth={2} dot={false} activeDot={{ r: 5 }} />
@@ -198,7 +201,7 @@ export function BqlSalesReportPage() {
                     <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} />
                     <Tooltip
                       formatter={(v: unknown) => [(v as number).toLocaleString('vi-VN'), 'Won']}
-                      contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}
+                      contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid rgba(255,255,255,0.6)', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)' }}
                     />
                     <Bar dataKey="value" radius={[4, 4, 0, 0]}>
                       {channelData.map((_, i) => (
@@ -232,7 +235,7 @@ export function BqlSalesReportPage() {
                     </Pie>
                     <Tooltip
                       formatter={(v: unknown) => [(v as number).toLocaleString('vi-VN'), 'Won']}
-                      contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}
+                      contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid rgba(255,255,255,0.6)', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)' }}
                     />
                     <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11 }} />
                   </PieChart>
