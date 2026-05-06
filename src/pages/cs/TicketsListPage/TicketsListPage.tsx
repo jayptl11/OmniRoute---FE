@@ -20,6 +20,7 @@ import {
   TICKET_PRIORITY_LABELS,
   TICKET_NEED_TYPE_LABELS,
 } from '@/types/tickets';
+import { GlassSelect } from '@/components/glass';
 import styles from './TicketsListPage.module.css';
 
 const PAGE_SIZE = 20;
@@ -124,31 +125,36 @@ export function TicketsListPage() {
           />
         </div>
 
-        <select
+        <GlassSelect
           id="cs-tickets-status-filter"
-          className={styles.select}
-          onChange={(e) =>
-            setParams((p) => ({ ...p, page: 1, status: (e.target.value as TicketStatus) || undefined }))
+          value={params.status ?? ''}
+          onChange={(val) =>
+            setParams((p) => ({ ...p, page: 1, status: (val as TicketStatus) || undefined }))
           }
-        >
-          <option value="">Tất cả trạng thái</option>
-          {(Object.entries(TICKET_STATUS_LABELS) as [TicketStatus, string][]).map(([val, label]) => (
-            <option key={val} value={val}>{label}</option>
-          ))}
-        </select>
+          options={[
+            { value: '', label: 'Tất cả trạng thái' },
+            ...(Object.entries(TICKET_STATUS_LABELS) as [TicketStatus, string][]).map(([val, label]) => ({
+              value: val,
+              label,
+            })),
+          ]}
+          placeholder="Tất cả trạng thái"
+        />
 
-        <select
+        <GlassSelect
           id="cs-tickets-priority-filter"
-          className={styles.select}
-          onChange={(e) =>
-            setParams((p) => ({ ...p, page: 1, priorityLevel: (e.target.value as TicketPriorityLevel) || undefined }))
+          value={params.priorityLevel ?? ''}
+          onChange={(val) =>
+            setParams((p) => ({ ...p, page: 1, priorityLevel: (val as TicketPriorityLevel) || undefined }))
           }
-        >
-          <option value="">Tất cả mức ưu tiên</option>
-          <option value="High">Cao</option>
-          <option value="Medium">Trung bình</option>
-          <option value="Low">Thấp</option>
-        </select>
+          options={[
+            { value: '', label: 'Tất cả mức ưu tiên' },
+            { value: 'High', label: 'Cao' },
+            { value: 'Medium', label: 'Trung bình' },
+            { value: 'Low', label: 'Thấp' },
+          ]}
+          placeholder="Tất cả mức ưu tiên"
+        />
 
         <input
           id="cs-tickets-date-from"

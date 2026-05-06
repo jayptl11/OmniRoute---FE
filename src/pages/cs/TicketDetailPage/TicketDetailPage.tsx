@@ -29,6 +29,7 @@ import {
   TICKET_VALID_TRANSITIONS,
   SATISFACTION_META,
 } from '@/types/tickets';
+import { GlassSelect } from '@/components/glass';
 import styles from './TicketDetailPage.module.css';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -125,18 +126,16 @@ function UpdateStatusPanel({ ticket }: { ticket: TicketDetailDto }) {
       <h3 className={styles.panelTitle}>
         <ChevronDown size={15} /> Cập nhật trạng thái
       </h3>
-      <select
+      <GlassSelect
         id="cs-ticket-status-select"
-        className={styles.select}
         value={selectedStatus}
-        onChange={(e) => setSelectedStatus(e.target.value as TicketStatus | '')}
-        required
-      >
-        <option value="">— Chọn trạng thái đích —</option>
-        {validNextStates.map((s) => (
-          <option key={s} value={s}>{TICKET_STATUS_LABELS[s]}</option>
-        ))}
-      </select>
+        onChange={(val) => setSelectedStatus(val as TicketStatus | '')}
+        options={[
+          { value: '', label: '— Chọn trạng thái đích —' },
+          ...validNextStates.map((s) => ({ value: s, label: TICKET_STATUS_LABELS[s] })),
+        ]}
+        placeholder="— Chọn trạng thái đích —"
+      />
 
       {(selectedStatus || noteRequired) && (
         <textarea

@@ -3,19 +3,19 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { useLogout } from '@/features/auth';
 import {
-  GitBranch,
   ClipboardList,
   BarChart2,
   LogOut,
   ChevronLeft,
   ChevronRight,
   Headphones,
+  GitBranch,
 } from 'lucide-react';
 import { NotificationBell } from '@/features/notifications/components/NotificationBell';
 import styles from './CsLayout.module.css';
 
 const NAV_ITEMS = [
-  { to: '/cs/tickets',     icon: ClipboardList, label: 'Danh sách ticket' },
+  { to: '/cs/tickets',     icon: ClipboardList, label: 'Tickets' },
   { to: '/cs/performance', icon: BarChart2,      label: 'Hiệu suất' },
 ];
 
@@ -28,15 +28,16 @@ export function CsLayout() {
   return (
     <div className={styles.shell}>
       <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
+        {/* Logo */}
         <div className={styles.sidebarHeader}>
           <div className={styles.logoMark}>
-            <GitBranch size={16} strokeWidth={2.5} />
+            <GitBranch size={22} strokeWidth={2.5} />
           </div>
-          {!collapsed && <span className={styles.logoText}>OmniRoute</span>}
         </div>
 
+        {/* Nav */}
         <nav className={styles.nav}>
-          <p className={styles.navSection}>{!collapsed && 'CSKH'}</p>
+          {!collapsed && <p className={styles.navSection}>CSKH</p>}
           {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
@@ -46,19 +47,19 @@ export function CsLayout() {
               }
               title={collapsed ? label : undefined}
             >
-              <Icon size={17} strokeWidth={1.8} className={styles.navIcon} />
+              <Icon size={20} strokeWidth={2} className={styles.navIcon} />
               {!collapsed && <span className={styles.navLabel}>{label}</span>}
             </NavLink>
           ))}
         </nav>
 
+        {/* Collapse toggle */}
         <button
           className={styles.collapseBtn}
           onClick={() => setCollapsed((v) => !v)}
           aria-label={collapsed ? 'Mở rộng sidebar' : 'Thu nhỏ sidebar'}
         >
           {collapsed ? <ChevronRight size={15} /> : <ChevronLeft size={15} />}
-          {!collapsed && <span>Thu nhỏ</span>}
         </button>
       </aside>
 
