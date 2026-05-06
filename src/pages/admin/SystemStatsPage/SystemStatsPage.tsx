@@ -15,6 +15,7 @@ import { useSystemStats } from '@/features/qt/hooks/useAudit';
 import type { Period } from '@/types/dashboard';
 import { RefreshCw, Cpu, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import styles from './SystemStatsPage.module.css';
+import { GlassButton } from '@/components/glass';
 
 const PERIOD_LABELS: Record<Period, string> = { week: 'Tuần', month: 'Tháng', quarter: 'Quý' };
 const GROUP_COLORS: Record<string, string> = {
@@ -56,13 +57,13 @@ export function SystemStatsPage() {
         </div>
         <div className={styles.periodSelector}>
           {(['week', 'month', 'quarter'] as Period[]).map((p) => (
-            <button
+            <GlassButton
               key={p}
               className={`${styles.periodBtn} ${period === p ? styles.periodBtnActive : ''}`}
               onClick={() => setPeriod(p)}
             >
               {PERIOD_LABELS[p]}
-            </button>
+            </GlassButton>
           ))}
         </div>
       </div>

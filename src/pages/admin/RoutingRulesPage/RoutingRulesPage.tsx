@@ -9,6 +9,7 @@ import type { RoutingRuleDto } from '@/types/admin';
 import { Plus, Pencil, Power, RefreshCw, SendHorizonal, FlaskConical } from 'lucide-react';
 import styles from '../UsersPage/UsersPage.module.css';
 import ruleStyles from './RoutingRulesPage.module.css';
+import { GlassButton } from '@/components/glass';
 
 export function RoutingRulesPage() {
   const { data: rules = [], isLoading, refetch, isFetching } = useRoutingRules();
@@ -45,17 +46,17 @@ export function RoutingRulesPage() {
           <h1 className={styles.title}>Routing Rules</h1>
           <p className={styles.subtitle}>Cấu hình quy tắc phân luồng tự động theo kênh và từ khóa</p>
         </div>
-        <button className={styles.btnPrimary} onClick={() => { setEditTarget(null); setFormOpen(true); }}>
+        <GlassButton className={styles.btnPrimary} onClick={() => { setEditTarget(null); setFormOpen(true); }}>
           <Plus size={15} />
           Thêm rule
-        </button>
+        </GlassButton>
       </div>
 
       {/* Filters row */}
       <div className={styles.filters}>
-        <button className={styles.btnIcon} onClick={() => refetch()} title="Làm mới">
+        <GlassButton className={styles.btnIcon} onClick={() => refetch()} title="Làm mới">
           <RefreshCw size={14} className={isFetching ? styles.spinning : ''} />
-        </button>
+        </GlassButton>
         <span className={styles.paginationInfo}>{rules.length} rule · {rules.filter(r => r.isActive).length} đang bật</span>
       </div>
 
@@ -123,17 +124,17 @@ export function RoutingRulesPage() {
                   </td>
                   <td>
                     <div className={styles.actions}>
-                      <button className={styles.actionBtn} title="Chỉnh sửa" onClick={() => { setEditTarget(rule); setFormOpen(true); }}>
+                      <GlassButton className={styles.actionBtn} title="Chỉnh sửa" onClick={() => { setEditTarget(rule); setFormOpen(true); }}>
                         <Pencil size={13} />
-                      </button>
-                      <button
+                      </GlassButton>
+                      <GlassButton
                         className={`${styles.actionBtn} ${rule.isActive ? styles.actionDanger : styles.actionSuccess}`}
                         title={rule.isActive ? 'Tắt rule' : 'Bật rule'}
                         onClick={() => handleToggle(rule)}
                         disabled={toggleStatus.isPending}
                       >
                         <Power size={13} />
-                      </button>
+                      </GlassButton>
                     </div>
                   </td>
                 </tr>
@@ -175,10 +176,10 @@ export function RoutingRulesPage() {
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>
-            <button type="submit" className={styles.btnPrimary} disabled={testRule.isPending}>
+            <GlassButton type="submit" className={styles.btnPrimary} disabled={testRule.isPending}>
               <SendHorizonal size={14} />
               {testRule.isPending ? 'Đang test...' : 'Test'}
-            </button>
+            </GlassButton>
           </form>
 
           {testRule.data && (
@@ -211,13 +212,13 @@ export function RoutingRulesPage() {
               Tắt rule <strong>"{confirmToggle.ruleName}"</strong> có thể thay đổi luồng phân loại lead. Bạn có chắc chắn muốn tiếp tục?
             </p>
             <div className={styles.confirmActions}>
-              <button className={styles.btnSecondary} onClick={() => setConfirmToggle(null)}>Huỷ</button>
-              <button className={styles.btnDanger} onClick={() => {
+              <GlassButton className={styles.btnSecondary} onClick={() => setConfirmToggle(null)}>Huỷ</GlassButton>
+              <GlassButton className={styles.btnDanger} onClick={() => {
                 toggleStatus.mutate({ id: confirmToggle.id, isActive: false });
                 setConfirmToggle(null);
               }}>
                 Tắt rule
-              </button>
+              </GlassButton>
             </div>
           </div>
         </div>

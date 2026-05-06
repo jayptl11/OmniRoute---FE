@@ -5,6 +5,7 @@ import type { RoutingRuleDto, CreateRuleRequest } from '@/types/admin';
 import { AssignedGroup } from '@/types/admin';
 import { X, Plus, XCircle } from 'lucide-react';
 import styles from '../UsersPage/UsersPage.module.css';
+import { GlassButton } from '@/components/glass';
 
 const CHANNELS = ['Hotline', 'Walkin', 'Webform', 'Chat', 'Email', 'Zalo', 'Referral'];
 
@@ -88,7 +89,7 @@ export function RuleFormDialog({ rule, onClose }: Props) {
       <div className={styles.dialog} style={{ maxWidth: 560 }}>
         <div className={styles.dialogHeader}>
           <h2 className={styles.dialogTitle}>{isEdit ? 'Chỉnh sửa rule' : 'Tạo rule mới'}</h2>
-          <button className={styles.closeBtn} onClick={onClose}><X size={16} /></button>
+          <GlassButton className={styles.closeBtn} onClick={onClose}><X size={16} /></GlassButton>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -125,12 +126,12 @@ export function RuleFormDialog({ rule, onClose }: Props) {
               </p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {CHANNELS.map((ch) => (
-                  <button key={ch} type="button"
+                  <GlassButton key={ch} type="button"
                     className={form.conditionChannels?.includes(ch) ? styles.btnPrimary : styles.btnSecondary}
                     style={{ padding: '4px 12px', fontSize: '0.775rem' }}
                     onClick={() => toggleChannel(ch)}>
                     {ch}
-                  </button>
+                  </GlassButton>
                 ))}
               </div>
             </div>
@@ -142,9 +143,9 @@ export function RuleFormDialog({ rule, onClose }: Props) {
                   value={kwInput}
                   onChange={(e) => setKwInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addKeyword(); } }} />
-                <button type="button" className={styles.iconBtn} onClick={addKeyword}>
+                <GlassButton type="button" className={styles.iconBtn} onClick={addKeyword}>
                   <Plus size={14} />
-                </button>
+                </GlassButton>
               </div>
               {form.conditionKeywords && form.conditionKeywords.length > 0 && (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
@@ -155,10 +156,10 @@ export function RuleFormDialog({ rule, onClose }: Props) {
                       borderRadius: 20, fontSize: '0.775rem', color: '#6366f1', fontWeight: 500,
                     }}>
                       {kw}
-                      <button type="button" onClick={() => removeKeyword(kw)}
+                      <GlassButton type="button" onClick={() => removeKeyword(kw)}
                         style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', color: 'inherit' }}>
                         <XCircle size={12} />
-                      </button>
+                      </GlassButton>
                     </span>
                   ))}
                 </div>
@@ -178,10 +179,10 @@ export function RuleFormDialog({ rule, onClose }: Props) {
           </div>
 
           <div className={styles.dialogFooter}>
-            <button type="button" className={styles.btnSecondary} onClick={onClose}>Huỷ</button>
-            <button type="submit" className={styles.btnPrimary} disabled={isPending}>
+            <GlassButton type="button" className={styles.btnSecondary} onClick={onClose}>Huỷ</GlassButton>
+            <GlassButton type="submit" className={styles.btnPrimary} disabled={isPending}>
               {isPending ? 'Đang lưu...' : isEdit ? 'Lưu thay đổi' : 'Tạo rule'}
-            </button>
+            </GlassButton>
           </div>
         </form>
       </div>

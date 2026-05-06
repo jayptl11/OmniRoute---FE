@@ -6,6 +6,7 @@ import {
 } from '@/features/notifications/hooks/useNotifications';
 import type { NotificationConfigDto } from '@/types/notifications';
 import styles from './NotificationConfigPage.module.css';
+import { GlassButton } from '@/components/glass';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -58,7 +59,7 @@ function ToggleRow({ cfg, onToggle, isPending }: ToggleRowProps) {
         </span>
       </div>
 
-      <button
+      <GlassButton
         id={`toggle-${cfg.id}`}
         className={`${styles.toggle} ${cfg.isEnabled ? styles.toggleOn : styles.toggleOff}`}
         onClick={() => onToggle(cfg.id, cfg.isEnabled)}
@@ -73,7 +74,7 @@ function ToggleRow({ cfg, onToggle, isPending }: ToggleRowProps) {
           <ToggleLeft size={24} strokeWidth={1.5} />
         )}
         <span>{cfg.isEnabled ? 'Bật' : 'Tắt'}</span>
-      </button>
+      </GlassButton>
     </div>
   );
 }

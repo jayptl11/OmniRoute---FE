@@ -11,6 +11,7 @@ import type { StoreDto, GetStoresParams, StoreManagerDto } from '@/types/admin';
 import { Plus, Pencil, Power, RefreshCw, X, MapPin, Search, AlertTriangle } from 'lucide-react';
 import { GooglePlacesInput } from '@/components/GooglePlacesInput';
 import styles from '../UsersPage/UsersPage.module.css';
+import { GlassButton } from '@/components/glass';
 
 // ── ManagerAutocomplete ────────────────────────────────────────────────────────
 
@@ -72,9 +73,9 @@ function ManagerAutocomplete({ value, displayName, onChange, onClear }: ManagerA
           autoComplete="off"
         />
         {value && (
-          <button type="button" className={styles.btnIcon} onClick={handleClear} title="Xóa quản lý">
+          <GlassButton type="button" className={styles.btnIcon} onClick={handleClear} title="Xóa quản lý">
             <X size={13} />
-          </button>
+          </GlassButton>
         )}
       </div>
       {open && (inputVal.length > 0 || results.length > 0) && (
@@ -95,7 +96,7 @@ function ManagerAutocomplete({ value, displayName, onChange, onClear }: ManagerA
             </div>
           )}
           {results.map((m) => (
-            <button
+            <GlassButton
               key={m.userId}
               type="button"
               onClick={() => handleSelect(m)}
@@ -123,7 +124,7 @@ function ManagerAutocomplete({ value, displayName, onChange, onClear }: ManagerA
               {m.hasStore && (
                 <AlertTriangle size={13} style={{ color: '#f59e0b', flexShrink: 0 }} />
               )}
-            </button>
+            </GlassButton>
           ))}
         </div>
       )}
@@ -240,15 +241,15 @@ export function StoresPage() {
           <h1 className={styles.title}>Cửa hàng</h1>
           <p className={styles.subtitle}>Quản lý danh sách cửa hàng và công suất tiếp nhận</p>
         </div>
-        <button className={styles.btnPrimary} onClick={openCreate}>
+        <GlassButton className={styles.btnPrimary} onClick={openCreate}>
           <Plus size={15} />
           Thêm cửa hàng
-        </button>
+        </GlassButton>
       </div>
 
       {/* Filters */}
       <div className={styles.filters}>
-        <div style={{ display: 'flex', gap: 0, border: '1.5px solid var(--color-border)', borderRadius: 7, overflow: 'hidden', background: 'var(--color-bg)', flex: 1, maxWidth: 300 }}>
+        <div style={{ display: 'flex', gap: 0, border: '1px solid rgba(255, 255, 255, 0.5)', borderRadius: 8, overflow: 'hidden', background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(24px)', flex: 1, maxWidth: 300 }}>
           <Search size={14} style={{ margin: 'auto 8px', color: 'var(--color-text-muted)', flexShrink: 0 }} />
           <input
             className={styles.input}
@@ -258,9 +259,9 @@ export function StoresPage() {
             onChange={(e) => setSearchInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           />
-          <button className={styles.btnIcon} style={{ borderLeft: '1.5px solid var(--color-border)', borderRadius: 0 }} onClick={handleSearch}>
+          <GlassButton className={styles.btnIcon} style={{ borderLeft: '1.5px solid var(--color-border)', borderRadius: 0 }} onClick={handleSearch}>
             Tìm
-          </button>
+          </GlassButton>
         </div>
 
         <select
@@ -285,9 +286,9 @@ export function StoresPage() {
           <option value="false">Vô hiệu</option>
         </select>
 
-        <button className={styles.btnIcon} onClick={() => refetch()} title="Làm mới">
+        <GlassButton className={styles.btnIcon} onClick={() => refetch()} title="Làm mới">
           <RefreshCw size={14} className={isFetching ? styles.spinning : ''} />
-        </button>
+        </GlassButton>
         <span className={styles.paginationInfo}>{stores.length} cửa hàng</span>
       </div>
 
@@ -353,17 +354,17 @@ export function StoresPage() {
                 </td>
                 <td>
                   <div className={styles.actions}>
-                    <button className={styles.actionBtn} title="Chỉnh sửa" onClick={() => openEdit(store)}>
+                    <GlassButton className={styles.actionBtn} title="Chỉnh sửa" onClick={() => openEdit(store)}>
                       <Pencil size={13} />
-                    </button>
-                    <button
+                    </GlassButton>
+                    <GlassButton
                       className={`${styles.actionBtn} ${store.isActive ? styles.actionDanger : styles.actionSuccess}`}
                       title={store.isActive ? 'Vô hiệu hóa' : 'Kích hoạt'}
                       onClick={() => toggleStatus.mutate({ id: store.id, isActive: !store.isActive })}
                       disabled={toggleStatus.isPending}
                     >
                       <Power size={13} />
-                    </button>
+                    </GlassButton>
                   </div>
                 </td>
               </tr>
@@ -378,7 +379,7 @@ export function StoresPage() {
           <div className={styles.dialog}>
             <div className={styles.dialogHeader}>
               <h2 className={styles.dialogTitle}>{editTarget ? 'Chỉnh sửa cửa hàng' : 'Thêm cửa hàng'}</h2>
-              <button className={styles.closeBtn} onClick={() => setFormOpen(false)}><X size={16} /></button>
+              <GlassButton className={styles.closeBtn} onClick={() => setFormOpen(false)}><X size={16} /></GlassButton>
             </div>
             <form onSubmit={handleSubmit}>
               <div className={styles.dialogBody}>
@@ -445,10 +446,10 @@ export function StoresPage() {
               </div>
 
               <div className={styles.dialogFooter}>
-                <button type="button" className={styles.btnSecondary} onClick={() => setFormOpen(false)}>Huỷ</button>
-                <button type="submit" className={styles.btnPrimary} disabled={isPending}>
+                <GlassButton type="button" className={styles.btnSecondary} onClick={() => setFormOpen(false)}>Huỷ</GlassButton>
+                <GlassButton type="submit" className={styles.btnPrimary} disabled={isPending}>
                   {isPending ? 'Đang lưu...' : editTarget ? 'Lưu' : 'Thêm'}
-                </button>
+                </GlassButton>
               </div>
             </form>
           </div>

@@ -4,6 +4,7 @@ import { extractErrorMessage } from '@/lib/errors';
 import type { UserDto, CreateUserRequest, UpdateUserRequest } from '@/types/admin';
 import { X, Eye, EyeOff } from 'lucide-react';
 import styles from './UsersPage.module.css';
+import { GlassButton } from '@/components/glass';
 
 interface Props {
   user: UserDto | null; // null = create mode
@@ -80,7 +81,7 @@ export function UserFormDialog({ user, onClose }: Props) {
           <h2 className={styles.dialogTitle}>
             {isEdit ? 'Chỉnh sửa tài khoản' : 'Tạo tài khoản mới'}
           </h2>
-          <button className={styles.closeBtn} onClick={onClose}><X size={16} /></button>
+          <GlassButton className={styles.closeBtn} onClick={onClose}><X size={16} /></GlassButton>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -176,9 +177,9 @@ export function UserFormDialog({ user, onClose }: Props) {
                       value={form.password}
                       onChange={(e) => set('password', e.target.value)}
                     />
-                    <button type="button" className={styles.iconBtn} onClick={() => setShowPwd((v) => !v)}>
+                    <GlassButton type="button" className={styles.iconBtn} onClick={() => setShowPwd((v) => !v)}>
                       {showPwd ? <EyeOff size={14} /> : <Eye size={14} />}
-                    </button>
+                    </GlassButton>
                   </div>
                 </div>
 
@@ -200,12 +201,12 @@ export function UserFormDialog({ user, onClose }: Props) {
           </div>
 
           <div className={styles.dialogFooter}>
-            <button type="button" className={styles.btnSecondary} onClick={onClose}>
+            <GlassButton type="button" className={styles.btnSecondary} onClick={onClose}>
               Hủy
-            </button>
-            <button type="submit" className={styles.btnPrimary} disabled={isPending || rolesLoading}>
+            </GlassButton>
+            <GlassButton type="submit" className={styles.btnPrimary} disabled={isPending || rolesLoading}>
               {isPending ? 'Đang lưu...' : isEdit ? 'Lưu thay đổi' : 'Tạo tài khoản'}
-            </button>
+            </GlassButton>
           </div>
         </form>
       </div>

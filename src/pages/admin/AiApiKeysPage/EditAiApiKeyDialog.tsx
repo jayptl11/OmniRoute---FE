@@ -4,6 +4,7 @@ import { useUpdateAiApiKey } from '@/features/qt/hooks/useAiApiKeys';
 import { extractErrorMessage } from '@/lib/errors';
 import type { AiApiKeyDto } from '@/types/admin';
 import styles from './AiApiKeysPage.module.css';
+import { GlassButton } from '@/components/glass';
 
 interface Props {
   keyItem: AiApiKeyDto;
@@ -62,9 +63,9 @@ export function EditAiApiKeyDialog({ keyItem, onClose }: Props) {
       <div className={styles.dialog} role="dialog" aria-modal="true">
         <div className={styles.dialogHeader}>
           <h2 className={styles.dialogTitle}>Cập nhật API Key</h2>
-          <button className={styles.closeBtn} onClick={onClose} aria-label="Đóng">
+          <GlassButton className={styles.closeBtn} onClick={onClose} aria-label="Đóng">
             <X size={16} />
-          </button>
+          </GlassButton>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -101,14 +102,14 @@ export function EditAiApiKeyDialog({ keyItem, onClose }: Props) {
                   placeholder="Để trống = giữ nguyên key cũ"
                   autoComplete="off"
                 />
-                <button
+                <GlassButton
                   type="button"
                   className={styles.iconBtn}
                   onClick={() => setShowKey((v) => !v)}
                   aria-label={showKey ? 'Ẩn key' : 'Hiện key'}
                 >
                   {showKey ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
+                </GlassButton>
               </div>
             </div>
 
@@ -174,12 +175,12 @@ export function EditAiApiKeyDialog({ keyItem, onClose }: Props) {
           </div>
 
           <div className={styles.dialogFooter}>
-            <button type="button" className={styles.btnSecondary} onClick={onClose}>
+            <GlassButton type="button" className={styles.btnSecondary} onClick={onClose}>
               Huỷ
-            </button>
-            <button type="submit" className={styles.btnPrimary} disabled={update.isPending}>
+            </GlassButton>
+            <GlassButton type="submit" className={styles.btnPrimary} disabled={update.isPending}>
               {update.isPending ? 'Đang lưu...' : 'Lưu thay đổi'}
-            </button>
+            </GlassButton>
           </div>
         </form>
       </div>

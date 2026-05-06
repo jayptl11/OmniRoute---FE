@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { useLogout } from '@/features/auth';
@@ -11,8 +10,6 @@ import {
   UsersRound,
   Timer,
   LogOut,
-  ChevronLeft,
-  ChevronRight,
   LayoutDashboard,
   Bell,
   FileText,
@@ -36,7 +33,6 @@ const NAV_ITEMS = [
 ];
 
 export function AdminLayout() {
-  const [collapsed, setCollapsed] = useState(false);
   const user = useAuthStore((s) => s.user);
   const logout = useLogout();
   const navigate = useNavigate();
@@ -44,20 +40,17 @@ export function AdminLayout() {
   return (
     <div className={styles.shell}>
       {/* Sidebar */}
-      <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
+      <aside className={styles.sidebar}>
         {/* Logo */}
         <div className={styles.sidebarHeader}>
           <div className={styles.logoMark}>
-            <GitBranch size={16} strokeWidth={2.5} />
+            <GitBranch size={20} strokeWidth={2.5} />
           </div>
-          {!collapsed && (
-            <span className={styles.logoText}>OmniRoute</span>
-          )}
+          <span className={styles.logoText}>OMNIROUTE</span>
         </div>
 
         {/* Nav */}
         <nav className={styles.nav}>
-          <p className={styles.navSection}>{!collapsed && 'Quản trị'}</p>
           {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
@@ -65,23 +58,12 @@ export function AdminLayout() {
               className={({ isActive }) =>
                 `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
               }
-              title={collapsed ? label : undefined}
             >
-              <Icon size={17} strokeWidth={1.8} className={styles.navIcon} />
-              {!collapsed && <span className={styles.navLabel}>{label}</span>}
+              <Icon size={20} strokeWidth={2} className={styles.navIcon} />
+              <span className={styles.navLabel}>{label}</span>
             </NavLink>
           ))}
         </nav>
-
-        {/* Collapse toggle */}
-        <button
-          className={styles.collapseBtn}
-          onClick={() => setCollapsed((v) => !v)}
-          aria-label={collapsed ? 'Mở rộng sidebar' : 'Thu nhỏ sidebar'}
-        >
-          {collapsed ? <ChevronRight size={15} /> : <ChevronLeft size={15} />}
-          {!collapsed && <span>Thu nhỏ</span>}
-        </button>
       </aside>
 
       {/* Main area */}

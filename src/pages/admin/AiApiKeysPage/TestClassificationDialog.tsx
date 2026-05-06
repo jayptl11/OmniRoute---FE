@@ -9,6 +9,7 @@ import type {
   AssignedGroupString,
 } from '@/types/admin';
 import styles from './AiApiKeysPage.module.css';
+import { GlassButton } from '@/components/glass';
 
 interface Props {
   keyItem: AiApiKeyDto;
@@ -102,9 +103,9 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
       <div className={styles.dialog} role="dialog" aria-modal="true" style={{ maxWidth: 520 }}>
         <div className={styles.dialogHeader}>
           <h2 className={styles.dialogTitle}>Test Lead Classification</h2>
-          <button className={styles.closeBtn} onClick={onClose} aria-label="Đóng">
+          <GlassButton className={styles.closeBtn} onClick={onClose} aria-label="Đóng">
             <X size={16} />
-          </button>
+          </GlassButton>
         </div>
 
         <div className={styles.dialogBody}>
@@ -160,7 +161,7 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
           </div>
 
           {/* Run test button */}
-          <button
+          <GlassButton
             className={styles.btnPrimary}
             onClick={handleRunTest}
             disabled={!needDescription.trim() || testClassification.isPending}
@@ -177,7 +178,7 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
                 Run Test
               </>
             )}
-          </button>
+          </GlassButton>
 
           {/* Result */}
           {testClassification.isError && (
@@ -276,9 +277,9 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
         </div>
 
         <div className={styles.dialogFooter}>
-          <button className={styles.btnSecondary} onClick={onClose}>
+          <GlassButton className={styles.btnSecondary} onClick={onClose}>
             Đóng
-          </button>
+          </GlassButton>
         </div>
       </div>
     </div>

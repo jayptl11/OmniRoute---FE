@@ -6,6 +6,7 @@ import { AssignedGroup } from '@/types/admin';
 import type { TeamDto, CreateTeamRequest, UpdateTeamRequest } from '@/types/admin';
 import { Plus, Pencil, Power, RefreshCw, X, UserCheck } from 'lucide-react';
 import styles from '../UsersPage/UsersPage.module.css';
+import { GlassButton } from '@/components/glass';
 
 const TEAM_TYPES = [
   { label: 'Sale', value: AssignedGroup.Sale },
@@ -97,10 +98,10 @@ export function TeamsPage() {
           <h1 className={styles.title}>Nhóm</h1>
           <p className={styles.subtitle}>Quản lý các nhóm Sale và CSKH trong hệ thống</p>
         </div>
-        <button className={styles.btnPrimary} onClick={openCreate}>
+        <GlassButton className={styles.btnPrimary} onClick={openCreate}>
           <Plus size={15} />
           Thêm nhóm
-        </button>
+        </GlassButton>
       </div>
 
       <div className={styles.filters}>
@@ -110,9 +111,9 @@ export function TeamsPage() {
             <option key={value} value={value}>{label}</option>
           ))}
         </select>
-        <button className={styles.btnIcon} onClick={() => refetch()} title="Làm mới">
+        <GlassButton className={styles.btnIcon} onClick={() => refetch()} title="Làm mới">
           <RefreshCw size={14} className={isFetching ? styles.spinning : ''} />
-        </button>
+        </GlassButton>
         <span className={styles.paginationInfo}>{teams.length} nhóm</span>
       </div>
 
@@ -159,17 +160,17 @@ export function TeamsPage() {
                   <td className={styles.cellMuted}>{new Date(team.createdAt).toLocaleDateString('vi-VN')}</td>
                   <td>
                     <div className={styles.actions}>
-                      <button className={styles.actionBtn} title="Chỉnh sửa" onClick={() => openEdit(team)}>
+                      <GlassButton className={styles.actionBtn} title="Chỉnh sửa" onClick={() => openEdit(team)}>
                         <Pencil size={13} />
-                      </button>
-                      <button
+                      </GlassButton>
+                      <GlassButton
                         className={`${styles.actionBtn} ${team.isActive ? styles.actionDanger : styles.actionSuccess}`}
                         title={team.isActive ? 'Vô hiệu hóa' : 'Kích hoạt'}
                         onClick={() => toggleStatus.mutate({ id: team.id, isActive: !team.isActive })}
                         disabled={toggleStatus.isPending}
                       >
                         <Power size={13} />
-                      </button>
+                      </GlassButton>
                     </div>
                   </td>
                 </tr>
@@ -184,7 +185,7 @@ export function TeamsPage() {
           <div className={styles.dialog}>
             <div className={styles.dialogHeader}>
               <h2 className={styles.dialogTitle}>{editTarget ? 'Chỉnh sửa nhóm' : 'Thêm nhóm mới'}</h2>
-              <button className={styles.closeBtn} onClick={() => setFormOpen(false)}><X size={16} /></button>
+              <GlassButton className={styles.closeBtn} onClick={() => setFormOpen(false)}><X size={16} /></GlassButton>
             </div>
             <form onSubmit={handleSubmit}>
               <div className={styles.dialogBody}>
@@ -244,10 +245,10 @@ export function TeamsPage() {
                 {error && <p className={styles.errorMsg}>{error}</p>}
               </div>
               <div className={styles.dialogFooter}>
-                <button type="button" className={styles.btnSecondary} onClick={() => setFormOpen(false)}>Huỷ</button>
-                <button type="submit" className={styles.btnPrimary} disabled={isPending}>
+                <GlassButton type="button" className={styles.btnSecondary} onClick={() => setFormOpen(false)}>Huỷ</GlassButton>
+                <GlassButton type="submit" className={styles.btnPrimary} disabled={isPending}>
                   {isPending ? 'Đang lưu...' : editTarget ? 'Lưu' : 'Thêm nhóm'}
-                </button>
+                </GlassButton>
               </div>
             </form>
           </div>

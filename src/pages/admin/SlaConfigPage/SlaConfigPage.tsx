@@ -4,6 +4,7 @@ import { extractErrorMessage } from '@/lib/errors';
 import type { SlaConfigDto, UpdateSlaConfigRequest } from '@/types/admin';
 import { Pencil, X, RefreshCw } from 'lucide-react';
 import styles from '../UsersPage/UsersPage.module.css';
+import { GlassButton } from '@/components/glass';
 
 const GROUPS = ['Sale', 'Cskh', 'StoreSupport'] as const;
 const PRIORITIES = ['High', 'Medium', 'Low'] as const;
@@ -58,9 +59,9 @@ export function SlaConfigPage() {
             9 cấu hình pre-seed (Sale · CSKH · StoreSupport × High · Medium · Low). Chỉ cập nhật hoặc bật/tắt.
           </p>
         </div>
-        <button className={styles.btnIcon} onClick={() => refetch()} title="Làm mới">
+        <GlassButton className={styles.btnIcon} onClick={() => refetch()} title="Làm mới">
           <RefreshCw size={14} className={isFetching ? styles.spinning : ''} />
-        </button>
+        </GlassButton>
       </div>
 
       {/* SLA Grid */}
@@ -90,9 +91,9 @@ export function SlaConfigPage() {
                     <p className={styles.slaValue}>{cfg.maxHours}h</p>
                     <p className={styles.slaWarn}>⚠ cảnh báo {cfg.warningBeforeHours}h trước</p>
                     <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
-                      <button className={styles.actionBtn} title="Chỉnh sửa" onClick={() => openEdit(cfg)}>
+                      <GlassButton className={styles.actionBtn} title="Chỉnh sửa" onClick={() => openEdit(cfg)}>
                         <Pencil size={12} />
-                      </button>
+                      </GlassButton>
                       <span className={`${styles.statusBadge} ${cfg.isActive ? styles.statusActive : styles.statusInactive}`}
                         style={{ cursor: 'pointer' }}
                         onClick={() => toggleSla.mutate({ id: cfg.id, isActive: !cfg.isActive })}
@@ -117,7 +118,7 @@ export function SlaConfigPage() {
               <h2 className={styles.dialogTitle}>
                 SLA — {GROUP_LABELS[editTarget.assignedGroup]} · {editTarget.priorityLevel}
               </h2>
-              <button className={styles.closeBtn} onClick={() => setEditTarget(null)}><X size={16} /></button>
+              <GlassButton className={styles.closeBtn} onClick={() => setEditTarget(null)}><X size={16} /></GlassButton>
             </div>
             <form onSubmit={handleSubmit}>
               <div className={styles.dialogBody}>
@@ -141,10 +142,10 @@ export function SlaConfigPage() {
                 {error && <p className={styles.errorMsg}>{error}</p>}
               </div>
               <div className={styles.dialogFooter}>
-                <button type="button" className={styles.btnSecondary} onClick={() => setEditTarget(null)}>Huỷ</button>
-                <button type="submit" className={styles.btnPrimary} disabled={updateSla.isPending}>
+                <GlassButton type="button" className={styles.btnSecondary} onClick={() => setEditTarget(null)}>Huỷ</GlassButton>
+                <GlassButton type="submit" className={styles.btnPrimary} disabled={updateSla.isPending}>
                   {updateSla.isPending ? 'Đang lưu...' : 'Lưu'}
-                </button>
+                </GlassButton>
               </div>
             </form>
           </div>

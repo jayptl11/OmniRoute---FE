@@ -4,6 +4,7 @@ import { extractErrorMessage } from '@/lib/errors';
 import type { UserDto } from '@/types/admin';
 import { X, Mail, KeyRound, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import styles from './UsersPage.module.css';
+import { GlassButton } from '@/components/glass';
 
 interface Props {
   user: UserDto;
@@ -53,7 +54,7 @@ export function ResetPasswordDialog({ user, onClose }: Props) {
       <div className={styles.dialog}>
         <div className={styles.dialogHeader}>
           <h2 className={styles.dialogTitle}>Reset mật khẩu — {user.username}</h2>
-          <button className={styles.closeBtn} onClick={onClose}><X size={16} /></button>
+          <GlassButton className={styles.closeBtn} onClick={onClose}><X size={16} /></GlassButton>
         </div>
 
         <div className={styles.dialogBody}>
@@ -69,7 +70,7 @@ export function ResetPasswordDialog({ user, onClose }: Props) {
             </div>
           ) : mode === 'choose' ? (
             <div className={styles.optionGrid}>
-              <button
+              <GlassButton
                 className={styles.optionCard}
                 onClick={() => setMode('email')}
                 id="reset-option-email"
@@ -79,8 +80,8 @@ export function ResetPasswordDialog({ user, onClose }: Props) {
                 <span className={styles.optionDesc}>
                   Hệ thống gửi link reset tới <strong>{user.email}</strong>
                 </span>
-              </button>
-              <button
+              </GlassButton>
+              <GlassButton
                 className={styles.optionCard}
                 onClick={() => setMode('temp')}
                 id="reset-option-temp"
@@ -90,7 +91,7 @@ export function ResetPasswordDialog({ user, onClose }: Props) {
                 <span className={styles.optionDesc}>
                   Nhập thủ công mật khẩu tạm thời cho user
                 </span>
-              </button>
+              </GlassButton>
             </div>
           ) : mode === 'email' ? (
             <div>
@@ -114,9 +115,9 @@ export function ResetPasswordDialog({ user, onClose }: Props) {
                     value={tempPwd}
                     onChange={(e) => setTempPwd(e.target.value)}
                   />
-                  <button type="button" className={styles.iconBtn} onClick={() => setShowPwd((v) => !v)}>
+                  <GlassButton type="button" className={styles.iconBtn} onClick={() => setShowPwd((v) => !v)}>
                     {showPwd ? <EyeOff size={14} /> : <Eye size={14} />}
-                  </button>
+                  </GlassButton>
                 </div>
               </div>
               {error && <p className={styles.errorMsg}>{error}</p>}
@@ -126,33 +127,33 @@ export function ResetPasswordDialog({ user, onClose }: Props) {
 
         <div className={styles.dialogFooter}>
           {done ? (
-            <button className={styles.btnPrimary} onClick={onClose}>Đóng</button>
+            <GlassButton className={styles.btnPrimary} onClick={onClose}>Đóng</GlassButton>
           ) : (
             <>
-              <button
+              <GlassButton
                 className={styles.btnSecondary}
                 onClick={() => (mode === 'choose' ? onClose() : setMode('choose'))}
               >
                 {mode === 'choose' ? 'Huỷ' : 'Quay lại'}
-              </button>
+              </GlassButton>
               {mode === 'email' && (
-                <button
+                <GlassButton
                   className={styles.btnPrimary}
                   onClick={handleSendLink}
                   disabled={sendLink.isPending}
                 >
                   {sendLink.isPending ? 'Đang gửi...' : 'Gửi email'}
-                </button>
+                </GlassButton>
               )}
               {mode === 'temp' && (
-                <button
+                <GlassButton
                   type="submit"
                   form="form-set-temp"
                   className={styles.btnPrimary}
                   disabled={setTemp.isPending}
                 >
                   {setTemp.isPending ? 'Đang lưu...' : 'Đặt mật khẩu'}
-                </button>
+                </GlassButton>
               )}
             </>
           )}

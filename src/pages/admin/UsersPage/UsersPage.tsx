@@ -20,6 +20,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import styles from './UsersPage.module.css';
+import { GlassButton } from '@/components/glass';
 
 const PAGE_SIZE = 20;
 
@@ -68,10 +69,10 @@ export function UsersPage() {
             Quản lý toàn bộ tài khoản người dùng trong hệ thống
           </p>
         </div>
-        <button className={styles.btnPrimary} onClick={() => { setEditTarget(null); setFormOpen(true); }}>
+        <GlassButton className={styles.btnPrimary} onClick={() => { setEditTarget(null); setFormOpen(true); }}>
           <Plus size={15} />
           Tạo tài khoản
-        </button>
+        </GlassButton>
       </div>
 
       {/* Filters */}
@@ -112,9 +113,9 @@ export function UsersPage() {
           <option value="true">Đang hoạt động</option>
           <option value="false">Đã khóa</option>
         </select>
-        <button className={styles.btnIcon} onClick={() => refetch()} title="Làm mới">
+        <GlassButton className={styles.btnIcon} onClick={() => refetch()} title="Làm mới">
           <RefreshCw size={14} className={isFetching ? styles.spinning : ''} />
-        </button>
+        </GlassButton>
       </div>
 
       {/* Table */}
@@ -175,28 +176,28 @@ export function UsersPage() {
                     </td>
                     <td>
                       <div className={styles.actions}>
-                        <button
+                        <GlassButton
                           className={styles.actionBtn}
                           title="Chỉnh sửa"
                           onClick={() => { setEditTarget(user); setFormOpen(true); }}
                         >
                           <Pencil size={13} />
-                        </button>
-                        <button
+                        </GlassButton>
+                        <GlassButton
                           className={styles.actionBtn}
                           title="Reset mật khẩu"
                           onClick={() => setResetTarget(user)}
                         >
                           <KeyRound size={13} />
-                        </button>
-                        <button
+                        </GlassButton>
+                        <GlassButton
                           className={`${styles.actionBtn} ${user.isActive ? styles.actionDanger : styles.actionSuccess}`}
                           title={user.isActive ? 'Khóa tài khoản' : 'Mở khóa'}
                           onClick={() => handleToggleStatus(user)}
                           disabled={toggleStatus.isPending}
                         >
                           {user.isActive ? <Lock size={13} /> : <Unlock size={13} />}
-                        </button>
+                        </GlassButton>
                       </div>
                     </td>
                   </tr>
@@ -213,20 +214,20 @@ export function UsersPage() {
             {total} tài khoản · Trang {page}/{totalPages}
           </span>
           <div className={styles.paginationBtns}>
-            <button
+            <GlassButton
               className={styles.pageBtn}
               disabled={page <= 1}
               onClick={() => setParams((p) => ({ ...p, page: (p.page ?? 1) - 1 }))}
             >
               <ChevronLeft size={14} />
-            </button>
-            <button
+            </GlassButton>
+            <GlassButton
               className={styles.pageBtn}
               disabled={page >= totalPages}
               onClick={() => setParams((p) => ({ ...p, page: (p.page ?? 1) + 1 }))}
             >
               <ChevronRight size={14} />
-            </button>
+            </GlassButton>
           </div>
         </div>
       )}
@@ -244,10 +245,10 @@ export function UsersPage() {
               chưa xử lý. Vui lòng reassign trước khi khóa, hoặc xác nhận khóa ngay.
             </p>
             <div className={styles.confirmActions}>
-              <button className={styles.btnSecondary} onClick={() => setPendingToggle(null)}>
+              <GlassButton className={styles.btnSecondary} onClick={() => setPendingToggle(null)}>
                 Huỷ
-              </button>
-              <button
+              </GlassButton>
+              <GlassButton
                 className={styles.btnDanger}
                 onClick={() => {
                   toggleStatus.mutate({ id: pendingToggle.user.userId, isActive: false });
@@ -255,7 +256,7 @@ export function UsersPage() {
                 }}
               >
                 Khóa tài khoản
-              </button>
+              </GlassButton>
             </div>
           </div>
         </div>
