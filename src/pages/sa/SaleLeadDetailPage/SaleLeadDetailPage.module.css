@@ -27,9 +27,11 @@
   justify-content: center;
   width: 34px;
   height: 34px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 8px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: #64748b;
   cursor: pointer;
   transition: all 0.15s;
@@ -37,7 +39,7 @@
 }
 
 .backBtn:hover {
-  background: #f8fafc;
+  background: rgba(255, 255, 255, 0.7);
   color: #0f172a;
 }
 
@@ -83,10 +85,13 @@
 
 /* ── Cards ───────────────────────────────────────────────────────────────── */
 .card {
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
 .cardHeader {
@@ -94,7 +99,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 20px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .cardTitle {
@@ -161,7 +167,8 @@
   display: inline-flex;
   align-items: center;
   padding: 3px 9px;
-  background: #dbeafe;
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.15);
   color: #1e40af;
   border-radius: 20px;
   font-size: 0.75rem;
@@ -174,7 +181,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 11px 20px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   gap: 10px;
 }
 
@@ -217,9 +224,9 @@
   font-weight: 700;
 }
 
-.priorityHigh   { background: #fee2e2; color: #b91c1c; }
-.priorityMedium { background: #ffedd5; color: #c2410c; }
-.priorityLow    { background: #dcfce7; color: #15803d; }
+.priorityHigh   { background: rgba(239, 68, 68, 0.1);  color: #b91c1c; }
+.priorityMedium { background: rgba(245, 158, 11, 0.1); color: #c2410c; }
+.priorityLow    { background: rgba(22, 163, 74, 0.1);  color: #15803d; }
 
 .statusBadge {
   display: inline-flex;
@@ -230,13 +237,13 @@
   font-weight: 600;
 }
 
-.statusAssigned  { background: #dbeafe; color: #1d4ed8; }
-.statusContacted { background: #e0e7ff; color: #4338ca; }
-.statusProgress  { background: #d1fae5; color: #065f46; }
-.statusWon       { background: #d1fae5; color: #065f46; }
-.statusLost      { background: #fee2e2; color: #b91c1c; }
-.statusCancelled { background: #f1f5f9; color: #64748b; }
-.statusDefault   { background: #f1f5f9; color: #475569; }
+.statusAssigned  { background: rgba(37, 99, 235, 0.1);   color: #1d4ed8; }
+.statusContacted { background: rgba(99, 102, 241, 0.1);  color: #4338ca; }
+.statusProgress  { background: rgba(5, 150, 105, 0.1);   color: #065f46; }
+.statusWon       { background: rgba(5, 150, 105, 0.1);   color: #065f46; }
+.statusLost      { background: rgba(239, 68, 68, 0.1);   color: #b91c1c; }
+.statusCancelled { background: rgba(100, 116, 139, 0.1); color: #64748b; }
+.statusDefault   { background: rgba(100, 116, 139, 0.1); color: #475569; }
 
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
 .btnPrimary {
@@ -244,17 +251,19 @@
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  border: none;
+  border: 1px solid rgba(37, 99, 235, 0.3);
   border-radius: 8px;
-  background: #2563eb;
-  color: #fff;
+  background: rgba(37, 99, 235, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #1d4ed8;
   font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: all 0.15s;
 }
 
-.btnPrimary:hover { background: #1d4ed8; }
+.btnPrimary:hover { background: rgba(37, 99, 235, 0.25); }
 .btnPrimary:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .btnSecondary {
@@ -262,9 +271,11 @@
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 8px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: #374151;
   font-size: 0.8125rem;
   font-weight: 500;
@@ -273,8 +284,8 @@
 }
 
 .btnSecondary:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
 .btnSecondary:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -284,9 +295,11 @@
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  border: 1px solid #fcd34d;
+  border: 1px solid rgba(245, 158, 11, 0.4);
   border-radius: 8px;
-  background: #fffbeb;
+  background: rgba(245, 158, 11, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: #b45309;
   font-size: 0.8125rem;
   font-weight: 600;
@@ -294,7 +307,7 @@
   transition: all 0.15s;
 }
 
-.btnWarning:hover { background: #fef3c7; border-color: #f59e0b; }
+.btnWarning:hover { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.6); }
 .btnWarning:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ── Activity Timeline ───────────────────────────────────────────────────── */
@@ -321,7 +334,7 @@
   top: 30px;
   bottom: 0;
   width: 2px;
-  background: #f1f5f9;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .timelineIconWrap {
@@ -336,11 +349,11 @@
   z-index: 1;
 }
 
-.actionCreated   { background: #f1f5f9; color: #64748b; }
-.actionAssigned  { background: #dbeafe; color: #1d4ed8; }
-.actionStatus    { background: #e0e7ff; color: #4338ca; }
-.actionNote      { background: #d1fae5; color: #065f46; }
-.actionUpdated   { background: #ffedd5; color: #c2410c; }
+.actionCreated   { background: rgba(100, 116, 139, 0.12); color: #64748b; }
+.actionAssigned  { background: rgba(37, 99, 235, 0.12);   color: #1d4ed8; }
+.actionStatus    { background: rgba(99, 102, 241, 0.12);  color: #4338ca; }
+.actionNote      { background: rgba(5, 150, 105, 0.12);   color: #065f46; }
+.actionUpdated   { background: rgba(245, 158, 11, 0.12);  color: #c2410c; }
 
 .timelineContent { flex: 1; padding-top: 4px; }
 
@@ -368,7 +381,7 @@
   padding: 1px 6px;
   border-radius: 10px;
   font-weight: 600;
-  background: #f1f5f9;
+  background: rgba(255, 255, 255, 0.5);
   color: #64748b;
 }
 
@@ -376,8 +389,8 @@
   font-size: 0.8125rem;
   color: #374151;
   line-height: 1.6;
-  background: #f8fafc;
-  border-left: 3px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.5);
+  border-left: 3px solid rgba(255, 255, 255, 0.6);
   padding: 8px 12px;
   border-radius: 0 6px 6px 0;
   margin-top: 4px;
@@ -390,10 +403,10 @@
   margin-top: 3px;
 }
 
-/* ── Note input area (SA-05) ─────────────────────────────────────────────── */
+/* ── Note input area ─────────────────────────────────────────────────────── */
 .noteBox {
   padding: 16px 20px 20px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -408,11 +421,13 @@
 .noteTextarea {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 8px;
   font-size: 0.8125rem;
   color: #0f172a;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   outline: none;
   resize: vertical;
   min-height: 80px;
@@ -423,7 +438,8 @@
 
 .noteTextarea:focus {
   border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .noteFooter {
@@ -443,8 +459,9 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(2px);
+  background: rgba(15, 23, 42, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -453,11 +470,14 @@
 }
 
 .dialog {
-  background: #fff;
-  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
   width: 100%;
   max-width: 480px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   animation: slideUp 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -486,7 +506,7 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 6px;
   background: transparent;
   color: #94a3b8;
@@ -495,7 +515,7 @@
 }
 
 .dialogClose:hover {
-  background: #f1f5f9;
+  background: rgba(255, 255, 255, 0.5);
   color: #0f172a;
 }
 
@@ -524,11 +544,13 @@
 .formInput,
 .formTextarea {
   padding: 8px 11px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 8px;
   font-size: 0.8125rem;
   color: #0f172a;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
   font-family: inherit;
@@ -540,7 +562,8 @@
 .formInput:focus,
 .formTextarea:focus {
   border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .formTextarea {
@@ -576,7 +599,7 @@
 .pageSpinner {
   width: 36px;
   height: 36px;
-  border: 4px solid #e2e8f0;
+  border: 4px solid rgba(255, 255, 255, 0.4);
   border-top-color: #2563eb;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
@@ -596,4 +619,4 @@
   text-align: center;
 }
 
-.notFoundIcon { color: #e2e8f0; }
+.notFoundIcon { color: rgba(255, 255, 255, 0.6); }

@@ -55,18 +55,28 @@ export function GlassSelect({ value, onChange, options, placeholder = 'Select...
       }
     };
 
-    const handleScrollOrResize = () => {
-      // Close on scroll to prevent detachment issues on complex overflow layouts
+    const handleScroll = (e: Event) => {
+      // Do NOT close if the scroll is happening inside the dropdown panel itself
+      if (dropdownRef.current && dropdownRef.current.contains(e.target as Node)) {
+        return;
+      }
+      // Also ignore scroll events from the trigger container
+      if (containerRef.current && containerRef.current.contains(e.target as Node)) {
+        return;
+      }
+      // Scroll happened outside → reposition or close
       setIsOpen(false);
     };
 
-    window.addEventListener('scroll', handleScrollOrResize, true);
-    window.addEventListener('resize', handleScrollOrResize);
+    const handleResize = () => setIsOpen(false);
+
+    window.addEventListener('scroll', handleScroll, true);
+    window.addEventListener('resize', handleResize);
     document.addEventListener('mousedown', handleOutsideClick);
 
     return () => {
-      window.removeEventListener('scroll', handleScrollOrResize, true);
-      window.removeEventListener('resize', handleScrollOrResize);
+      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleResize);
       document.removeEventListener('mousedown', handleOutsideClick);
     };
   }, [isOpen, updatePosition]);

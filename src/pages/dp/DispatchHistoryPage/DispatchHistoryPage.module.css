@@ -30,10 +30,13 @@
 
 /* ── Table ─────────────────────────────────────────────────────────────────── */
 .tableWrap {
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
 .table {
@@ -43,8 +46,8 @@
 }
 
 .table thead tr {
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .table th {
@@ -61,7 +64,7 @@
 .table td {
   padding: 12px 14px;
   vertical-align: middle;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   color: #334155;
 }
 
@@ -70,7 +73,7 @@
 }
 
 .table tbody tr:hover {
-  background: #fafbff;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 /* ── Cells ──────────────────────────────────────────────────────────────────── */
@@ -129,12 +132,12 @@
   white-space: nowrap;
 }
 
-.statusAssigned   { background: rgba(37,99,235,0.1);  color: #1d4ed8; }
-.statusContacted  { background: rgba(8,145,178,0.1);  color: #0e7490; }
-.statusInProgress { background: rgba(124,58,237,0.1); color: #6d28d9; }
-.statusWon        { background: rgba(22,163,74,0.1);  color: #15803d; }
-.statusLost       { background: rgba(100,116,139,0.1);color: #475569; }
-.statusCancelled  { background: rgba(100,116,139,0.1);color: #475569; }
+.statusAssigned   { background: rgba(37, 99, 235, 0.1);   color: #1d4ed8; }
+.statusContacted  { background: rgba(8, 145, 178, 0.1);   color: #0e7490; }
+.statusInProgress { background: rgba(124, 58, 237, 0.1);  color: #6d28d9; }
+.statusWon        { background: rgba(22, 163, 74, 0.1);   color: #15803d; }
+.statusLost       { background: rgba(100, 116, 139, 0.1); color: #475569; }
+.statusCancelled  { background: rgba(100, 116, 139, 0.1); color: #475569; }
 
 /* ── States ─────────────────────────────────────────────────────────────────── */
 .loadingState {
@@ -147,7 +150,7 @@
 .spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid #e2e8f0;
+  border: 3px solid rgba(255, 255, 255, 0.4);
   border-top-color: #7c3aed;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
@@ -163,7 +166,7 @@
   font-size: 0.875rem;
 }
 
-.emptyIcon { color: #cbd5e1; }
+.emptyIcon { color: rgba(255, 255, 255, 0.6); }
 
 /* ── Animation ──────────────────────────────────────────────────────────────── */
 @keyframes spin {

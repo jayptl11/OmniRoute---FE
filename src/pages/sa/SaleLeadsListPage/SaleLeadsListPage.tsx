@@ -14,6 +14,7 @@ import {
   ALL_LEAD_CHANNELS,
   NEED_TYPE_LABELS,
 } from '@/types/leads';
+import { GlassSelect } from '@/components/glass';
 import styles from './SaleLeadsListPage.module.css';
 
 const PAGE_SIZE = 20;
@@ -119,44 +120,46 @@ export function SaleLeadsListPage() {
           />
         </div>
 
-        <select
+        <GlassSelect
           id="sa-leads-status-filter"
-          className={styles.select}
-          onChange={(e) =>
-            setParams((p) => ({ ...p, page: 1, status: (e.target.value as LeadStatus) || undefined }))
+          value={params.status ?? ''}
+          onChange={(val) =>
+            setParams((p) => ({ ...p, page: 1, status: (val as LeadStatus) || undefined }))
           }
-        >
-          <option value="">Tất cả trạng thái</option>
-          {(Object.entries(SA_LEAD_STATUS_LABELS) as [LeadStatus, string][]).map(([val, label]) => (
-            <option key={val} value={val}>{label}</option>
-          ))}
-        </select>
+          options={[
+            { value: '', label: 'Tất cả trạng thái' },
+            ...(Object.entries(SA_LEAD_STATUS_LABELS) as [LeadStatus, string][]).map(([val, label]) => ({ value: val, label })),
+          ]}
+          placeholder="Tất cả trạng thái"
+        />
 
-        <select
+        <GlassSelect
           id="sa-leads-priority-filter"
-          className={styles.select}
-          onChange={(e) =>
-            setParams((p) => ({ ...p, page: 1, priorityLevel: (e.target.value as PriorityLevel) || undefined }))
+          value={params.priorityLevel ?? ''}
+          onChange={(val) =>
+            setParams((p) => ({ ...p, page: 1, priorityLevel: (val as PriorityLevel) || undefined }))
           }
-        >
-          <option value="">Tất cả mức ưu tiên</option>
-          <option value="High">High</option>
-          <option value="Medium">Medium</option>
-          <option value="Low">Low</option>
-        </select>
+          options={[
+            { value: '', label: 'Tất cả mức ưu tiên' },
+            { value: 'High', label: 'High' },
+            { value: 'Medium', label: 'Medium' },
+            { value: 'Low', label: 'Low' },
+          ]}
+          placeholder="Tất cả mức ưu tiên"
+        />
 
-        <select
+        <GlassSelect
           id="sa-leads-channel-filter"
-          className={styles.select}
-          onChange={(e) =>
-            setParams((p) => ({ ...p, page: 1, channel: (e.target.value as any) || undefined }))
+          value={params.channel ?? ''}
+          onChange={(val) =>
+            setParams((p) => ({ ...p, page: 1, channel: (val as any) || undefined }))
           }
-        >
-          <option value="">Tất cả kênh</option>
-          {ALL_LEAD_CHANNELS.map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
+          options={[
+            { value: '', label: 'Tất cả kênh' },
+            ...ALL_LEAD_CHANNELS.map((c) => ({ value: c, label: c })),
+          ]}
+          placeholder="Tất cả kênh"
+        />
 
         <input
           id="sa-leads-date-from"

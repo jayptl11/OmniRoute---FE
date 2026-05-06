@@ -19,6 +19,7 @@ import {
   INVALID_REASON_LABELS,
 } from '@/types/leads';
 import styles from './SaleLeadDetailPage.module.css';
+import { GlassSelect } from '@/components/glass';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -111,11 +112,16 @@ function StatusUpdateDialog({ leadId, currentStatus, onClose }: {
         <div className={styles.dialogBody}>
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>Trạng thái mới <span className={styles.required}>*</span></label>
-            <select id="status-dialog-new-status" className={styles.formSelect} value={newStatus}
-              onChange={(e) => { setNewStatus(e.target.value as LeadStatus); setError(''); }}>
-              <option value="">Chọn trạng thái...</option>
-              {validNext.map((s) => <option key={s} value={s}>{SA_LEAD_STATUS_LABELS[s] ?? s}</option>)}
-            </select>
+            <GlassSelect
+              id="status-dialog-new-status"
+              value={newStatus}
+              onChange={(val) => { setNewStatus(val as LeadStatus); setError(''); }}
+              options={[
+                { value: '', label: 'Chọn trạng thái...' },
+                ...validNext.map((s) => ({ value: s, label: SA_LEAD_STATUS_LABELS[s] ?? s })),
+              ]}
+              placeholder="Chọn trạng thái..."
+            />
           </div>
           {(needsNote || newStatus === 'Won') && (
             <div className={styles.formGroup}>
@@ -195,13 +201,16 @@ function ReportInvalidDialog({ leadId, onClose, onSuccess }: {
           </p>
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>Lý do <span className={styles.required}>*</span></label>
-            <select id="report-invalid-reason" className={styles.formSelect} value={reason}
-              onChange={(e) => { setReason(e.target.value as InvalidReason); setError(''); }}>
-              <option value="">Chọn lý do...</option>
-              {(Object.entries(INVALID_REASON_LABELS) as [InvalidReason, string][]).map(([val, label]) => (
-                <option key={val} value={val}>{label}</option>
-              ))}
-            </select>
+            <GlassSelect
+              id="report-invalid-reason"
+              value={reason}
+              onChange={(val) => { setReason(val as InvalidReason); setError(''); }}
+              options={[
+                { value: '', label: 'Chọn lý do...' },
+                ...(Object.entries(INVALID_REASON_LABELS) as [InvalidReason, string][]).map(([val, label]) => ({ value: val, label })),
+              ]}
+              placeholder="Chọn lý do..."
+            />
           </div>
           {error && <p className={styles.fieldError}>{error}</p>}
         </div>

@@ -7,6 +7,7 @@ import {
 import { useDispatchQueue } from '@/features/dp/hooks/useDispatch';
 import type { DispatchQueueParams, DispatchQueueItemDto } from '@/types/dispatch';
 import { NEED_TYPE_LABELS } from '@/types/leads';
+import { GlassSelect } from '@/components/glass';
 import styles from './DispatchQueuePage.module.css';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -111,17 +112,18 @@ export function DispatchQueuePage() {
             />
           </div>
 
-          <select
+          <GlassSelect
             id="filter-priority"
-            className={styles.select}
             value={priorityLevel}
-            onChange={(e) => setPriorityLevel(e.target.value as typeof priorityLevel)}
-          >
-            <option value="">Tất cả ưu tiên</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-          </select>
+            onChange={(val) => setPriorityLevel(val as typeof priorityLevel)}
+            options={[
+              { value: '', label: 'Tất cả ưu tiên' },
+              { value: 'High', label: 'High' },
+              { value: 'Medium', label: 'Medium' },
+              { value: 'Low', label: 'Low' },
+            ]}
+            placeholder="Tất cả ưu tiên"
+          />
 
           <div className={styles.inputWrap}>
             <Filter size={14} className={styles.inputIcon} />
