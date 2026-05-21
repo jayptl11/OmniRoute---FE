@@ -5,6 +5,7 @@ import type { UserDto, CreateUserRequest, UpdateUserRequest } from '@/types/admi
 import { X, Eye, EyeOff } from 'lucide-react';
 import styles from './UsersPage.module.css';
 import { GlassButton, GlassSelect } from '@/components/glass';
+import { getRoleLabel } from '@/lib/roleChannel';
 
 interface Props {
   user: UserDto | null; // null = create mode
@@ -146,12 +147,13 @@ export function UserFormDialog({ user, onClose }: Props) {
                 className={styles.selectFullWidth}
                 options={[
                   { value: '', label: rolesLoading ? 'Đang tải...' : '— Chọn role —' },
-                  ...roles.map(r => ({ value: r.roleId, label: r.roleName }))
+                  ...roles.map((r) => ({ value: r.roleId, label: r.displayName }))
                 ]}
               />
               {isEdit && (
                 <p className={styles.cellMuted} style={{ marginTop: 4, fontSize: '0.75rem' }}>
-                  Role hiện tại: <strong>{user.roleName}</strong>
+                  Role hiện tại:{' '}
+                  <strong>{getRoleLabel(user.roleName, user.roleDisplayName)}</strong>
                 </p>
               )}
             </div>

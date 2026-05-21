@@ -1,30 +1,26 @@
 import { useState } from 'react';
 import { X, Loader2, FlaskConical } from 'lucide-react';
+import { GlassButton, GlassSelect } from '@/components/glass';
 import { useTestClassification } from '@/features/qt/hooks/useAiApiKeys';
-import { Channel } from '@/types/admin';
-import type {
-  AiApiKeyDto,
-  TestClassificationResponse,
-  NeedType,
-  AssignedGroupString,
+import { CHANNEL_VALUES, getChannelLabel } from '@/lib/roleChannel';
+import {
+  Channel,
+  type AiApiKeyDto,
+  type AssignedGroupString,
+  type NeedType,
+  type TestClassificationResponse,
 } from '@/types/admin';
 import styles from './AiApiKeysPage.module.css';
-import { GlassButton, GlassSelect } from '@/components/glass';
 
 interface Props {
   keyItem: AiApiKeyDto;
   onClose: () => void;
 }
 
-const channelOptions: { value: Channel; label: string }[] = [
-  { value: Channel.Hotline, label: 'Điện thoại' },
-  { value: Channel.Walkin, label: 'Đến trực tiếp' },
-  { value: Channel.Webform, label: 'Form website' },
-  { value: Channel.Chat, label: 'Chat' },
-  { value: Channel.Email, label: 'Email' },
-  { value: Channel.Zalo, label: 'Zalo' },
-  { value: Channel.Referral, label: 'Giới thiệu' },
-];
+const channelOptions: { value: Channel; label: string }[] = CHANNEL_VALUES.map((value) => ({
+  value: value as Channel,
+  label: getChannelLabel(value),
+}));
 
 const needTypeLabels: Record<NeedType, string> = {
   SaleNew: 'Mua hàng mới',
@@ -94,9 +90,7 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
     }
   };
 
-  const confidenceLevel = result?.success
-    ? getConfidenceLevel(result.confidenceScore)
-    : null;
+  const confidenceLevel = result?.success ? getConfidenceLevel(result.confidenceScore) : null;
 
   return (
     <div className={styles.overlay}>
@@ -109,37 +103,41 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
         </div>
 
         <div className={styles.dialogBody}>
-          {/* Key info */}
           <div className={styles.formGroup}>
             <label className={styles.label}>API Key</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span className={styles.cellMuted}>{keyItem.maskedKey}</span>
-              <span className={`${styles.providerChip} ${
-                keyItem.provider === 'OpenAI'
-                  ? styles.providerOpenAI
-                  : keyItem.provider === 'Gemini'
-                  ? styles.providerGemini
-                  : keyItem.provider === 'Anthropic'
-                  ? styles.providerAnthropic
-                  : styles.providerGroq
-              }`}>
+              <span
+                className={`${styles.providerChip} ${
+                  keyItem.provider === 'OpenAI'
+                    ? styles.providerOpenAI
+                    : keyItem.provider === 'Gemini'
+                      ? styles.providerGemini
+                      : keyItem.provider === 'Anthropic'
+                        ? styles.providerAnthropic
+                        : styles.providerGroq
+                }`}
+              >
                 {keyItem.provider}
               </span>
             </div>
           </div>
 
-          {/* Channel dropdown */}
           <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="tc-channel">Channel *</label>
+            <label className={styles.label} htmlFor="tc-channel">
+              Channel *
+            </label>
             <GlassSelect
               value={channel}
               onChange={(val) => setChannel(val as Channel)}
               className={styles.selectFullWidth}
-              options={channelOptions.map(opt => ({ value: String(opt.value), label: opt.label }))}
+              options={channelOptions.map((opt) => ({
+                value: String(opt.value),
+                label: opt.label,
+              }))}
             />
           </div>
 
-          {/* Need description textarea */}
           <div className={styles.formGroup}>
             <label className={styles.label} htmlFor="tc-description">
               Mô tả nhu cầu khách hàng *
@@ -154,7 +152,6 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
             />
           </div>
 
-          {/* Run test button */}
           <GlassButton
             className={styles.btnPrimary}
             onClick={handleRunTest}
@@ -174,7 +171,6 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
             )}
           </GlassButton>
 
-          {/* Result */}
           {testClassification.isError && (
             <div className={styles.errorCard}>
               <div className={styles.errorTitle}>
@@ -202,7 +198,6 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
 
           {result && result.success && (
             <div className={styles.resultCard}>
-              {/* NeedType */}
               <div className={styles.resultRow}>
                 <span className={styles.resultLabel}>NeedType</span>
                 <span className={`${styles.needTypeBadge} ${needTypeBadgeClass[result.needType!]}`}>
@@ -210,7 +205,6 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
                 </span>
               </div>
 
-              {/* Confidence */}
               <div className={styles.resultRow}>
                 <span className={styles.resultLabel}>Confidence</span>
                 <div className={styles.confidenceRow}>
@@ -220,8 +214,8 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
                         confidenceLevel === 'high'
                           ? styles.confidenceHigh
                           : confidenceLevel === 'medium'
-                          ? styles.confidenceMedium
-                          : styles.confidenceLow
+                            ? styles.confidenceMedium
+                            : styles.confidenceLow
                       }`}
                       style={{ width: `${result.confidenceScore * 100}%` }}
                     />
@@ -234,8 +228,8 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
                       confidenceLevel === 'high'
                         ? styles.confidenceBadgeHigh
                         : confidenceLevel === 'medium'
-                        ? styles.confidenceBadgeMedium
-                        : styles.confidenceBadgeLow
+                          ? styles.confidenceBadgeMedium
+                          : styles.confidenceBadgeLow
                     }`}
                   >
                     {getConfidenceLabel(confidenceLevel!)}
@@ -243,7 +237,6 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
                 </div>
               </div>
 
-              {/* AssignedGroup */}
               <div className={styles.resultRow}>
                 <span className={styles.resultLabel}>AssignedGroup</span>
                 <span className={`${styles.groupBadge} ${groupBadgeClass[result.assignedGroup!]}`}>
@@ -251,13 +244,11 @@ export function TestClassificationDialog({ keyItem, onClose }: Props) {
                 </span>
               </div>
 
-              {/* Reasoning */}
               <div className={styles.resultRow} style={{ alignItems: 'flex-start' }}>
                 <span className={styles.resultLabel}>Reasoning</span>
                 <div className={styles.reasoningText}>{result.reasoning}</div>
               </div>
 
-              {/* Latency & Provider */}
               <div className={styles.resultRow}>
                 <span className={styles.resultLabel}>Latency</span>
                 <span className={styles.latencyText}>{result.latencyMs}ms</span>

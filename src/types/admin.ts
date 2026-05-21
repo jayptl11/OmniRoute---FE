@@ -1,5 +1,7 @@
 // ─── Shared ───────────────────────────────────────────────────────────────────
 
+import type { ChannelValue } from '@/lib/roleChannel';
+
 export interface PaginatedResponse<T> {
   items: T[];
   totalCount: number;
@@ -52,6 +54,7 @@ export type PriorityLevel = 'Low' | 'Medium' | 'High';
 export interface RoleDto {
   roleId: string;
   roleName: string;
+  displayName: string;
 }
 
 // ─── Users ────────────────────────────────────────────────────────────────────
@@ -63,6 +66,7 @@ export interface UserDto {
   firstName: string;
   lastName: string;
   roleName: string;
+  roleDisplayName?: string | null;
   roleId: string;
   storeId: string | null;
   isActive: boolean;
@@ -117,7 +121,7 @@ export interface RoutingRuleDto {
   ruleName: string;
   description: string | null;
   priorityOrder: number;
-  conditionChannels: string[] | null;
+  conditionChannels: ChannelValue[] | null;
   conditionKeywords: string[] | null;
   actionGroup: AssignedGroupString;
   actionTeamId: string | null;
@@ -131,7 +135,7 @@ export interface CreateRuleRequest {
   ruleName: string;
   description?: string | null;
   priorityOrder: number;
-  conditionChannels?: string[] | null;
+  conditionChannels?: ChannelValue[] | null;
   conditionKeywords?: string[] | null;
   actionGroup: number; // send as integer
   actionTeamId?: string | null;
@@ -141,7 +145,7 @@ export interface UpdateRuleRequest extends CreateRuleRequest {}
 
 export interface TestRuleRequest {
   needDescription?: string | null;
-  channel?: string | null;
+  channel?: ChannelValue | null;
 }
 
 export interface TestRuleResponse {

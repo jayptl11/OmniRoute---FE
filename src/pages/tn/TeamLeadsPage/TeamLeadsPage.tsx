@@ -11,6 +11,7 @@ import {
 import type { TeamLeadListItemDto, TnLeadStatus, TnPriorityLevel, TnChannel } from '@/types/teamlead';
 import { Search, Filter, ChevronLeft, ChevronRight, List } from 'lucide-react';
 import styles from './TeamLeadsPage.module.css';
+import { CHANNEL_VALUES } from '@/lib/roleChannel';
 
 type DialogType = 'reassign' | 'escalate' | 'note' | null;
 
@@ -23,7 +24,7 @@ const ALL_STATUSES: TnLeadStatus[] = [
   'New', 'PendingResponse', 'InProgress', 'Escalated', 'Won', 'Lost', 'Invalid', 'Closed',
 ];
 const ALL_PRIORITIES: TnPriorityLevel[] = ['High', 'Medium', 'Low'];
-const ALL_CHANNELS: TnChannel[] = ['Web', 'Facebook', 'Zalo', 'Phone', 'Walkin', 'Other'];
+const ALL_CHANNELS: TnChannel[] = [...CHANNEL_VALUES];
 
 export function TeamLeadsPage() {
   const [page, setPage] = useState(1);

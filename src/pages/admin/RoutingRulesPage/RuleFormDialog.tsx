@@ -6,8 +6,7 @@ import { AssignedGroup } from '@/types/admin';
 import { X, Plus, XCircle } from 'lucide-react';
 import styles from '../UsersPage/UsersPage.module.css';
 import { GlassButton, GlassSelect } from '@/components/glass';
-
-const CHANNELS = ['Hotline', 'Walkin', 'Webform', 'Chat', 'Email', 'Zalo', 'Referral'];
+import { CHANNEL_VALUES, getChannelLabel, type ChannelValue } from '@/lib/roleChannel';
 
 interface Props {
   rule: RoutingRuleDto | null;
@@ -23,7 +22,7 @@ export function RuleFormDialog({ rule, onClose }: Props) {
     ruleName: rule?.ruleName ?? '',
     description: rule?.description ?? '',
     priorityOrder: rule?.priorityOrder ?? 1,
-    conditionChannels: rule?.conditionChannels ?? null as string[] | null,
+    conditionChannels: (rule?.conditionChannels ?? null) as ChannelValue[] | null,
     conditionKeywords: rule?.conditionKeywords ?? null as string[] | null,
     actionGroup: rule ? (AssignedGroup[rule.actionGroup as keyof typeof AssignedGroup] ?? 0) : 0,
     actionTeamId: rule?.actionTeamId ?? '',
@@ -33,7 +32,7 @@ export function RuleFormDialog({ rule, onClose }: Props) {
 
   const set = (k: string, v: unknown) => setForm((f) => ({ ...f, [k]: v }));
 
-  const toggleChannel = (ch: string) => {
+  const toggleChannel = (ch: ChannelValue) => {
     if (form.conditionChannels === null) {
       set('conditionChannels', [ch]);
     } else if (form.conditionChannels.includes(ch)) {
@@ -128,12 +127,12 @@ export function RuleFormDialog({ rule, onClose }: Props) {
                 Không chọn = áp dụng tất cả kênh
               </p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {CHANNELS.map((ch) => (
+                {CHANNEL_VALUES.map((ch) => (
                   <GlassButton key={ch} type="button"
                     className={form.conditionChannels?.includes(ch) ? styles.btnPrimary : styles.btnSecondary}
                     style={{ padding: '4px 12px', fontSize: '0.775rem' }}
                     onClick={() => toggleChannel(ch)}>
-                    {ch}
+                    {getChannelLabel(ch)}
                   </GlassButton>
                 ))}
               </div>

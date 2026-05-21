@@ -1,14 +1,17 @@
 import { useStoreCapacity, useStoreWorkload } from '@/features/ql/hooks/useStoreManager';
+import { getRoleLabel } from '@/lib/roleChannel';
 import type { StoreStaffWorkloadDto } from '@/types/storemanager';
 import styles from './QlDashboardPage.module.css';
-
-// ── Capacity Widget ────────────────────────────────────────────────────────────
 
 function CapacityWidget() {
   const { data, isLoading, isError } = useStoreCapacity();
 
   if (isLoading) {
-    return <div className={styles.card}><p className={styles.loadingText}>Đang tải...</p></div>;
+    return (
+      <div className={styles.card}>
+        <p className={styles.loadingText}>Đang tải...</p>
+      </div>
+    );
   }
 
   if (isError || !data) {
@@ -40,12 +43,12 @@ function CapacityWidget() {
 
       {data.isOverCapacity && (
         <div className={`${styles.banner} ${styles.bannerRed}`}>
-          ⚠️ Đơn vị đang quá tải — {data.activeLeads}/{data.maxCapacity} lead active.
+          Đơn vị đang quá tải: {data.activeLeads}/{data.maxCapacity} lead active.
         </div>
       )}
       {!data.isOverCapacity && data.isNearCapacity && (
         <div className={`${styles.banner} ${styles.bannerYellow}`}>
-          ⚡ Đơn vị gần đầy — còn {data.availableSlots} slot trống.
+          Đơn vị gần đầy: còn {data.availableSlots} slot trống.
         </div>
       )}
 
@@ -60,8 +63,8 @@ function CapacityWidget() {
               data.isOverCapacity
                 ? styles.progressRed
                 : data.isNearCapacity
-                ? styles.progressYellow
-                : styles.progressGreen
+                  ? styles.progressYellow
+                  : styles.progressGreen
             }`}
             style={{ width: `${pct}%` }}
           />
@@ -85,14 +88,6 @@ function CapacityWidget() {
       </div>
     </div>
   );
-}
-
-// ── Workload Table ─────────────────────────────────────────────────────────────
-
-function roleLabel(role: string | null): string {
-  if (!role) return '—';
-  const map: Record<string, string> = { SA: 'Tư vấn', CS: 'CSKH', DP: 'Dispatch' };
-  return map[role] ?? role;
 }
 
 function WorkloadTable() {
@@ -132,13 +127,15 @@ function WorkloadTable() {
           <tbody>
             {data.length === 0 && (
               <tr>
-                <td colSpan={6} className={styles.emptyCell}>Chưa có nhân sự nào.</td>
+                <td colSpan={6} className={styles.emptyCell}>
+                  Chưa có nhân sự nào.
+                </td>
               </tr>
             )}
             {data.map((m: StoreStaffWorkloadDto) => (
               <tr key={m.userId} className={m.isActive ? '' : styles.rowInactive}>
                 <td className={styles.nameCell}>{m.fullName}</td>
-                <td>{roleLabel(m.roleName)}</td>
+                <td>{getRoleLabel(m.roleName, m.roleDisplayName)}</td>
                 <td>
                   <span className={styles.workloadBadge}>{m.currentWorkload}</span>
                 </td>
@@ -165,8 +162,6 @@ function WorkloadTable() {
     </div>
   );
 }
-
-// ── Page ──────────────────────────────────────────────────────────────────────
 
 export function QlDashboardPage() {
   return (

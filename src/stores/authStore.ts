@@ -8,6 +8,7 @@ interface AuthUser {
   username: string;
   roleId: string | null;
   roleName: string | null;
+  roleDisplayName: string | null;
   lastLogin: string | null;
 }
 
@@ -40,6 +41,7 @@ export const authStore = create<AuthState>()(
                 username: data.username,
                 roleId: data.roleId,
                 roleName: data.roleName,
+                roleDisplayName: data.roleDisplayName ?? null,
                 lastLogin: data.lastLogin,
               },
               accessToken: data.accessToken,

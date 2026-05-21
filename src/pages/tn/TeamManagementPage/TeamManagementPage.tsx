@@ -5,6 +5,7 @@ import { extractErrorMessage } from '@/lib/errors';
 import type { AddableUserDto } from '@/types/teamlead';
 import { Users, Plus, Trash2, BarChart2, AlertTriangle, X } from 'lucide-react';
 import styles from './TeamManagementPage.module.css';
+import { getRoleLabel } from '@/lib/roleChannel';
 
 // ── Add Member Dialog ─────────────────────────────────────────────────────────
 
@@ -81,7 +82,9 @@ function AddMemberDialog({ onClose }: { onClose: () => void }) {
                   >
                     <div className={styles.searchItemLeft}>
                       <span className={styles.searchItemName}>{u.fullName}</span>
-                      <span className={styles.searchItemMeta}>{u.username} · {u.roleName}</span>
+                      <span className={styles.searchItemMeta}>
+                        {u.username} · {getRoleLabel(u.roleName, u.roleDisplayName)}
+                      </span>
                     </div>
                     {u.hasTeam && (
                       <span className={styles.hasTeamBadge}>Đang ở đội khác</span>
@@ -100,7 +103,9 @@ function AddMemberDialog({ onClose }: { onClose: () => void }) {
             <div className={`${styles.selectedCard} ${selected.hasTeam ? styles.selectedCardWarn : ''}`}>
               <div>
                 <p className={styles.selectedName}>{selected.fullName}</p>
-                <p className={styles.selectedMeta}>{selected.username} · {selected.roleName}</p>
+                <p className={styles.selectedMeta}>
+                  {selected.username} · {getRoleLabel(selected.roleName, selected.roleDisplayName)}
+                </p>
               </div>
               {selected.hasTeam && (
                 <p className={styles.selectedWarnMsg}>
@@ -261,7 +266,11 @@ export function TeamManagementPage() {
                       <span className={styles.memberName}>{m.fullName}</span>
                     </div>
                   </td>
-                  <td><span className={styles.roleBadge}>{m.roleName}</span></td>
+                  <td>
+                    <span className={styles.roleBadge}>
+                      {getRoleLabel(m.roleName, m.roleDisplayName)}
+                    </span>
+                  </td>
                   <td>
                     <span className={m.isActive ? styles.activeBadge : styles.inactiveBadge}>
                       {m.isActive ? 'Đang hoạt động' : 'Không hoạt động'}

@@ -3,6 +3,7 @@ import { useTeamMembers, useReassignLead } from '@/features/tn/hooks/useTeamLead
 import { extractErrorMessage } from '@/lib/errors';
 import { X } from 'lucide-react';
 import styles from './ReassignDialog.module.css';
+import { getRoleLabel } from '@/lib/roleChannel';
 
 interface Props {
   leadId: string;
@@ -69,7 +70,7 @@ export function ReassignDialog({ leadId, leadCode, currentAssigneeName, onClose,
               <option value="">-- Chọn thành viên --</option>
               {activeMembers.map((m) => (
                 <option key={m.userId} value={m.userId}>
-                  {m.fullName} [{m.roleName}] — {m.currentWorkload} lead
+                  {m.fullName} [{getRoleLabel(m.roleName, m.roleDisplayName)}] — {m.currentWorkload} lead
                 </option>
               ))}
             </select>

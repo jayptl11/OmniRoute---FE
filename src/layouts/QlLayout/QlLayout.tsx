@@ -2,6 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { useLogout } from '@/features/auth';
 import { useStoreCapacity } from '@/features/ql/hooks/useStoreManager';
+import { getRoleLabel } from '@/lib/roleChannel';
 import {
   LayoutDashboard,
   List,
@@ -123,7 +124,9 @@ export function QlLayout() {
             <NotificationBell />
             <div className={styles.userInfo}>
               <span className={styles.userName}>{user?.username}</span>
-              <span className={styles.roleBadge}>{user?.roleName}</span>
+              <span className={styles.roleBadge}>
+                {getRoleLabel(user?.roleName, user?.roleDisplayName)}
+              </span>
             </div>
             <button
               className={styles.logoutBtn}

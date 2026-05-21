@@ -61,6 +61,7 @@ export interface DispatchLeadDetailDto {
   customerAddress: string;
   customerEmail: string | null;
   channel: LeadChannel;
+  channelDisplayName?: string | null;
   needDescription: string;
   productInterest: string[];
   needType: NeedType | null;

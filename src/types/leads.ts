@@ -1,5 +1,7 @@
 // ─── Enums ────────────────────────────────────────────────────────────────────
 
+import { CHANNEL_VALUES, type ChannelValue } from '@/lib/roleChannel';
+
 export type LeadStatus =
   | 'New'
   | 'Assigned'
@@ -13,24 +15,9 @@ export type LeadStatus =
 
 export const LEAD_STATUS_CLOSED: LeadStatus[] = ['Won', 'Lost', 'Cancelled'];
 
-export type LeadChannel =
-  | 'Hotline'
-  | 'Walkin'
-  | 'Webform'
-  | 'Chat'
-  | 'Email'
-  | 'Zalo'
-  | 'Referral';
+export type LeadChannel = ChannelValue;
 
-export const ALL_LEAD_CHANNELS: LeadChannel[] = [
-  'Hotline',
-  'Walkin',
-  'Webform',
-  'Chat',
-  'Email',
-  'Zalo',
-  'Referral',
-];
+export const ALL_LEAD_CHANNELS: LeadChannel[] = [...CHANNEL_VALUES];
 
 export type NeedType =
   | 'SaleNew'
@@ -129,6 +116,7 @@ export interface LeadListItemDto {
   customerName: string;
   customerPhone: string;
   channel: LeadChannel;
+  channelDisplayName?: string | null;
   needType: NeedType | null;
   leadStatus: LeadStatus;
   priorityLevel: PriorityLevel | null;
@@ -145,6 +133,7 @@ export interface LeadDetailDto {
   customerAddress: string | null;
   customerEmail: string | null;
   channel: LeadChannel;
+  channelDisplayName?: string | null;
   needDescription: string;
   productInterest: string[];
 
@@ -240,6 +229,7 @@ export interface SaleLeadDetailDto {
   customerAddress: string | null;
   customerEmail: string | null;
   channel: LeadChannel;
+  channelDisplayName?: string | null;
   needDescription: string;
   productInterest: string[];
 
@@ -393,5 +383,4 @@ export interface PerformanceDto {
   slaViolatedCount: number;
   generatedAt: string;
 }
-
 

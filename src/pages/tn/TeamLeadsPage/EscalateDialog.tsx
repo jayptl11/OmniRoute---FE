@@ -3,6 +3,7 @@ import { useEscalateLead, useEscalateTargets } from '@/features/tn/hooks/useTeam
 import { extractErrorMessage } from '@/lib/errors';
 import { X, Search } from 'lucide-react';
 import styles from '../SlaViolationsPage/ReassignDialog.module.css';
+import { getRoleLabel } from '@/lib/roleChannel';
 
 interface Props {
   leadId: string;
@@ -10,8 +11,6 @@ interface Props {
   onClose: () => void;
   onSuccess: () => void;
 }
-
-const ROLE_LABELS: Record<string, string> = { QT: 'Quản trị', QL: 'Quản lý', TN: 'Team Lead' };
 
 export function EscalateDialog({ leadId, leadCode, onClose, onSuccess }: Props) {
   const [escalateTo, setEscalateTo] = useState('');
@@ -112,14 +111,14 @@ export function EscalateDialog({ leadId, leadCode, onClose, onSuccess }: Props) 
                     background: '#f1f5f9',
                     color: '#475569',
                   }}>
-                    {ROLE_LABELS[t.roleName] ?? t.roleName}
+                    {getRoleLabel(t.roleName, t.roleDisplayName)}
                   </span>
                 </div>
               ))}
             </div>
             {selected && (
               <p style={{ fontSize: '0.8rem', color: '#16a34a', margin: 0 }}>
-                ✓ Đã chọn: <strong>{selected.fullName}</strong> ({ROLE_LABELS[selected.roleName]})
+                ✓ Đã chọn: <strong>{selected.fullName}</strong> ({getRoleLabel(selected.roleName, selected.roleDisplayName)})
               </p>
             )}
           </div>

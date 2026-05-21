@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useLogout } from '@/features/auth';
 import { useTeamLeadOverview } from '@/features/tn/hooks/useTeamLead';
 import { isAppError } from '@/types/common';
+import { getRoleLabel } from '@/lib/roleChannel';
 import {
   LayoutDashboard,
   AlertTriangle,
@@ -120,7 +121,9 @@ export function TnLayout() {
             <NotificationBell />
             <div className={styles.userInfo}>
               <span className={styles.userName}>{user?.username}</span>
-              <span className={styles.roleBadge}>{user?.roleName}</span>
+              <span className={styles.roleBadge}>
+                {getRoleLabel(user?.roleName, user?.roleDisplayName)}
+              </span>
             </div>
             <button
               className={styles.logoutBtn}

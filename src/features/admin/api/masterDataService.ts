@@ -16,7 +16,9 @@ export const masterDataService = {
 
   getEnums: (enumType: 'Channel' | 'NeedType' | 'LeadStatus') =>
     api
-      .get<EnumValueDto[]>(`/api/master-data/enums/${enumType}`)
+      .get<EnumValueDto[]>('/api/master-data/enum-list', {
+        params: { enumType },
+      })
       .then((r) => r.data),
 
   createMasterData: (data: CreateMasterDataRequest) =>

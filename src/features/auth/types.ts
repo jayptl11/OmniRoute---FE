@@ -51,6 +51,7 @@ export interface LoginResponse {
   lastLogin: string | null;
   roleId: string | null;
   roleName: string | null;
+  roleDisplayName?: string | null;
 }
 
 export type OtpPurpose = 'Register' | 'ResetPassword';

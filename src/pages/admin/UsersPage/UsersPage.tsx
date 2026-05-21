@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import styles from './UsersPage.module.css';
 import { GlassButton, GlassSelect } from '@/components/glass';
+import { getRoleLabel } from '@/lib/roleChannel';
 
 const PAGE_SIZE = 20;
 
@@ -92,7 +93,7 @@ export function UsersPage() {
           onChange={(val) => handleFilter('roleName', val)}
           options={[
             { value: '', label: rolesLoading ? 'Đang tải role...' : 'Tất cả role' },
-            ...roles.map(r => ({ value: r.roleName, label: r.roleName }))
+            ...roles.map((r) => ({ value: r.roleName, label: r.displayName }))
           ]}
         />
         <GlassSelect
@@ -152,7 +153,9 @@ export function UsersPage() {
                     <td>{user.firstName} {user.lastName}</td>
                     <td className={styles.cellMuted}>{user.email}</td>
                     <td>
-                      <span className={styles.rolePill}>{user.roleName}</span>
+                      <span className={styles.rolePill}>
+                        {getRoleLabel(user.roleName, user.roleDisplayName)}
+                      </span>
                     </td>
                     <td>
                       <span className={`${styles.statusBadge} ${user.isActive ? styles.statusActive : styles.statusInactive}`}>

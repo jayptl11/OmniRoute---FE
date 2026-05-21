@@ -29,6 +29,7 @@ import {
   NEED_TYPE_LABELS,
 } from '@/types/leads';
 import styles from './LeadsListPage.module.css';
+import { getChannelLabel } from '@/lib/roleChannel';
 
 const PAGE_SIZE = 20;
 
@@ -74,12 +75,12 @@ const STATUS_OPTIONS = [
 
 const CHANNEL_OPTIONS = [
   { value: '', label: 'Tất cả kênh' },
-  ...ALL_LEAD_CHANNELS.map((c) => ({ value: c, label: c })),
+  ...ALL_LEAD_CHANNELS.map((c) => ({ value: c, label: getChannelLabel(c) })),
 ];
 
 const CHANNEL_FORM_OPTIONS = [
   { value: '', label: 'Chọn kênh...' },
-  ...ALL_LEAD_CHANNELS.map((c) => ({ value: c, label: c })),
+  ...ALL_LEAD_CHANNELS.map((c) => ({ value: c, label: getChannelLabel(c) })),
 ];
 
 // ─── Create Lead Panel ────────────────────────────────────────────────────────
@@ -526,7 +527,9 @@ export function LeadsListPage() {
                   <td className={styles.cellBold}>{lead.customerName}</td>
                   <td className={styles.cellMuted}>{lead.customerPhone}</td>
                   <td>
-                    <span className={styles.channelBadge}>{lead.channel}</span>
+                    <span className={styles.channelBadge}>
+                      {getChannelLabel(lead.channel, lead.channelDisplayName)}
+                    </span>
                   </td>
                   <td className={styles.cellMuted}>
                     {lead.needType ? NEED_TYPE_LABELS[lead.needType] : '—'}

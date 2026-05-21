@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserPlus, Trash2, X, AlertTriangle, Search } from 'lucide-react';
 import {
   useStoreMembers,
   useSearchStoreMembers,
@@ -7,26 +8,20 @@ import {
   useRemoveStoreMember,
 } from '@/features/ql/hooks/useStoreManager';
 import { extractErrorMessage } from '@/lib/errors';
-import type { StoreStaffDto, AddableStoreUserDto } from '@/types/storemanager';
-import { UserPlus, Trash2, X, AlertTriangle, Search } from 'lucide-react';
+import { getRoleLabel } from '@/lib/roleChannel';
+import type { AddableStoreUserDto, StoreStaffDto } from '@/types/storemanager';
 import styles from './QlMembersPage.module.css';
-
-// ── helpers ───────────────────────────────────────────────────────────────────
 
 function formatDate(iso: string | null): string {
   if (!iso) return 'Chưa có lead';
   return new Intl.DateTimeFormat('vi-VN', {
-    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   }).format(new Date(iso));
 }
-
-function roleLabel(role: string | null): string {
-  if (!role) return '—';
-  const map: Record<string, string> = { SA: 'Tư vấn', CS: 'CSKH', DP: 'Dispatch' };
-  return map[role] ?? role;
-}
-
-// ── Add Member Dialog ─────────────────────────────────────────────────────────
 
 interface AddMemberDialogProps {
   onClose: () => void;
@@ -41,18 +36,25 @@ function AddMemberDialog({ onClose }: AddMemberDialogProps) {
   const addMember = useAddStoreMember();
 
   const { data: results = [], isFetching } = useSearchStoreMembers(
-    debouncedQ ? { q: debouncedQ } : undefined
+    debouncedQ ? { q: debouncedQ } : undefined,
   );
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => setDebouncedQ(q), 300);
-    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
   }, [q]);
 
   const handleAdd = async () => {
-    if (!selectedUser) { setErrorMsg('Vui lòng chọn người dùng.'); return; }
+    if (!selectedUser) {
+      setErrorMsg('Vui lòng chọn người dùng.');
+      return;
+    }
+
     setErrorMsg('');
+
     try {
       await addMember.mutateAsync({ userId: selectedUser.userId });
       onClose();
@@ -66,7 +68,9 @@ function AddMemberDialog({ onClose }: AddMemberDialogProps) {
       <div className={styles.dialog}>
         <div className={styles.dialogHeader}>
           <h3 className={styles.dialogTitle}>Thêm nhân sự</h3>
-          <button className={styles.closeBtn} onClick={onClose}><X size={16} /></button>
+          <button className={styles.closeBtn} onClick={onClose}>
+            <X size={16} />
+          </button>
         </div>
 
         <div className={styles.dialogBody}>
@@ -76,7 +80,10 @@ function AddMemberDialog({ onClose }: AddMemberDialogProps) {
               className={styles.searchInput}
               placeholder="Tìm theo tên hoặc username..."
               value={q}
-              onChange={(e) => { setQ(e.target.value); setSelectedUser(null); }}
+              onChange={(e) => {
+                setQ(e.target.value);
+                setSelectedUser(null);
+              }}
               autoFocus
             />
             {isFetching && <span className={styles.searching}>...</span>}
@@ -89,17 +96,19 @@ function AddMemberDialog({ onClose }: AddMemberDialogProps) {
             {results.map((u: AddableStoreUserDto) => (
               <button
                 key={u.userId}
-                className={`${styles.resultItem} ${selectedUser?.userId === u.userId ? styles.resultSelected : ''}`}
+                className={`${styles.resultItem} ${
+                  selectedUser?.userId === u.userId ? styles.resultSelected : ''
+                }`}
                 onClick={() => setSelectedUser(u)}
               >
                 <div className={styles.resultInfo}>
                   <span className={styles.resultName}>{u.fullName}</span>
                   <span className={styles.resultMeta}>
-                    {u.username} · {roleLabel(u.roleName)}
+                    {u.username} · {getRoleLabel(u.roleName, u.roleDisplayName)}
                   </span>
                 </div>
                 {u.hasStore && (
-                  <span className={styles.hasStoreWarning} title="Đang thuộc đơn vị khác">
+                  <span className={styles.hasStoreWarning} title="Dang thuoc don vi khac">
                     <AlertTriangle size={13} /> Đơn vị khác
                   </span>
                 )}
@@ -111,7 +120,7 @@ function AddMemberDialog({ onClose }: AddMemberDialogProps) {
             <div className={styles.selectedBadge}>
               Đã chọn: <strong>{selectedUser.fullName}</strong>
               {selectedUser.hasStore && (
-                <span className={styles.warnText}> · ⚠️ Đang thuộc đơn vị khác</span>
+                <span className={styles.warnText}> · Đang thuộc đơn vị khác</span>
               )}
             </div>
           )}
@@ -120,7 +129,9 @@ function AddMemberDialog({ onClose }: AddMemberDialogProps) {
         </div>
 
         <div className={styles.dialogFooter}>
-          <button className={styles.cancelBtn} onClick={onClose}>Hủy</button>
+          <button className={styles.cancelBtn} onClick={onClose}>
+            Hủy
+          </button>
           <button
             className={styles.submitBtn}
             onClick={handleAdd}
@@ -133,8 +144,6 @@ function AddMemberDialog({ onClose }: AddMemberDialogProps) {
     </div>
   );
 }
-
-// ── Active Leads Warning Dialog ───────────────────────────────────────────────
 
 interface ActiveLeadsWarningProps {
   userId: string;
@@ -149,20 +158,24 @@ function ActiveLeadsWarningDialog({ userId, userName, onClose }: ActiveLeadsWarn
     <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className={styles.dialog}>
         <div className={styles.dialogHeader}>
-          <h3 className={styles.dialogTitle}>⚠️ Nhân sự còn lead đang xử lý</h3>
-          <button className={styles.closeBtn} onClick={onClose}><X size={16} /></button>
+          <h3 className={styles.dialogTitle}>Nhân sự còn lead đang xử lý</h3>
+          <button className={styles.closeBtn} onClick={onClose}>
+            <X size={16} />
+          </button>
         </div>
         <div className={styles.dialogBody}>
           <div className={styles.warningBox}>
             <AlertTriangle size={20} className={styles.warningIcon} />
             <p className={styles.warningText}>
-              <strong>{userName}</strong> còn lead đang xử lý. Bạn cần reassign toàn bộ lead
-              cho người khác trước khi xóa khỏi đơn vị.
+              <strong>{userName}</strong> còn lead đang xử lý. Bạn cần reassign toàn bộ lead cho
+              người khác trước khi xóa khỏi đơn vị.
             </p>
           </div>
         </div>
         <div className={styles.dialogFooter}>
-          <button className={styles.cancelBtn} onClick={onClose}>Hủy</button>
+          <button className={styles.cancelBtn} onClick={onClose}>
+            Hủy
+          </button>
           <button
             className={styles.warningBtn}
             onClick={() => {
@@ -178,11 +191,11 @@ function ActiveLeadsWarningDialog({ userId, userName, onClose }: ActiveLeadsWarn
   );
 }
 
-// ── Main Page ──────────────────────────────────────────────────────────────────
-
 export function QlMembersPage() {
   const [showAddDialog, setShowAddDialog] = useState(false);
-  const [warningMember, setWarningMember] = useState<{ userId: string; userName: string } | null>(null);
+  const [warningMember, setWarningMember] = useState<{ userId: string; userName: string } | null>(
+    null,
+  );
   const [toastMsg, setToastMsg] = useState('');
 
   const { data: members = [], isLoading, isError } = useStoreMembers();
@@ -196,7 +209,7 @@ export function QlMembersPage() {
   const handleRemove = async (member: StoreStaffDto) => {
     try {
       await removeMember.mutateAsync(member.userId);
-      showToast(`Đã xóa ${member.fullName} khỏi đơn vị.`);
+      showToast(`Da xoa ${member.fullName} khoi don vi.`);
     } catch (err: unknown) {
       const code = (err as { code?: string })?.code;
 
@@ -204,6 +217,7 @@ export function QlMembersPage() {
         setWarningMember({ userId: member.userId, userName: member.fullName });
         return;
       }
+
       showToast(extractErrorMessage(err));
     }
   };
@@ -239,13 +253,19 @@ export function QlMembersPage() {
             </thead>
             <tbody>
               {members.length === 0 && (
-                <tr><td colSpan={6} className={styles.emptyCell}>Chưa có nhân sự nào trong đơn vị.</td></tr>
+                <tr>
+                  <td colSpan={6} className={styles.emptyCell}>
+                    Chưa có nhân sự nào trong đơn vị.
+                  </td>
+                </tr>
               )}
               {members.map((m: StoreStaffDto) => (
                 <tr key={m.userId} className={m.isActive ? '' : styles.rowInactive}>
                   <td className={styles.nameCell}>{m.fullName}</td>
                   <td>
-                    <span className={styles.roleBadge}>{roleLabel(m.roleName)}</span>
+                    <span className={styles.roleBadge}>
+                      {getRoleLabel(m.roleName, m.roleDisplayName)}
+                    </span>
                   </td>
                   <td>
                     {m.currentWorkload > 0 ? (
@@ -288,9 +308,7 @@ export function QlMembersPage() {
         />
       )}
 
-      {toastMsg && (
-        <div className={styles.toast}>{toastMsg}</div>
-      )}
+      {toastMsg && <div className={styles.toast}>{toastMsg}</div>}
     </div>
   );
 }

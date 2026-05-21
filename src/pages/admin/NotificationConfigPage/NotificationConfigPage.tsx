@@ -1,38 +1,24 @@
 import { useState } from 'react';
 import { Bell, ToggleLeft, ToggleRight, Info } from 'lucide-react';
+import { GlassButton } from '@/components/glass';
 import {
   useNotificationConfigs,
   useUpdateNotificationConfig,
 } from '@/features/notifications/hooks/useNotifications';
+import { getRoleLabel } from '@/lib/roleChannel';
 import type { NotificationConfigDto } from '@/types/notifications';
 import styles from './NotificationConfigPage.module.css';
-import { GlassButton } from '@/components/glass';
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
 
 const TYPE_LABEL: Record<string, string> = {
-  NEW_LEAD:      'Lead mới được gán',
-  SLA_WARNING:   'Cảnh báo SLA sắp hết hạn',
-  SLA_VIOLATED:  'Vi phạm SLA',
-  ESCALATED:     'Lead/ticket được escalate',
-  REASSIGNED:    'Lead được reassign',
+  NEW_LEAD: 'Lead mới được gán',
+  SLA_WARNING: 'Cảnh báo SLA sắp hết hạn',
+  SLA_VIOLATED: 'Vi phạm SLA',
+  ESCALATED: 'Lead/ticket được escalate',
+  REASSIGNED: 'Lead được reassign',
   FOLLOW_UP_DUE: 'Nhắc nhở follow-up',
 };
 
-const ROLE_LABEL: Record<string, string> = {
-  TN: 'Trưởng nhóm (TN)',
-  QL: 'Quản lý đơn vị (QL)',
-  SA: 'Tư vấn viên (SA)',
-  CS: 'CSKH (CS)',
-  DP: 'Điều phối (DP)',
-  TV: 'Tiếp nhận (TV)',
-  QT: 'Quản trị (QT)',
-  BQL: 'BQL',
-};
-
-function groupByType(
-  configs: NotificationConfigDto[],
-): Map<string, NotificationConfigDto[]> {
+function groupByType(configs: NotificationConfigDto[]): Map<string, NotificationConfigDto[]> {
   const map = new Map<string, NotificationConfigDto[]>();
   for (const cfg of configs) {
     if (!map.has(cfg.notificationType)) map.set(cfg.notificationType, []);
@@ -40,8 +26,6 @@ function groupByType(
   }
   return map;
 }
-
-// ── Toggle row ────────────────────────────────────────────────────────────────
 
 interface ToggleRowProps {
   cfg: NotificationConfigDto;
@@ -54,9 +38,7 @@ function ToggleRow({ cfg, onToggle, isPending }: ToggleRowProps) {
     <div className={styles.row}>
       <div className={styles.rowLeft}>
         <span className={styles.roleBadge}>{cfg.targetRole}</span>
-        <span className={styles.roleLabel}>
-          {ROLE_LABEL[cfg.targetRole] ?? cfg.targetRole}
-        </span>
+        <span className={styles.roleLabel}>{getRoleLabel(cfg.targetRole)}</span>
       </div>
 
       <GlassButton
@@ -79,34 +61,25 @@ function ToggleRow({ cfg, onToggle, isPending }: ToggleRowProps) {
   );
 }
 
-// ── Main Page ─────────────────────────────────────────────────────────────────
-
 export function NotificationConfigPage() {
   const { data: configs = [], isLoading, isError } = useNotificationConfigs();
   const updateConfig = useUpdateNotificationConfig();
   const [localConfigs, setLocalConfigs] = useState<NotificationConfigDto[] | null>(null);
 
-  // Dùng localConfigs nếu đang trong quá trình optimistic update
   const displayConfigs = localConfigs ?? configs;
 
   const handleToggle = async (id: string, currentValue: boolean) => {
     const newValue = !currentValue;
 
-    // Optimistic update
     setLocalConfigs((prev) =>
-      (prev ?? configs).map((c) =>
-        c.id === id ? { ...c, isEnabled: newValue } : c,
-      ),
+      (prev ?? configs).map((c) => (c.id === id ? { ...c, isEnabled: newValue } : c)),
     );
 
     try {
       await updateConfig.mutateAsync({ id, isEnabled: newValue });
     } catch {
-      // Rollback
       setLocalConfigs((prev) =>
-        (prev ?? configs).map((c) =>
-          c.id === id ? { ...c, isEnabled: currentValue } : c,
-        ),
+        (prev ?? configs).map((c) => (c.id === id ? { ...c, isEnabled: currentValue } : c)),
       );
     }
   };
@@ -122,22 +95,14 @@ export function NotificationConfigPage() {
           </div>
           <div>
             <h1 className={styles.pageTitle}>Cấu hình thông báo</h1>
-            <p className={styles.pageDesc}>
-              Bật/tắt thông báo gửi theo từng loại sự kiện và role
-            </p>
+            <p className={styles.pageDesc}>Bật/tắt thông báo gửi theo từng loại sự kiện và role</p>
           </div>
         </div>
       </div>
 
-      {isLoading && (
-        <div className={styles.loading}>Đang tải cấu hình...</div>
-      )}
+      {isLoading && <div className={styles.loading}>Đang tải cấu hình...</div>}
 
-      {isError && (
-        <div className={styles.errorMsg}>
-          Không thể tải cấu hình thông báo.
-        </div>
-      )}
+      {isError && <div className={styles.errorMsg}>Không thể tải cấu hình thông báo.</div>}
 
       {!isLoading && !isError && (
         <>
@@ -145,9 +110,7 @@ export function NotificationConfigPage() {
             {Array.from(grouped.entries()).map(([type, rows]) => (
               <div key={type} className={styles.section}>
                 <div className={styles.sectionHeader}>
-                  <span className={styles.sectionType}>
-                    {TYPE_LABEL[type] ?? type}
-                  </span>
+                  <span className={styles.sectionType}>{TYPE_LABEL[type] ?? type}</span>
                   <span className={styles.sectionBadge}>{type}</span>
                 </div>
 
@@ -168,9 +131,8 @@ export function NotificationConfigPage() {
           <div className={styles.disclaimer}>
             <Info size={14} strokeWidth={2} className={styles.disclaimerIcon} />
             <p>
-              Cấu hình này chỉ ảnh hưởng đến thông báo gửi{' '}
-              <strong>theo role</strong> (broadcast). Nhân viên được gán trực
-              tiếp vào lead/ticket luôn nhận thông báo bất kể cấu hình trên.
+              Cấu hình này chỉ ảnh hưởng đến thông báo gửi <strong>theo role</strong> (broadcast).
+              Nhân viên được gán trực tiếp vào lead/ticket luôn nhận thông báo bất kể cấu hình trên.
               Hiệu lực sau tối đa 5 phút.
             </p>
           </div>

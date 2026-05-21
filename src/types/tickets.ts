@@ -1,4 +1,4 @@
-// ─── Enums ────────────────────────────────────────────────────────────────────
+import { CHANNEL_LABELS, type ChannelValue } from '@/lib/roleChannel';
 
 export type TicketStatus =
   | 'New'
@@ -8,17 +8,10 @@ export type TicketStatus =
   | 'Resolved'
   | 'Closed';
 
-export type TicketChannel =
-  | 'Hotline'   // added per spec example
-  | 'Phone'
-  | 'Chat'
-  | 'Email'
-  | 'Zalo'
-  | 'Walkin'
-  | 'Other';
+export type TicketChannel = ChannelValue;
 
 export type TicketNeedType =
-  | 'CskhSupport'      // added per spec example
+  | 'CskhSupport'
   | 'TechnicalSupport'
   | 'Complaint'
   | 'Warranty'
@@ -36,237 +29,197 @@ export type TicketActivityAction =
 
 export type TicketPerformancePeriod = 'week' | 'month' | 'quarter';
 
-// ─── Display Helpers ──────────────────────────────────────────────────────────
-
 export const TICKET_STATUS_LABELS: Record<TicketStatus, string> = {
-  New:             'Mới',
-  InProgress:      'Đang xử lý',
-  WaitingCustomer: 'Chờ KH phản hồi',
-  Escalated:       'Đã escalate',
-  Resolved:        'Đã giải quyết',
-  Closed:          'Đã đóng',
+  New: 'Moi',
+  InProgress: 'Dang xu ly',
+  WaitingCustomer: 'Cho KH phan hoi',
+  Escalated: 'Da escalate',
+  Resolved: 'Da giai quyet',
+  Closed: 'Da dong',
 };
 
 export const TICKET_CHANNEL_LABELS: Record<TicketChannel, string> = {
-  Hotline: 'Hotline',
-  Phone:   'Điện thoại',
-  Chat:    'Chat',
-  Email:   'Email',
-  Zalo:    'Zalo',
-  Walkin:  'Trực tiếp',
-  Other:   'Khác',
+  ...CHANNEL_LABELS,
 };
 
 export const TICKET_NEED_TYPE_LABELS: Record<TicketNeedType, string> = {
-  CskhSupport:      'Hỗ trợ CSKH',
-  TechnicalSupport: 'Hỗ trợ kỹ thuật',
-  Complaint:        'Khiếu nại',
-  Warranty:         'Bảo hành',
-  Billing:          'Thanh toán',
-  Other:            'Khác',
+  CskhSupport: 'Ho tro CSKH',
+  TechnicalSupport: 'Ho tro ky thuat',
+  Complaint: 'Khieu nai',
+  Warranty: 'Bao hanh',
+  Billing: 'Thanh toan',
+  Other: 'Khac',
 };
 
 export const TICKET_PRIORITY_LABELS: Record<TicketPriorityLevel, string> = {
-  Low:    'Thấp',
-  Medium: 'Trung bình',
-  High:   'Cao',
+  Low: 'Thap',
+  Medium: 'Trung binh',
+  High: 'Cao',
 };
 
 export const TICKET_ACTIVITY_ACTION_LABELS: Record<TicketActivityAction, string> = {
-  TICKET_CREATED:        'Ticket được tạo',
-  STATUS_CHANGED:        'Chuyển trạng thái',
-  PROCESSING_NOTE:       'Ghi chú xử lý',
-  ESCALATED:             'Escalate ticket',
-  SATISFACTION_RECORDED: 'Ghi nhận hài lòng',
+  TICKET_CREATED: 'Ticket duoc tao',
+  STATUS_CHANGED: 'Chuyen trang thai',
+  PROCESSING_NOTE: 'Ghi chu xu ly',
+  ESCALATED: 'Escalate ticket',
+  SATISFACTION_RECORDED: 'Ghi nhan hai long',
 };
 
-/**
- * BR-05: Valid status transitions.
- * CS-04 does NOT allow transitioning to `Escalated` — use CS-06 (escalate endpoint) instead.
- */
 export const TICKET_VALID_TRANSITIONS: Partial<Record<TicketStatus, TicketStatus[]>> = {
-  New:             ['InProgress'],
-  InProgress:      ['WaitingCustomer', 'Resolved'],   // Escalated removed — use CS-06
+  New: ['InProgress'],
+  InProgress: ['WaitingCustomer', 'Resolved'],
   WaitingCustomer: ['InProgress', 'Resolved'],
-  Escalated:       ['Resolved'],
-  Resolved:        ['Closed'],
+  Escalated: ['Resolved'],
+  Resolved: ['Closed'],
 };
 
-/** Satisfaction score labels & colors */
 export interface SatisfactionMeta {
   label: string;
   color: string;
 }
 
 export const SATISFACTION_META: Record<number, SatisfactionMeta> = {
-  1: { label: 'Rất không hài lòng', color: '#ef4444' },
-  2: { label: 'Không hài lòng',     color: '#f97316' },
-  3: { label: 'Bình thường',         color: '#eab308' },
-  4: { label: 'Hài lòng',            color: '#86efac' },
-  5: { label: 'Rất hài lòng',        color: '#22c55e' },
+  1: { label: 'Rat khong hai long', color: '#ef4444' },
+  2: { label: 'Khong hai long', color: '#f97316' },
+  3: { label: 'Binh thuong', color: '#eab308' },
+  4: { label: 'Hai long', color: '#86efac' },
+  5: { label: 'Rat hai long', color: '#22c55e' },
 };
 
-// ─── CS-01 + CS-03: List Tickets ─────────────────────────────────────────────
-
 export interface GetTicketsParams {
-  search?:        string;
-  status?:        TicketStatus;
+  search?: string;
+  status?: TicketStatus;
   priorityLevel?: TicketPriorityLevel;
-  dateFrom?:      string;
-  dateTo?:        string;
-  page?:          number;
-  pageSize?:      number;
+  dateFrom?: string;
+  dateTo?: string;
+  page?: number;
+  pageSize?: number;
 }
 
-/**
- * CS-01 list item — only fields returned by GET /api/tickets.
- * NOTE: `ticketStatus` (not `status`) per spec.
- */
 export interface TicketListItemDto {
-  ticketId:      string;
-  ticketCode:    string;
-  customerName:  string;
+  ticketId: string;
+  ticketCode: string;
+  customerName: string;
   customerPhone: string;
-  needType:      TicketNeedType;
-  ticketStatus:  TicketStatus;   // field name per spec (not "status")
+  needType: TicketNeedType;
+  ticketStatus: TicketStatus;
   priorityLevel: TicketPriorityLevel;
-  slaDeadline:   string;
-  slaViolated:   boolean;
-  assignedAt:    string;
+  slaDeadline: string;
+  slaViolated: boolean;
+  assignedAt: string;
 }
-
-// ─── CS-02: Ticket Detail ─────────────────────────────────────────────────────
 
 export interface TicketActivityLogDto {
-  id:              string;
-  action:          TicketActivityAction;
-  note:            string | null;
-  newValue:        string | null;
-  performedAt:     string;
+  id: string;
+  action: TicketActivityAction;
+  note: string | null;
+  newValue: string | null;
+  performedAt: string;
   performedByName: string;
 }
 
 export interface CustomerTicketHistoryDto {
-  ticketId:     string;
-  ticketCode:   string;
-  needType:     TicketNeedType;   // replaces needDescription — spec only returns needType
-  ticketStatus: TicketStatus;     // field name per spec (not "status")
-  createdAt:    string;
-  closedAt:     string | null;
+  ticketId: string;
+  ticketCode: string;
+  needType: TicketNeedType;
+  ticketStatus: TicketStatus;
+  createdAt: string;
+  closedAt: string | null;
 }
 
-/**
- * CS-02 detail — fields exactly as returned by GET /api/tickets/{id}.
- * NOTE: `ticketStatus` (not `status`) per spec.
- * NOTE: No `escalatedTo`/`escalatedAt` — spec uses `isEscalated: bool` + `escalatedReason`.
- */
 export interface TicketDetailDto {
-  ticketId:           string;
-  ticketCode:         string;
-  customerName:       string;
-  customerPhone:      string;
-  customerAddress:    string | null;
-  customerEmail:      string | null;
-  channel:            TicketChannel;
-  needType:           TicketNeedType | null;
-  needDescription:    string;
-  priorityScore:      number;
-  priorityLevel:      TicketPriorityLevel;
-  assignedUserId:     string;
-  assignedUserName:   string;
-  assignedStoreId:    string;
-  assignedAt:         string;
-  slaDeadline:        string;
-  slaViolated:        boolean;
-  ticketStatus:       TicketStatus;   // field name per spec (not "status")
-  isEscalated:        boolean;
-  escalatedReason:    string | null;
-  satisfactionScore:  number | null;
-  satisfactionNote:   string | null;
-  createdBy:          string;
-  createdAt:          string;
-  updatedAt:          string;
-  closedAt:           string | null;
-  activityLogs:          TicketActivityLogDto[] | null;
+  ticketId: string;
+  ticketCode: string;
+  customerName: string;
+  customerPhone: string;
+  customerAddress: string | null;
+  customerEmail: string | null;
+  channel: TicketChannel;
+  channelDisplayName?: string | null;
+  needType: TicketNeedType | null;
+  needDescription: string;
+  priorityScore: number;
+  priorityLevel: TicketPriorityLevel;
+  assignedUserId: string;
+  assignedUserName: string;
+  assignedStoreId: string;
+  assignedAt: string;
+  slaDeadline: string;
+  slaViolated: boolean;
+  ticketStatus: TicketStatus;
+  isEscalated: boolean;
+  escalatedReason: string | null;
+  satisfactionScore: number | null;
+  satisfactionNote: string | null;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  closedAt: string | null;
+  activityLogs: TicketActivityLogDto[] | null;
   customerTicketHistory: CustomerTicketHistoryDto[] | null;
 }
 
-// ─── CS-04: Update Status ─────────────────────────────────────────────────────
-
 export interface UpdateTicketStatusRequest {
-  ticketId:     string;
-  newStatus:    TicketStatus;
-  note?:        string;
-  cancelReason?: string;  // optional, used when newStatus = Closed
+  ticketId: string;
+  newStatus: TicketStatus;
+  note?: string;
+  cancelReason?: string;
 }
 
 export interface UpdateTicketStatusResponse {
-  ticketId:  string;
+  ticketId: string;
   ticketCode: string;
   newStatus: TicketStatus;
   updatedAt: string;
 }
 
-// ─── CS-05: Add Note ─────────────────────────────────────────────────────────
-
 export interface AddTicketNoteRequest {
   ticketId: string;
-  content:  string; // BE field name is "content" (not "note"), max 4000 chars
+  content: string;
 }
 
 export interface AddTicketNoteResponse {
-  noteId:    string;
-  ticketId:  string;
+  noteId: string;
+  ticketId: string;
   createdAt: string;
 }
 
-// ─── CS-06: Escalate ─────────────────────────────────────────────────────────
-
 export interface EscalateTicketRequest {
-  ticketId:   string;
-  escalateTo: string;  // field name per spec: "escalateTo" (not "escalatedTo")
-  reason:     string;  // max 1000 chars
+  ticketId: string;
+  escalateTo: string;
+  reason: string;
 }
 
 export interface EscalateTicketResponse {
-  ticketId:    string;
-  ticketCode:  string;
+  ticketId: string;
+  ticketCode: string;
   escalatedTo: string;
   escalatedAt: string;
 }
 
-// ─── CS-07: Satisfaction ─────────────────────────────────────────────────────
-
 export interface RecordSatisfactionRequest {
   ticketId: string;
-  score:    number; // 1–5
-  note?:    string; // max 1000 chars
+  score: number;
+  note?: string;
 }
 
 export interface RecordSatisfactionResponse {
-  ticketId:          string;
-  ticketCode:        string;
+  ticketId: string;
+  ticketCode: string;
   satisfactionScore: number;
-  updatedAt:         string;
+  updatedAt: string;
 }
 
-// ─── CS-08: Performance ───────────────────────────────────────────────────────
-
-/**
- * onTimeRate: percentage 0–100 (NOT a 0.0–1.0 ratio).
- * avgHandlingTimeMinutes: null if no Closed/Resolved tickets yet.
- * avgSatisfactionScore: null if no satisfaction data yet.
- */
 export interface TicketPerformanceDto {
-  period:                  TicketPerformancePeriod;
-  periodStart:             string;  // was dateFrom — renamed per spec
-  periodEnd:               string;  // was dateTo   — renamed per spec
-  totalAssigned:           number;
-  totalProcessed:          number;
-  resolvedCount:           number;
-  onTimeRate:              number;        // 0–100 percent (not 0.0–1.0)
-  avgHandlingTimeMinutes:  number | null; // null if no Closed/Resolved yet
-  avgSatisfactionScore:    number | null; // null if no data
-  slaViolatedCount:        number;
-  generatedAt:             string;
+  period: TicketPerformancePeriod;
+  periodStart: string;
+  periodEnd: string;
+  totalAssigned: number;
+  totalProcessed: number;
+  resolvedCount: number;
+  onTimeRate: number;
+  avgHandlingTimeMinutes: number | null;
+  avgSatisfactionScore: number | null;
+  slaViolatedCount: number;
+  generatedAt: string;
 }

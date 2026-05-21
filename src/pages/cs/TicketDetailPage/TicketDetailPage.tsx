@@ -23,7 +23,6 @@ import type {
 import {
   TICKET_STATUS_LABELS,
   TICKET_PRIORITY_LABELS,
-  TICKET_CHANNEL_LABELS,
   TICKET_NEED_TYPE_LABELS,
   TICKET_ACTIVITY_ACTION_LABELS,
   TICKET_VALID_TRANSITIONS,
@@ -31,6 +30,7 @@ import {
 } from '@/types/tickets';
 import { GlassSelect } from '@/components/glass';
 import styles from './TicketDetailPage.module.css';
+import { getChannelLabel } from '@/lib/roleChannel';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -453,7 +453,7 @@ export function TicketDetailPage() {
               {TICKET_PRIORITY_LABELS[ticket.priorityLevel]} · {ticket.priorityScore} điểm
             </span>
             <span className={styles.channelBadge}>
-              {TICKET_CHANNEL_LABELS[ticket.channel]}
+              {getChannelLabel(ticket.channel, ticket.channelDisplayName)}
             </span>
             <SlaBadge ticket={ticket} />
           </div>

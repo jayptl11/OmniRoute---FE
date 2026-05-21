@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { useLogout } from '@/features/auth';
+import { getRoleLabel } from '@/lib/roleChannel';
 import {
   ListChecks,
   History,
@@ -75,7 +76,9 @@ export function DpLayout() {
             <NotificationBell />
             <div className={styles.userInfo}>
               <span className={styles.userName}>{user?.username}</span>
-              <span className={styles.roleBadge}>{user?.roleName}</span>
+              <span className={styles.roleBadge}>
+                {getRoleLabel(user?.roleName, user?.roleDisplayName)}
+              </span>
             </div>
             <button
               className={styles.logoutBtn}

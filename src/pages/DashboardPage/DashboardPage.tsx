@@ -1,6 +1,7 @@
 import { useAuthStore } from '@/stores/authStore';
 import { useLogout } from '@/features/auth';
 import { GitBranch, Users, Activity, BarChart3, ArrowUpRight, LogOut } from 'lucide-react';
+import { getRoleLabel } from '@/lib/roleChannel';
 
 const statCards = [
   { label: 'Tổng yêu cầu hôm nay', value: '—', icon: Activity, iconColor: '#80A1C1', iconBg: 'bg-[#80A1C1]/10' },
@@ -32,7 +33,7 @@ export function DashboardPage() {
             </div>
             {user?.roleName && (
               <span className="inline-flex items-center rounded-md bg-[#80A1C1]/10 px-2.5 py-1 text-xs font-medium text-[#4d7fa3]">
-                {user.roleName}
+                {getRoleLabel(user.roleName, user.roleDisplayName)}
               </span>
             )}
             <button

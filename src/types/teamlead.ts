@@ -1,4 +1,4 @@
-// ─── Enums ────────────────────────────────────────────────────────────────────
+import { CHANNEL_LABELS, type ChannelValue } from '@/lib/roleChannel';
 
 export type TnLeadStatus =
   | 'New'
@@ -13,14 +13,14 @@ export type TnLeadStatus =
 export const TN_LEAD_STATUS_TERMINAL: TnLeadStatus[] = ['Won', 'Lost', 'Invalid', 'Closed'];
 
 export const TN_LEAD_STATUS_LABELS: Record<TnLeadStatus, string> = {
-  New: 'Mới',
-  PendingResponse: 'Chờ phản hồi',
-  InProgress: 'Đang xử lý',
-  Escalated: 'Đã escalate',
-  Won: 'Thành công',
-  Lost: 'Thất bại',
-  Invalid: 'Không hợp lệ',
-  Closed: 'Đã đóng',
+  New: 'Moi',
+  PendingResponse: 'Cho phan hoi',
+  InProgress: 'Dang xu ly',
+  Escalated: 'Da escalate',
+  Won: 'Thanh cong',
+  Lost: 'That bai',
+  Invalid: 'Khong hop le',
+  Closed: 'Da dong',
 };
 
 export const TN_LEAD_STATUS_COLORS: Record<TnLeadStatus, string> = {
@@ -38,8 +38,8 @@ export type TnPriorityLevel = 'High' | 'Medium' | 'Low';
 
 export const TN_PRIORITY_LABELS: Record<TnPriorityLevel, string> = {
   High: 'Cao',
-  Medium: 'Trung bình',
-  Low: 'Thấp',
+  Medium: 'Trung binh',
+  Low: 'Thap',
 };
 
 export const TN_PRIORITY_COLORS: Record<TnPriorityLevel, string> = {
@@ -48,27 +48,18 @@ export const TN_PRIORITY_COLORS: Record<TnPriorityLevel, string> = {
   Low: '#10b981',
 };
 
-export type TnChannel = 'Web' | 'Facebook' | 'Zalo' | 'Phone' | 'Walkin' | 'Other';
+export type TnChannel = ChannelValue;
 
-export const TN_CHANNEL_LABELS: Record<TnChannel, string> = {
-  Web: 'Website',
-  Facebook: 'Facebook',
-  Zalo: 'Zalo',
-  Phone: 'Điện thoại',
-  Walkin: 'Đến trực tiếp',
-  Other: 'Khác',
-};
+export const TN_CHANNEL_LABELS: Record<TnChannel, string> = CHANNEL_LABELS;
 
 export type Period = 'today' | 'week' | 'month' | 'quarter';
 
 export const PERIOD_LABELS: Record<Period, string> = {
-  today: 'Hôm nay',
-  week: '7 ngày',
-  month: '30 ngày',
-  quarter: '90 ngày',
+  today: 'Hom nay',
+  week: '7 ngay',
+  month: '30 ngay',
+  quarter: '90 ngay',
 };
-
-// ─── TN-01: Overview ──────────────────────────────────────────────────────────
 
 export interface TrendDayDto {
   date: string;
@@ -82,8 +73,6 @@ export interface TeamLeadOverviewDto {
   slaNearDeadline: number;
   trendLast7Days: TrendDayDto[];
 }
-
-// ─── TN-02: SLA Violations ────────────────────────────────────────────────────
 
 export interface SlaViolationDto {
   leadId: string;
@@ -112,8 +101,6 @@ export interface SlaViolationsParams {
   pageSize?: number;
 }
 
-// ─── TN-03: Team Leads List ───────────────────────────────────────────────────
-
 export interface GetTeamLeadsParams {
   search?: string;
   status?: TnLeadStatus;
@@ -138,6 +125,8 @@ export interface TeamLeadListItemDto {
   slaViolated: boolean;
   assignedUserId: string | null;
   assignedUserName: string | null;
+  channel?: TnChannel | null;
+  channelDisplayName?: string | null;
 }
 
 export interface TeamLeadsResponse {
@@ -147,14 +136,10 @@ export interface TeamLeadsResponse {
   pageSize: number;
 }
 
-// ─── TN-04: Reassign Lead ─────────────────────────────────────────────────────
-
 export interface ReassignLeadRequest {
   newUserId: string;
   reason: string;
 }
-
-// ─── TN-05: Escalate Lead ─────────────────────────────────────────────────────
 
 export interface EscalateLeadRequest {
   escalateTo: string;
@@ -165,9 +150,8 @@ export interface EscalateTargetDto {
   userId: string;
   fullName: string;
   roleName: 'TN' | 'QL' | 'QT';
+  roleDisplayName?: string | null;
 }
-
-// ─── TN-06: Escalate History ─────────────────────────────────────────────────
 
 export interface EscalateHistoryItemDto {
   logId: string;
@@ -193,13 +177,9 @@ export interface EscalateHistoryParams {
   pageSize?: number;
 }
 
-// ─── TN-07: Internal Note ─────────────────────────────────────────────────────
-
 export interface AddInternalNoteRequest {
   content: string;
 }
-
-// ─── TN-08: Member Performance ───────────────────────────────────────────────
 
 export interface MemberPerformanceDto {
   userId: string;
@@ -215,8 +195,6 @@ export interface MemberPerformanceDto {
   slaViolatedCount: number;
   generatedAt: string;
 }
-
-// ─── TN-09: Team Report ──────────────────────────────────────────────────────
 
 export interface GetTeamReportParams {
   period?: Period;
@@ -239,38 +217,32 @@ export interface TeamReportDto {
   generatedAt: string;
 }
 
-// ─── TN-10: Team Members ─────────────────────────────────────────────────────
-
 export interface TeamMemberDto {
   userId: string;
   fullName: string;
   roleName: string;
+  roleDisplayName?: string | null;
   isActive: boolean;
   currentWorkload: number;
   lastAssignedAt: string | null;
 }
 
-// ─── TN-11: Add Member ───────────────────────────────────────────────────────
-
 export interface AddMemberRequest {
   userId: string;
 }
-
-// ─── TN-11 helper: Search addable users ──────────────────────────────────────
 
 export interface AddableUserDto {
   userId: string;
   fullName: string;
   username: string;
   roleName: string;
+  roleDisplayName?: string | null;
   hasTeam: boolean;
 }
 
 export interface SearchMembersParams {
   q?: string;
 }
-
-// ─── TN-12: Active Leads Warning (409) ──────────────────────────────────────
 
 export interface ActiveLeadsWarningDto {
   errorCode: 'ACTIVE_LEADS_WARNING';

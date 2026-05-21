@@ -20,6 +20,7 @@ import {
 } from '@/types/leads';
 import styles from './SaleLeadDetailPage.module.css';
 import { GlassSelect } from '@/components/glass';
+import { getChannelLabel } from '@/lib/roleChannel';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -401,7 +402,9 @@ export function SaleLeadDetailPage() {
                 </div>
                 <div className={styles.field}>
                   <span className={styles.fieldLabel}><Tag size={10} /> Kênh tiếp nhận</span>
-                  <span className={styles.fieldValue}>{lead.channel}</span>
+                  <span className={styles.fieldValue}>
+                    {getChannelLabel(lead.channel, lead.channelDisplayName)}
+                  </span>
                 </div>
               </div>
               <div className={styles.field}>

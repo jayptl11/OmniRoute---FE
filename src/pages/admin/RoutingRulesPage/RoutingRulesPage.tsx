@@ -10,6 +10,7 @@ import { Plus, Pencil, Power, RefreshCw, SendHorizonal, FlaskConical } from 'luc
 import styles from '../UsersPage/UsersPage.module.css';
 import ruleStyles from './RoutingRulesPage.module.css';
 import { GlassButton, GlassSelect } from '@/components/glass';
+import { CHANNEL_VALUES, getChannelLabel, type ChannelValue } from '@/lib/roleChannel';
 
 export function RoutingRulesPage() {
   const { data: rules = [], isLoading, refetch, isFetching } = useRoutingRules();
@@ -21,7 +22,7 @@ export function RoutingRulesPage() {
 
   // Test panel state
   const [testDesc, setTestDesc] = useState('');
-  const [testChannel, setTestChannel] = useState('');
+  const [testChannel, setTestChannel] = useState<ChannelValue | ''>('');
   const [confirmToggle, setConfirmToggle] = useState<RoutingRuleDto | null>(null);
 
   const handleToggle = (rule: RoutingRuleDto) => {
@@ -95,7 +96,7 @@ export function RoutingRulesPage() {
                     ) : (
                       <div className={ruleStyles.tagRow}>
                         {rule.conditionChannels.map((c) => (
-                          <span key={c} className={ruleStyles.tag}>{c}</span>
+                          <span key={c} className={ruleStyles.tag}>{getChannelLabel(c)}</span>
                         ))}
                       </div>
                     )}
@@ -167,10 +168,13 @@ export function RoutingRulesPage() {
             />
             <GlassSelect
               value={testChannel}
-              onChange={setTestChannel}
+              onChange={(value) => setTestChannel(value as ChannelValue | '')}
               options={[
                 { value: '', label: 'Tất cả kênh' },
-                ...['Hotline','Walkin','Webform','Chat','Email','Zalo','Referral'].map(c => ({ value: c, label: c }))
+                ...CHANNEL_VALUES.map((channel) => ({
+                  value: channel,
+                  label: getChannelLabel(channel),
+                }))
               ]}
             />
             <GlassButton type="submit" className={styles.btnPrimary} disabled={testRule.isPending}>

@@ -49,6 +49,7 @@ export interface StoreStaffDto {
   userId: string;
   fullName: string;
   roleName: string | null; // "SA" | "CS" | "DP"
+  roleDisplayName?: string | null;
   isActive: boolean;
   currentWorkload: number;
   lastAssignedAt: string | null; // ISO 8601
@@ -61,6 +62,7 @@ export interface AddableStoreUserDto {
   fullName: string;
   username: string;
   roleName: string | null;
+  roleDisplayName?: string | null;
   hasStore: boolean; // true = đang thuộc đơn vị khác
 }
 
@@ -70,6 +72,7 @@ export interface StoreStaffWorkloadDto {
   userId: string;
   fullName: string;
   roleName: string | null;
+  roleDisplayName?: string | null;
   isActive: boolean;
   currentWorkload: number;
   slaViolatedCount: number;

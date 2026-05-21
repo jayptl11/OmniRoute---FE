@@ -16,6 +16,7 @@ import {
 } from '@/types/leads';
 import { GlassSelect } from '@/components/glass';
 import styles from './SaleLeadsListPage.module.css';
+import { getChannelLabel } from '@/lib/roleChannel';
 
 const PAGE_SIZE = 20;
 
@@ -156,7 +157,7 @@ export function SaleLeadsListPage() {
           }
           options={[
             { value: '', label: 'Tất cả kênh' },
-            ...ALL_LEAD_CHANNELS.map((c) => ({ value: c, label: c })),
+            ...ALL_LEAD_CHANNELS.map((c) => ({ value: c, label: getChannelLabel(c) })),
           ]}
           placeholder="Tất cả kênh"
         />

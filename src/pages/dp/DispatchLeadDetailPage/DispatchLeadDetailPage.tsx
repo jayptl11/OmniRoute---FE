@@ -16,6 +16,7 @@ import type {
 import { DISPATCH_ACTIVITY_LABELS, DISPATCH_LEAD_STATUS_LABELS } from '@/types/dispatch';
 import { NEED_TYPE_LABELS } from '@/types/leads';
 import styles from './DispatchLeadDetailPage.module.css';
+import { getChannelLabel } from '@/lib/roleChannel';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -362,7 +363,9 @@ export function DispatchLeadDetailPage() {
                 </div>
                 <div className={styles.field}>
                   <span className={styles.fieldLabel}><Tag size={10} /> Kênh</span>
-                  <span className={styles.fieldValue}>{lead.channel}</span>
+                  <span className={styles.fieldValue}>
+                    {getChannelLabel(lead.channel, lead.channelDisplayName)}
+                  </span>
                 </div>
               </div>
               <div className={styles.field}>
