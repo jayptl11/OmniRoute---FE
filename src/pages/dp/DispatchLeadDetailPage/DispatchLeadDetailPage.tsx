@@ -1,50 +1,97 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-  ArrowLeft, User, Phone, MapPin, Mail, Tag, FileText, Zap,
-  AlertCircle, GitCommitVertical, ArrowRightLeft, Loader2, X,
-  Store, CheckCircle2, AlertTriangle, Clock, Building2,
+  AlertCircle,
+  AlertTriangle,
+  ArrowLeft,
+  ArrowRightLeft,
+  Building2,
+  CheckCircle2,
+  Clock,
+  FileText,
+  GitCommitVertical,
+  Loader2,
+  Mail,
+  MapPin,
+  Phone,
+  Store,
+  Tag,
+  User,
+  X,
+  Zap,
 } from 'lucide-react';
+import { SearchableUserPicker, type SearchableUserPickerOption } from '@/components/SearchableUserPicker';
 import {
+  useAssignLead,
   useDispatchLeadDetail,
   useStoresCapacity,
-  useAssignLead,
 } from '@/features/dp/hooks/useDispatch';
+import { getChannelLabel } from '@/lib/roleChannel';
+import { NEED_TYPE_LABELS } from '@/types/leads';
 import type {
-  DispatchActivityLogDto, DispatchActivityAction, StoreCapacityDto,
+  DispatchActivityAction,
+  DispatchActivityLogDto,
+  StoreCapacityDto,
 } from '@/types/dispatch';
 import { DISPATCH_ACTIVITY_LABELS, DISPATCH_LEAD_STATUS_LABELS } from '@/types/dispatch';
-import { NEED_TYPE_LABELS } from '@/types/leads';
 import styles from './DispatchLeadDetailPage.module.css';
-import { getChannelLabel } from '@/lib/roleChannel';
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function fmtDate(iso: string | null) {
   if (!iso) return '—';
   return new Date(iso).toLocaleString('vi-VN', {
-    day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   });
 }
 
 function actionIconClass(action: DispatchActivityAction) {
   switch (action) {
-    case 'LEAD_CREATED': return styles.actionCreated;
-    case 'STATUS_CHANGED': return styles.actionStatus;
-    case 'DISPATCHED_TO_STORE': return styles.actionDispatched;
+    case 'LEAD_CREATED':
+      return styles.actionCreated;
+    case 'STATUS_CHANGED':
+      return styles.actionStatus;
+    case 'DISPATCHED_TO_STORE':
+      return styles.actionDispatched;
   }
 }
 
 function ActionIcon({ action }: { action: DispatchActivityAction }) {
   switch (action) {
-    case 'LEAD_CREATED': return <GitCommitVertical size={14} />;
-    case 'STATUS_CHANGED': return <ArrowRightLeft size={14} />;
-    case 'DISPATCHED_TO_STORE': return <Store size={14} />;
+    case 'LEAD_CREATED':
+      return <GitCommitVertical size={14} />;
+    case 'STATUS_CHANGED':
+      return <ArrowRightLeft size={14} />;
+    case 'DISPATCHED_TO_STORE':
+      return <Store size={14} />;
   }
 }
 
-// ─── Store Capacity Card ──────────────────────────────────────────────────────
+function getStoreStatusLabel(store: StoreCapacityDto) {
+  if (!store.isActive) return 'Ngừng hoạt động';
+  if (store.isOverCapacity) return 'Quá tải';
+  if (store.isNearCapacity) return 'Gần đầy';
+  return 'Còn chỗ';
+}
+
+function toStoreOption(store: StoreCapacityDto): SearchableUserPickerOption<StoreCapacityDto> {
+  const secondary = [store.storeCode, store.region || store.address].filter(Boolean).join(' · ');
+  const flags: string[] = [];
+
+  if (!store.isActive) flags.push('Ngừng hoạt động');
+  if (store.isOverCapacity) flags.push('Quá tải');
+  else if (store.isNearCapacity) flags.push('Gần đầy');
+
+  return {
+    value: store.id,
+    label: store.storeName,
+    subLabel: secondary,
+    note: `${store.activeLeads}/${store.maxCapacity} · còn ${store.availableSlots}${flags.length ? ` · ${flags.join(' · ')}` : ''}`,
+    raw: store,
+  };
+}
 
 function StoreCard({
   store,
@@ -53,7 +100,7 @@ function StoreCard({
 }: {
   store: StoreCapacityDto;
   selected: boolean;
-  onSelect: (id: string) => void;
+  onSelect: (store: StoreCapacityDto) => void;
 }) {
   const capacityPct = store.maxCapacity > 0
     ? Math.round((store.activeLeads / store.maxCapacity) * 100)
@@ -62,9 +109,10 @@ function StoreCard({
   return (
     <button
       className={`${styles.storeCard} ${selected ? styles.storeCardSelected : ''}`}
-      onClick={() => onSelect(store.id)}
+      onClick={() => onSelect(store)}
       type="button"
       id={`store-card-${store.id}`}
+      disabled={!store.isActive}
     >
       <div className={styles.storeCardHeader}>
         <div>
@@ -72,20 +120,20 @@ function StoreCard({
           <div className={styles.storeCode}>{store.storeCode} · {store.region}</div>
         </div>
         {store.isOverCapacity ? (
-          <span className={`${styles.capacityBadge} ${styles.capacityFull}`}>Đầy tải</span>
+          <span className={`${styles.capacityBadge} ${styles.capacityFull}`}>Quá tải</span>
         ) : store.isNearCapacity ? (
           <span className={`${styles.capacityBadge} ${styles.capacityNear}`}>Gần đầy</span>
-        ) : (
+        ) : store.isActive ? (
           <span className={`${styles.capacityBadge} ${styles.capacityOk}`}>Còn chỗ</span>
+        ) : (
+          <span className={`${styles.capacityBadge} ${styles.capacityInactive}`}>Ngừng hoạt động</span>
         )}
       </div>
       <div className={styles.storeCapacityRow}>
         <div className={styles.capacityBar}>
           <div
             className={`${styles.capacityFill} ${
-              store.isOverCapacity ? styles.fillFull :
-              store.isNearCapacity ? styles.fillNear :
-              styles.fillOk
+              store.isOverCapacity ? styles.fillFull : store.isNearCapacity ? styles.fillNear : styles.fillOk
             }`}
             style={{ width: `${Math.min(capacityPct, 100)}%` }}
           />
@@ -97,6 +145,7 @@ function StoreCard({
       <div className={styles.storeAddress}>
         <MapPin size={10} /> {store.address}
       </div>
+      {!store.isActive && <div className={styles.storeInactiveNote}>Không thể phân công vào cửa hàng này.</div>}
       {selected && (
         <div className={styles.storeSelectedMark}>
           <CheckCircle2 size={14} /> Đã chọn
@@ -105,8 +154,6 @@ function StoreCard({
     </button>
   );
 }
-
-// ─── Assign Dialog — DP-04 + DP-05 ───────────────────────────────────────────
 
 function AssignDialog({
   leadId,
@@ -125,11 +172,14 @@ function AssignDialog({
   const [error, setError] = useState('');
   const MAX_NOTE = 500;
 
-  // BR-07: show warning for over-capacity store, require explicit confirm
   const needsOverCapacityConfirm = store.isOverCapacity && !confirmedOverCapacity;
 
   const handleSubmit = async () => {
     setError('');
+    if (!store.isActive) {
+      setError('Không thể gán về cửa hàng đang ngừng hoạt động.');
+      return;
+    }
     if (needsOverCapacityConfirm) {
       setError('Vui lòng xác nhận gán về cửa hàng đang đầy tải.');
       return;
@@ -152,10 +202,11 @@ function AssignDialog({
           <h2 className={styles.dialogTitle}>
             <Store size={16} /> Xác nhận phân công
           </h2>
-          <button className={styles.dialogClose} onClick={onClose}><X size={15} /></button>
+          <button className={styles.dialogClose} onClick={onClose} type="button">
+            <X size={15} />
+          </button>
         </div>
         <div className={styles.dialogBody}>
-          {/* Store info summary */}
           <div className={styles.dialogStoreInfo}>
             <Building2 size={14} className={styles.dialogStoreIcon} />
             <div>
@@ -165,7 +216,7 @@ function AssignDialog({
               </div>
             </div>
             {store.isOverCapacity ? (
-              <span className={`${styles.capacityBadge} ${styles.capacityFull}`}>Đầy tải</span>
+              <span className={`${styles.capacityBadge} ${styles.capacityFull}`}>Quá tải</span>
             ) : store.isNearCapacity ? (
               <span className={`${styles.capacityBadge} ${styles.capacityNear}`}>Gần đầy</span>
             ) : (
@@ -173,7 +224,6 @@ function AssignDialog({
             )}
           </div>
 
-          {/* BR-07 over-capacity warning */}
           {store.isOverCapacity && (
             <div className={styles.warningBanner}>
               <AlertTriangle size={14} className={styles.warningIcon} />
@@ -187,18 +237,23 @@ function AssignDialog({
                 <button
                   id="btn-confirm-over-capacity"
                   className={styles.btnConfirmWarning}
-                  onClick={() => { setConfirmedOverCapacity(true); setError(''); }}
+                  onClick={() => {
+                    setConfirmedOverCapacity(true);
+                    setError('');
+                  }}
+                  type="button"
                 >
                   Tôi hiểu, tiếp tục
                 </button>
               )}
               {confirmedOverCapacity && (
-                <span className={styles.warningConfirmed}><CheckCircle2 size={13} /> Đã xác nhận</span>
+                <span className={styles.warningConfirmed}>
+                  <CheckCircle2 size={13} /> Đã xác nhận
+                </span>
               )}
             </div>
           )}
 
-          {/* Note — DP-05 */}
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>
               Ghi chú lý do chọn cửa hàng
@@ -217,12 +272,13 @@ function AssignDialog({
           {error && <p className={styles.fieldError}><AlertCircle size={12} /> {error}</p>}
         </div>
         <div className={styles.dialogFooter}>
-          <button className={styles.btnSecondary} onClick={onClose} disabled={assignLead.isPending}>Huỷ</button>
+          <button className={styles.btnSecondary} onClick={onClose} disabled={assignLead.isPending} type="button">Huỷ</button>
           <button
             id="btn-confirm-assign"
             className={styles.btnPrimary}
             onClick={handleSubmit}
-            disabled={assignLead.isPending || needsOverCapacityConfirm}
+            disabled={assignLead.isPending || needsOverCapacityConfirm || !store.isActive}
+            type="button"
           >
             {assignLead.isPending && <Loader2 size={13} className={styles.spinning} />}
             Xác nhận gán
@@ -232,8 +288,6 @@ function AssignDialog({
     </div>
   );
 }
-
-// ─── Timeline Item ────────────────────────────────────────────────────────────
 
 function TimelineItem({ log }: { log: DispatchActivityLogDto }) {
   return (
@@ -258,34 +312,39 @@ function TimelineItem({ log }: { log: DispatchActivityLogDto }) {
   );
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
-
 export function DispatchLeadDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: lead, isLoading, isError } = useDispatchLeadDetail(id!);
-  const { data: stores, isLoading: storesLoading } = useStoresCapacity();
-
-  const [selectedStoreId, setSelectedStoreId] = useState<string | null>(null);
+  const [storeSearchQuery, setStoreSearchQuery] = useState('');
+  const [selectedStore, setSelectedStore] = useState<StoreCapacityDto | null>(null);
   const [assignDialogOpen, setAssignDialogOpen] = useState(false);
+  const [storePickerOpen, setStorePickerOpen] = useState(false);
 
-  const activeStores = (stores ?? []).filter((s) => s.isActive);
-  const selectedStore = activeStores.find((s) => s.id === selectedStoreId) ?? null;
+  const { data: lead, isLoading, isError } = useDispatchLeadDetail(id!);
+  const { data: stores, isLoading: storesLoading } = useStoresCapacity(storeSearchQuery || undefined);
 
-  const sortedStores = [...activeStores].sort((a, b) => {
-    // Sort: available → near capacity → over capacity
-    if (a.isOverCapacity !== b.isOverCapacity) return a.isOverCapacity ? 1 : -1;
-    if (a.isNearCapacity !== b.isNearCapacity) return a.isNearCapacity ? 1 : -1;
-    return b.availableSlots - a.availableSlots;
-  });
+  const sortedStores = useMemo(() => {
+    return [...(stores ?? [])].sort((a, b) => {
+      if (a.isActive !== b.isActive) return a.isActive ? -1 : 1;
+      if (a.isOverCapacity !== b.isOverCapacity) return a.isOverCapacity ? 1 : -1;
+      if (a.isNearCapacity !== b.isNearCapacity) return a.isNearCapacity ? 1 : -1;
+      return b.availableSlots - a.availableSlots;
+    });
+  }, [stores]);
+
+  const storeOptions = useMemo(
+    () => sortedStores.map(toStoreOption),
+    [sortedStores],
+  );
+
+  const selectedStoreOption = selectedStore ? toStoreOption(selectedStore) : null;
 
   const sortedLogs = lead
     ? [...(lead.activityLogs ?? [])].sort(
-        (a, b) => new Date(a.performedAt).getTime() - new Date(b.performedAt).getTime()
+        (a, b) => new Date(a.performedAt).getTime() - new Date(b.performedAt).getTime(),
       )
     : [];
-
 
   if (isLoading) {
     return (
@@ -300,7 +359,7 @@ export function DispatchLeadDetailPage() {
       <div className={styles.notFound}>
         <AlertCircle size={40} className={styles.notFoundIcon} />
         <p>Lead không tồn tại hoặc không ở trạng thái chờ điều phối.</p>
-        <button className={styles.btnSecondary} onClick={() => navigate('/dp/queue')}>
+        <button className={styles.btnSecondary} onClick={() => navigate('/dp/queue')} type="button">
           <ArrowLeft size={14} /> Quay lại hàng đợi
         </button>
       </div>
@@ -309,10 +368,9 @@ export function DispatchLeadDetailPage() {
 
   return (
     <div className={styles.page}>
-      {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <button className={styles.backBtn} onClick={() => navigate('/dp/queue')}>
+          <button className={styles.backBtn} onClick={() => navigate('/dp/queue')} type="button">
             <ArrowLeft size={16} />
           </button>
           <div className={styles.titleGroup}>
@@ -328,17 +386,23 @@ export function DispatchLeadDetailPage() {
             )}
           </div>
           {(() => {
-            const lvl = lead.priorityLevel;
-            const cls = lvl === 'High' ? styles.priorityHigh : lvl === 'Medium' ? styles.priorityMedium : styles.priorityLow;
-            return <span className={`${styles.priorityBadge} ${cls}`}>{lvl}</span>;
+            const level = lead.priorityLevel;
+            const className =
+              level === 'High'
+                ? styles.priorityHigh
+                : level === 'Medium'
+                  ? styles.priorityMedium
+                  : styles.priorityLow;
+            return <span className={`${styles.priorityBadge} ${className}`}>{level}</span>;
           })()}
         </div>
         <div className={styles.headerActions}>
           <button
             id="btn-assign"
             className={styles.btnPrimary}
-            disabled={!selectedStore}
+            disabled={!selectedStore || !selectedStore.isActive}
             onClick={() => setAssignDialogOpen(true)}
+            type="button"
           >
             <Store size={14} />
             {selectedStore ? `Gán về ${selectedStore.storeName}` : 'Chọn cửa hàng để gán'}
@@ -346,11 +410,8 @@ export function DispatchLeadDetailPage() {
         </div>
       </div>
 
-      {/* 2-col grid */}
       <div className={styles.grid}>
-        {/* Left col */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {/* Customer info */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h2 className={styles.cardTitle}><User size={15} className={styles.cardTitleIcon} /> Thông tin khách hàng</h2>
@@ -384,14 +445,13 @@ export function DispatchLeadDetailPage() {
                 <div className={styles.field}>
                   <span className={styles.fieldLabel}><Tag size={10} /> Sản phẩm quan tâm</span>
                   <div className={styles.tagsWrap}>
-                    {(lead.productInterest ?? []).map((t) => <span key={t} className={styles.tag}>{t}</span>)}
+                    {(lead.productInterest ?? []).map((tag) => <span key={tag} className={styles.tag}>{tag}</span>)}
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Need description */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h2 className={styles.cardTitle}><FileText size={15} className={styles.cardTitleIcon} /> Mô tả nhu cầu</h2>
@@ -401,7 +461,6 @@ export function DispatchLeadDetailPage() {
             </div>
           </div>
 
-          {/* Classification */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h2 className={styles.cardTitle}><Zap size={15} className={styles.cardTitleIcon} /> Kết quả phân loại</h2>
@@ -409,10 +468,11 @@ export function DispatchLeadDetailPage() {
             <div>
               <div className={styles.classRow}>
                 <span className={styles.classLabel}>Loại nhu cầu</span>
-                {lead.needType
-                  ? <span className={styles.classValue}>{NEED_TYPE_LABELS[lead.needType]}</span>
-                  : <span className={styles.classValueMuted}>—</span>
-                }
+                {lead.needType ? (
+                  <span className={styles.classValue}>{NEED_TYPE_LABELS[lead.needType]}</span>
+                ) : (
+                  <span className={styles.classValueMuted}>—</span>
+                )}
               </div>
               <div className={styles.classRow}>
                 <span className={styles.classLabel}>Điểm ưu tiên</span>
@@ -430,33 +490,56 @@ export function DispatchLeadDetailPage() {
           </div>
         </div>
 
-        {/* Right col */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {/* Store capacity — DP-03 inline */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h2 className={styles.cardTitle}><Building2 size={15} className={styles.cardTitleIcon} /> Chọn cửa hàng phân công</h2>
-              <span className={styles.cardHint}>Click để chọn</span>
+              <span className={styles.cardHint}>Search server-side theo tên / mã / khu vực / địa chỉ</span>
+            </div>
+            <div className={styles.storeSearchWrap}>
+              <SearchableUserPicker
+                mode="remote"
+                placeholder="Tìm cửa hàng theo tên, mã, khu vực hoặc địa chỉ..."
+                options={storeOptions}
+                selectedOption={selectedStoreOption}
+                onChange={(option) => setSelectedStore(option?.raw ?? null)}
+                onSearch={setStoreSearchQuery}
+                onOpenChange={setStorePickerOpen}
+                isLoading={storesLoading && storePickerOpen}
+                fetchOnOpen
+                emptyMessage="Không tìm thấy cửa hàng phù hợp."
+                showSelectionSummary
+                className={styles.storeSearchPicker}
+              />
+              {selectedStore && (
+                <div className={styles.storeSearchMeta}>
+                  <span className={styles.storeSearchStatus}>{getStoreStatusLabel(selectedStore)}</span>
+                  <span className={styles.storeSearchCapacity}>
+                    {selectedStore.activeLeads}/{selectedStore.maxCapacity} · còn {selectedStore.availableSlots}
+                  </span>
+                </div>
+              )}
             </div>
             {storesLoading ? (
               <div className={styles.cardLoading}><div className={styles.miniSpinner} /></div>
             ) : sortedStores.length === 0 ? (
-              <div className={styles.cardEmpty}>Không có cửa hàng khả dụng.</div>
+              <div className={styles.cardEmpty}>
+                {storeSearchQuery ? 'Không có cửa hàng phù hợp với từ khóa tìm kiếm.' : 'Không có cửa hàng khả dụng.'}
+              </div>
             ) : (
               <div className={styles.storeList}>
                 {sortedStores.map((store) => (
                   <StoreCard
                     key={store.id}
                     store={store}
-                    selected={selectedStoreId === store.id}
-                    onSelect={(sid) => setSelectedStoreId((prev) => prev === sid ? null : sid)}
+                    selected={selectedStore?.id === store.id}
+                    onSelect={setSelectedStore}
                   />
                 ))}
               </div>
             )}
           </div>
 
-          {/* Activity Timeline */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h2 className={styles.cardTitle}><GitCommitVertical size={15} className={styles.cardTitleIcon} /> Lịch sử hoạt động</h2>

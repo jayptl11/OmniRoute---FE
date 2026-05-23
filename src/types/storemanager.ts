@@ -184,6 +184,13 @@ export interface ReassignStoreLeadRequest {
   reason: string;
 }
 
+export interface StoreLeadReassignTargetDto {
+  userId: string;
+  fullName: string;
+  roleName: string | null;
+  roleDisplayName?: string | null;
+}
+
 export interface AddStoreMemberRequest {
   userId: string;
 }
@@ -193,5 +200,18 @@ export interface AddStoreNoteRequest {
 }
 
 export interface SearchStoreMembersParams {
+  q?: string;
+}
+
+export interface StoreLeadHistoryActorDto {
+  userId: string;
+  fullName: string;
+}
+
+export interface SearchStoreLeadReassignTargetsParams {
+  q?: string;
+}
+
+export interface SearchStoreLeadHistoryActorsParams {
   q?: string;
 }

@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserPlus, Trash2, X, AlertTriangle, Search } from 'lucide-react';
+import { UserPlus, Trash2, X, AlertTriangle } from 'lucide-react';
+import { SearchableUserPicker, type SearchableUserPickerOption } from '@/components/SearchableUserPicker';
 import {
-  useStoreMembers,
-  useSearchStoreMembers,
   useAddStoreMember,
   useRemoveStoreMember,
+  useSearchStoreMembers,
+  useStoreMembers,
 } from '@/features/ql/hooks/useStoreManager';
 import { extractErrorMessage } from '@/lib/errors';
 import { getRoleLabel } from '@/lib/roleChannel';
@@ -23,29 +24,31 @@ function formatDate(iso: string | null): string {
   }).format(new Date(iso));
 }
 
+function toStoreMemberOption(user: AddableStoreUserDto): SearchableUserPickerOption<AddableStoreUserDto> {
+  return {
+    value: user.userId,
+    label: user.fullName,
+    subLabel: `${user.username} · ${getRoleLabel(user.roleName, user.roleDisplayName)}`,
+    note: user.hasStore ? 'Đang thuộc đơn vị khác' : undefined,
+    raw: user,
+  };
+}
+
 interface AddMemberDialogProps {
   onClose: () => void;
 }
 
 function AddMemberDialog({ onClose }: AddMemberDialogProps) {
-  const [q, setQ] = useState('');
-  const [debouncedQ, setDebouncedQ] = useState('');
-  const [selectedUser, setSelectedUser] = useState<AddableStoreUserDto | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<SearchableUserPickerOption<AddableStoreUserDto> | null>(null);
   const addMember = useAddStoreMember();
 
   const { data: results = [], isFetching } = useSearchStoreMembers(
-    debouncedQ ? { q: debouncedQ } : undefined,
+    searchQuery ? { q: searchQuery } : undefined,
+    pickerOpen,
   );
-
-  useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => setDebouncedQ(q), 300);
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-  }, [q]);
 
   const handleAdd = async () => {
     if (!selectedUser) {
@@ -56,7 +59,7 @@ function AddMemberDialog({ onClose }: AddMemberDialogProps) {
     setErrorMsg('');
 
     try {
-      await addMember.mutateAsync({ userId: selectedUser.userId });
+      await addMember.mutateAsync({ userId: selectedUser.raw.userId });
       onClose();
     } catch (err: unknown) {
       setErrorMsg(extractErrorMessage(err));
@@ -64,78 +67,46 @@ function AddMemberDialog({ onClose }: AddMemberDialogProps) {
   };
 
   return (
-    <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div className={styles.overlay} onClick={(event) => event.target === event.currentTarget && onClose()}>
       <div className={styles.dialog}>
         <div className={styles.dialogHeader}>
           <h3 className={styles.dialogTitle}>Thêm nhân sự</h3>
-          <button className={styles.closeBtn} onClick={onClose}>
+          <button className={styles.closeBtn} onClick={onClose} type="button">
             <X size={16} />
           </button>
         </div>
 
         <div className={styles.dialogBody}>
-          <div className={styles.searchGroup}>
-            <Search size={14} className={styles.searchIcon} />
-            <input
-              className={styles.searchInput}
-              placeholder="Tìm theo tên hoặc username..."
-              value={q}
-              onChange={(e) => {
-                setQ(e.target.value);
-                setSelectedUser(null);
-              }}
-              autoFocus
-            />
-            {isFetching && <span className={styles.searching}>...</span>}
-          </div>
-
-          <div className={styles.resultList}>
-            {results.length === 0 && debouncedQ && !isFetching && (
-              <p className={styles.noResults}>Không tìm thấy kết quả.</p>
-            )}
-            {results.map((u: AddableStoreUserDto) => (
-              <button
-                key={u.userId}
-                className={`${styles.resultItem} ${
-                  selectedUser?.userId === u.userId ? styles.resultSelected : ''
-                }`}
-                onClick={() => setSelectedUser(u)}
-              >
-                <div className={styles.resultInfo}>
-                  <span className={styles.resultName}>{u.fullName}</span>
-                  <span className={styles.resultMeta}>
-                    {u.username} · {getRoleLabel(u.roleName, u.roleDisplayName)}
-                  </span>
-                </div>
-                {u.hasStore && (
-                  <span className={styles.hasStoreWarning} title="Dang thuoc don vi khac">
-                    <AlertTriangle size={13} /> Đơn vị khác
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-
-          {selectedUser && (
-            <div className={styles.selectedBadge}>
-              Đã chọn: <strong>{selectedUser.fullName}</strong>
-              {selectedUser.hasStore && (
-                <span className={styles.warnText}> · Đang thuộc đơn vị khác</span>
-              )}
-            </div>
-          )}
+          <SearchableUserPicker
+            mode="remote"
+            placeholder="Tìm theo tên hoặc username..."
+            options={results.map(toStoreMemberOption)}
+            selectedOption={selectedUser}
+            onChange={(option) => {
+              setSelectedUser(option);
+              setErrorMsg('');
+            }}
+            onSearch={setSearchQuery}
+            onOpenChange={setPickerOpen}
+            isLoading={isFetching}
+            fetchOnOpen
+            emptyMessage="Không tìm thấy kết quả."
+            showSelectionSummary
+            autoFocus
+          />
 
           {errorMsg && <p className={styles.formError}>{errorMsg}</p>}
         </div>
 
         <div className={styles.dialogFooter}>
-          <button className={styles.cancelBtn} onClick={onClose}>
+          <button className={styles.cancelBtn} onClick={onClose} type="button">
             Hủy
           </button>
           <button
             className={styles.submitBtn}
             onClick={handleAdd}
             disabled={!selectedUser || addMember.isPending}
+            type="button"
           >
             {addMember.isPending ? 'Đang thêm...' : 'Thêm nhân sự'}
           </button>
@@ -155,11 +126,11 @@ function ActiveLeadsWarningDialog({ userId, userName, onClose }: ActiveLeadsWarn
   const navigate = useNavigate();
 
   return (
-    <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div className={styles.overlay} onClick={(event) => event.target === event.currentTarget && onClose()}>
       <div className={styles.dialog}>
         <div className={styles.dialogHeader}>
           <h3 className={styles.dialogTitle}>Nhân sự còn lead đang xử lý</h3>
-          <button className={styles.closeBtn} onClick={onClose}>
+          <button className={styles.closeBtn} onClick={onClose} type="button">
             <X size={16} />
           </button>
         </div>
@@ -167,13 +138,13 @@ function ActiveLeadsWarningDialog({ userId, userName, onClose }: ActiveLeadsWarn
           <div className={styles.warningBox}>
             <AlertTriangle size={20} className={styles.warningIcon} />
             <p className={styles.warningText}>
-              <strong>{userName}</strong> còn lead đang xử lý. Bạn cần reassign toàn bộ lead cho
-              người khác trước khi xóa khỏi đơn vị.
+              <strong>{userName}</strong> còn lead đang xử lý. Bạn cần reassign toàn bộ lead cho người khác trước khi
+              xóa khỏi đơn vị.
             </p>
           </div>
         </div>
         <div className={styles.dialogFooter}>
-          <button className={styles.cancelBtn} onClick={onClose}>
+          <button className={styles.cancelBtn} onClick={onClose} type="button">
             Hủy
           </button>
           <button
@@ -182,6 +153,7 @@ function ActiveLeadsWarningDialog({ userId, userName, onClose }: ActiveLeadsWarn
               onClose();
               navigate(`/ql/leads?assignedUserId=${userId}`);
             }}
+            type="button"
           >
             Đi đến danh sách lead
           </button>
@@ -193,16 +165,14 @@ function ActiveLeadsWarningDialog({ userId, userName, onClose }: ActiveLeadsWarn
 
 export function QlMembersPage() {
   const [showAddDialog, setShowAddDialog] = useState(false);
-  const [warningMember, setWarningMember] = useState<{ userId: string; userName: string } | null>(
-    null,
-  );
+  const [warningMember, setWarningMember] = useState<{ userId: string; userName: string } | null>(null);
   const [toastMsg, setToastMsg] = useState('');
 
   const { data: members = [], isLoading, isError } = useStoreMembers();
   const removeMember = useRemoveStoreMember();
 
-  const showToast = (msg: string) => {
-    setToastMsg(msg);
+  const showToast = (message: string) => {
+    setToastMsg(message);
     setTimeout(() => setToastMsg(''), 3500);
   };
 
@@ -212,7 +182,6 @@ export function QlMembersPage() {
       showToast(`Da xoa ${member.fullName} khoi don vi.`);
     } catch (err: unknown) {
       const code = (err as { code?: string })?.code;
-
       if (code === 'ACTIVE_LEADS_WARNING') {
         setWarningMember({ userId: member.userId, userName: member.fullName });
         return;
@@ -229,7 +198,7 @@ export function QlMembersPage() {
           <h1 className={styles.pageTitle}>Nhân sự đơn vị</h1>
           <p className={styles.pageDesc}>Quản lý danh sách nhân viên trong đơn vị của bạn</p>
         </div>
-        <button className={styles.addBtn} onClick={() => setShowAddDialog(true)}>
+        <button className={styles.addBtn} onClick={() => setShowAddDialog(true)} type="button">
           <UserPlus size={15} />
           Thêm nhân sự
         </button>
@@ -259,24 +228,24 @@ export function QlMembersPage() {
                   </td>
                 </tr>
               )}
-              {members.map((m: StoreStaffDto) => (
-                <tr key={m.userId} className={m.isActive ? '' : styles.rowInactive}>
-                  <td className={styles.nameCell}>{m.fullName}</td>
+              {members.map((member) => (
+                <tr key={member.userId} className={member.isActive ? '' : styles.rowInactive}>
+                  <td className={styles.nameCell}>{member.fullName}</td>
                   <td>
                     <span className={styles.roleBadge}>
-                      {getRoleLabel(m.roleName, m.roleDisplayName)}
+                      {getRoleLabel(member.roleName, member.roleDisplayName)}
                     </span>
                   </td>
                   <td>
-                    {m.currentWorkload > 0 ? (
-                      <span className={styles.workloadBadge}>{m.currentWorkload}</span>
+                    {member.currentWorkload > 0 ? (
+                      <span className={styles.workloadBadge}>{member.currentWorkload}</span>
                     ) : (
                       <span className={styles.workloadEmpty}>0</span>
                     )}
                   </td>
-                  <td className={styles.dateCell}>{formatDate(m.lastAssignedAt)}</td>
+                  <td className={styles.dateCell}>{formatDate(member.lastAssignedAt)}</td>
                   <td>
-                    {m.isActive ? (
+                    {member.isActive ? (
                       <span className={styles.activeTag}>Hoạt động</span>
                     ) : (
                       <span className={styles.inactiveTag}>Đã khóa</span>
@@ -285,9 +254,10 @@ export function QlMembersPage() {
                   <td>
                     <button
                       className={styles.removeBtn}
-                      onClick={() => handleRemove(m)}
+                      onClick={() => handleRemove(member)}
                       disabled={removeMember.isPending}
                       title="Xóa khỏi đơn vị"
+                      type="button"
                     >
                       <Trash2 size={14} />
                     </button>

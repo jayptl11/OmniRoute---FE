@@ -24,11 +24,11 @@ export function useStore(id: string) {
   });
 }
 
-/** Tìm kiếm QL để gán làm quản lý cửa hàng (debounce ở UI) */
-export function useSearchStoreManagers(q?: string) {
+export function useSearchStoreManagers(q?: string, enabled = true) {
   return useQuery({
     queryKey: storeKeys.managers(q),
     queryFn: () => storeService.searchManagers(q),
+    enabled,
     staleTime: 30_000,
   });
 }

@@ -91,6 +91,10 @@ export interface StoreCapacityDto {
   isActive: boolean;
 }
 
+export interface SearchDispatchStoresParams {
+  q?: string;
+}
+
 // ─── DP-04 / DP-05: Assign Lead ──────────────────────────────────────────────
 
 export interface AssignLeadRequest {

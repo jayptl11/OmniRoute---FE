@@ -1,21 +1,20 @@
 import {
-  useQuery,
-  useMutation,
-  useQueryClient,
   keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
 } from '@tanstack/react-query';
 import { storeManagerService } from '../api/storeManagerService';
 import type {
-  GetStoreLeadsParams,
-  GetStoreHistoryParams,
-  GetStoreReportParams,
-  ReassignStoreLeadRequest,
   AddStoreMemberRequest,
   AddStoreNoteRequest,
+  GetStoreHistoryParams,
+  GetStoreLeadsParams,
+  GetStoreReportParams,
+  ReassignStoreLeadRequest,
   SearchStoreMembersParams,
 } from '@/types/storemanager';
 
-// ── Query Keys ────────────────────────────────────────────────────────────────
 export const qlKeys = {
   all: ['ql'] as const,
   members: () => [...qlKeys.all, 'members'] as const,
@@ -24,11 +23,13 @@ export const qlKeys = {
   workload: () => [...qlKeys.all, 'workload'] as const,
   capacity: () => [...qlKeys.all, 'capacity'] as const,
   leads: (params?: GetStoreLeadsParams) => [...qlKeys.all, 'leads', params] as const,
+  reassignTargets: (leadId: string, q?: string) =>
+    [...qlKeys.all, 'reassign-targets', leadId, q] as const,
   history: (params?: GetStoreHistoryParams) => [...qlKeys.all, 'history', params] as const,
+  historyActors: (q?: string) => [...qlKeys.all, 'history-actors', q] as const,
   report: (params?: GetStoreReportParams) => [...qlKeys.all, 'report', params] as const,
 };
 
-// ── QL-06: Danh sách nhân sự ──────────────────────────────────────────────────
 export function useStoreMembers() {
   return useQuery({
     queryKey: qlKeys.members(),
@@ -37,16 +38,15 @@ export function useStoreMembers() {
   });
 }
 
-// ── QL-07 helper: Tìm kiếm user để thêm ──────────────────────────────────────
-export function useSearchStoreMembers(params?: SearchStoreMembersParams) {
+export function useSearchStoreMembers(params?: SearchStoreMembersParams, enabled = true) {
   return useQuery({
     queryKey: qlKeys.membersSearch(params),
     queryFn: () => storeManagerService.searchMembers(params),
+    enabled,
     staleTime: 30_000,
   });
 }
 
-// ── QL-07: Thêm nhân sự ──────────────────────────────────────────────────────
 export function useAddStoreMember() {
   const qc = useQueryClient();
   return useMutation({
@@ -57,8 +57,6 @@ export function useAddStoreMember() {
   });
 }
 
-// ── QL-08: Xóa nhân sự ───────────────────────────────────────────────────────
-// Caller phải tự xử lý lỗi 409 ACTIVE_LEADS_WARNING
 export function useRemoveStoreMember() {
   const qc = useQueryClient();
   return useMutation({
@@ -69,7 +67,6 @@ export function useRemoveStoreMember() {
   });
 }
 
-// ── QL-02: Workload nhân sự ───────────────────────────────────────────────────
 export function useStoreWorkload() {
   return useQuery({
     queryKey: qlKeys.workload(),
@@ -78,17 +75,15 @@ export function useStoreWorkload() {
   });
 }
 
-// ── QL-09: Năng lực đơn vị ────────────────────────────────────────────────────
 export function useStoreCapacity() {
   return useQuery({
     queryKey: qlKeys.capacity(),
     queryFn: storeManagerService.getCapacity,
     staleTime: 60_000,
-    retry: false, // không retry NO_STORE / STORE_NOT_FOUND
+    retry: false,
   });
 }
 
-// ── QL-01: Danh sách lead ────────────────────────────────────────────────────
 export function useStoreLeads(params?: GetStoreLeadsParams) {
   return useQuery({
     queryKey: qlKeys.leads(params),
@@ -98,7 +93,6 @@ export function useStoreLeads(params?: GetStoreLeadsParams) {
   });
 }
 
-// ── QL-03: Reassign lead ─────────────────────────────────────────────────────
 export function useReassignStoreLead() {
   const qc = useQueryClient();
   return useMutation({
@@ -110,7 +104,15 @@ export function useReassignStoreLead() {
   });
 }
 
-// ── QL-05: Lịch sử xử lý ────────────────────────────────────────────────────
+export function useSearchStoreLeadReassignTargets(leadId: string, q?: string, enabled = true) {
+  return useQuery({
+    queryKey: qlKeys.reassignTargets(leadId, q),
+    queryFn: () => storeManagerService.getReassignTargets(leadId, { q: q || undefined }),
+    enabled: enabled && !!leadId,
+    staleTime: 30_000,
+  });
+}
+
 export function useStoreLeadHistory(params?: GetStoreHistoryParams) {
   return useQuery({
     queryKey: qlKeys.history(params),
@@ -120,7 +122,15 @@ export function useStoreLeadHistory(params?: GetStoreHistoryParams) {
   });
 }
 
-// ── QL-04: Báo cáo đơn vị ────────────────────────────────────────────────────
+export function useSearchStoreLeadHistoryActors(q?: string, enabled = true) {
+  return useQuery({
+    queryKey: qlKeys.historyActors(q),
+    queryFn: () => storeManagerService.searchHistoryActors({ q: q || undefined }),
+    enabled,
+    staleTime: 30_000,
+  });
+}
+
 export function useStoreReport(params?: GetStoreReportParams) {
   return useQuery({
     queryKey: qlKeys.report(params),
@@ -129,7 +139,6 @@ export function useStoreReport(params?: GetStoreReportParams) {
   });
 }
 
-// ── API 11: Ghi chú nội bộ ───────────────────────────────────────────────────
 export function useAddStoreNote() {
   return useMutation({
     mutationFn: ({ leadId, data }: { leadId: string; data: AddStoreNoteRequest }) =>

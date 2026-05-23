@@ -318,6 +318,12 @@
   box-shadow: 0 4px 16px rgba(124, 58, 237, 0.08);
 }
 
+.storeCard:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
 .storeCardSelected {
   border-color: #7c3aed !important;
   background: rgba(124, 58, 237, 0.06) !important;
@@ -357,6 +363,7 @@
 .capacityFull { background: rgba(239, 68, 68, 0.1);  color: #b91c1c; }
 .capacityNear { background: rgba(234, 179, 8, 0.12); color: #a16207; }
 .capacityOk   { background: rgba(22, 163, 74, 0.1);  color: #15803d; }
+.capacityInactive { background: rgba(100, 116, 139, 0.12); color: #475569; }
 
 .storeCapacityRow {
   display: flex;
@@ -396,6 +403,11 @@
   color: #94a3b8;
 }
 
+.storeInactiveNote {
+  font-size: 0.72rem;
+  color: #b91c1c;
+}
+
 .storeSelectedMark {
   display: flex;
   align-items: center;
@@ -403,6 +415,36 @@
   font-size: 0.75rem;
   font-weight: 600;
   color: #7c3aed;
+}
+
+.storeSearchWrap {
+  padding: 12px 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.storeSearchPicker {
+  width: 100%;
+}
+
+.storeSearchMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.storeSearchStatus {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.storeSearchCapacity {
+  font-size: 0.72rem;
+  color: #64748b;
 }
 
 /* ── Timeline ───────────────────────────────────────────────────────────────── */

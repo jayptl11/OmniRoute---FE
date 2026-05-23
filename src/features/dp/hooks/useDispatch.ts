@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { dispatchService } from '../api/dispatchService';
-import type { DispatchQueueParams, AssignLeadRequest } from '@/types/dispatch';
+import type { AssignLeadRequest, DispatchQueueParams } from '@/types/dispatch';
 
 export const dispatchKeys = {
   all: ['dispatch'] as const,
   queue: (params?: DispatchQueueParams) => ['dispatch', 'queue', params] as const,
   queueItem: (id: string) => ['dispatch', 'queue', id] as const,
-  storesCapacity: () => ['dispatch', 'stores', 'capacity'] as const,
+  storesCapacity: (q?: string) => ['dispatch', 'stores', 'capacity', q] as const,
   history: () => ['dispatch', 'history'] as const,
 };
 
@@ -25,11 +25,11 @@ export function useDispatchLeadDetail(id: string) {
   });
 }
 
-export function useStoresCapacity() {
+export function useStoresCapacity(q?: string) {
   return useQuery({
-    queryKey: dispatchKeys.storesCapacity(),
-    queryFn: () => dispatchService.getStoresCapacity(),
-    staleTime: 30_000, // 30s — store load changes in near-realtime
+    queryKey: dispatchKeys.storesCapacity(q),
+    queryFn: () => dispatchService.getStoresCapacity({ q: q || undefined }),
+    staleTime: 30_000,
   });
 }
 
@@ -39,7 +39,6 @@ export function useAssignLead() {
     mutationFn: ({ id, data }: { id: string; data: AssignLeadRequest }) =>
       dispatchService.assignLead(id, data),
     onSuccess: () => {
-      // Remove lead from queue & refresh history
       qc.invalidateQueries({ queryKey: dispatchKeys.all });
     },
   });

@@ -1,17 +1,22 @@
-import { useState } from 'react';
-import { useTeamLeads, useTeamMembers } from '@/features/tn/hooks/useTeamLead';
+import { useMemo, useState, type FormEvent } from 'react';
+import { Search, Filter, ChevronLeft, ChevronRight, List } from 'lucide-react';
+import { SearchableUserPicker, type SearchableUserPickerOption } from '@/components/SearchableUserPicker';
 import { EscalateDialog } from './EscalateDialog';
 import { InternalNoteDialog } from './InternalNoteDialog';
 import { ReassignDialog } from '../SlaViolationsPage/ReassignDialog';
+import { useTeamLeads, useTeamMembers } from '@/features/tn/hooks/useTeamLead';
 import {
+  TN_CHANNEL_LABELS,
   TN_LEAD_STATUS_LABELS,
   TN_PRIORITY_LABELS,
-  TN_CHANNEL_LABELS,
+  type TeamLeadListItemDto,
+  type TeamMemberDto,
+  type TnChannel,
+  type TnLeadStatus,
+  type TnPriorityLevel,
 } from '@/types/teamlead';
-import type { TeamLeadListItemDto, TnLeadStatus, TnPriorityLevel, TnChannel } from '@/types/teamlead';
-import { Search, Filter, ChevronLeft, ChevronRight, List } from 'lucide-react';
-import styles from './TeamLeadsPage.module.css';
 import { CHANNEL_VALUES } from '@/lib/roleChannel';
+import styles from './TeamLeadsPage.module.css';
 
 type DialogType = 'reassign' | 'escalate' | 'note' | null;
 
@@ -21,10 +26,25 @@ interface ActiveDialog {
 }
 
 const ALL_STATUSES: TnLeadStatus[] = [
-  'New', 'PendingResponse', 'InProgress', 'Escalated', 'Won', 'Lost', 'Invalid', 'Closed',
+  'New',
+  'PendingResponse',
+  'InProgress',
+  'Escalated',
+  'Won',
+  'Lost',
+  'Invalid',
+  'Closed',
 ];
 const ALL_PRIORITIES: TnPriorityLevel[] = ['High', 'Medium', 'Low'];
 const ALL_CHANNELS: TnChannel[] = [...CHANNEL_VALUES];
+
+function toAssignedUserOption(member: TeamMemberDto): SearchableUserPickerOption<TeamMemberDto> {
+  return {
+    value: member.userId,
+    label: member.fullName,
+    raw: member,
+  };
+}
 
 export function TeamLeadsPage() {
   const [page, setPage] = useState(1);
@@ -39,7 +59,7 @@ export function TeamLeadsPage() {
   const [dateTo, setDateTo] = useState('');
   const [activeDialog, setActiveDialog] = useState<ActiveDialog | null>(null);
 
-  const { data: members } = useTeamMembers();
+  const { data: members = [] } = useTeamMembers();
 
   const params = {
     search: search || undefined,
@@ -56,17 +76,17 @@ export function TeamLeadsPage() {
   const { data, isLoading, isError, refetch } = useTeamLeads(params);
   const totalPages = data ? Math.ceil(data.totalCount / pageSize) : 0;
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+  const memberOptions = useMemo(() => members.map(toAssignedUserOption), [members]);
+  const selectedMember = memberOptions.find((option) => option.value === assignedUserId) ?? null;
+
+  const handleSearch = (event: FormEvent) => {
+    event.preventDefault();
     setSearch(searchInput);
     setPage(1);
   };
 
   const handleFilterChange = () => setPage(1);
-
-  const openDialog = (type: DialogType, lead: TeamLeadListItemDto) => {
-    setActiveDialog({ type, lead });
-  };
+  const openDialog = (type: DialogType, lead: TeamLeadListItemDto) => setActiveDialog({ type, lead });
   const closeDialog = () => setActiveDialog(null);
 
   return (
@@ -79,7 +99,6 @@ export function TeamLeadsPage() {
         <p className={styles.pageSubtitle}>Tìm kiếm, lọc và quản lý lead của toàn đội</p>
       </div>
 
-      {/* Filters */}
       <div className={styles.filtersCard}>
         <form className={styles.searchRow} onSubmit={handleSearch}>
           <div className={styles.searchWrap}>
@@ -88,11 +107,13 @@ export function TeamLeadsPage() {
               className={styles.searchInput}
               placeholder="Tìm theo tên hoặc SĐT khách hàng..."
               value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
+              onChange={(event) => setSearchInput(event.target.value)}
               id="lead-search"
             />
           </div>
-          <button type="submit" className={styles.searchBtn}>Tìm kiếm</button>
+          <button type="submit" className={styles.searchBtn}>
+            Tìm kiếm
+          </button>
         </form>
 
         <div className={styles.filterRow}>
@@ -101,56 +122,77 @@ export function TeamLeadsPage() {
           <select
             className={styles.filterSelect}
             value={status}
-            onChange={(e) => { setStatus(e.target.value as TnLeadStatus | ''); handleFilterChange(); }}
+            onChange={(event) => {
+              setStatus(event.target.value as TnLeadStatus | '');
+              handleFilterChange();
+            }}
             id="filter-status"
           >
             <option value="">Tất cả trạng thái</option>
-            {ALL_STATUSES.map((s) => (
-              <option key={s} value={s}>{TN_LEAD_STATUS_LABELS[s]}</option>
+            {ALL_STATUSES.map((item) => (
+              <option key={item} value={item}>
+                {TN_LEAD_STATUS_LABELS[item]}
+              </option>
             ))}
           </select>
 
           <select
             className={styles.filterSelect}
             value={priorityLevel}
-            onChange={(e) => { setPriorityLevel(e.target.value as TnPriorityLevel | ''); handleFilterChange(); }}
+            onChange={(event) => {
+              setPriorityLevel(event.target.value as TnPriorityLevel | '');
+              handleFilterChange();
+            }}
             id="filter-priority"
           >
             <option value="">Tất cả ưu tiên</option>
-            {ALL_PRIORITIES.map((p) => (
-              <option key={p} value={p}>{TN_PRIORITY_LABELS[p]}</option>
+            {ALL_PRIORITIES.map((item) => (
+              <option key={item} value={item}>
+                {TN_PRIORITY_LABELS[item]}
+              </option>
             ))}
           </select>
 
           <select
             className={styles.filterSelect}
             value={channel}
-            onChange={(e) => { setChannel(e.target.value as TnChannel | ''); handleFilterChange(); }}
+            onChange={(event) => {
+              setChannel(event.target.value as TnChannel | '');
+              handleFilterChange();
+            }}
             id="filter-channel"
           >
             <option value="">Tất cả kênh</option>
-            {ALL_CHANNELS.map((c) => (
-              <option key={c} value={c}>{TN_CHANNEL_LABELS[c]}</option>
+            {ALL_CHANNELS.map((item) => (
+              <option key={item} value={item}>
+                {TN_CHANNEL_LABELS[item]}
+              </option>
             ))}
           </select>
 
-          <select
-            className={styles.filterSelect}
-            value={assignedUserId}
-            onChange={(e) => { setAssignedUserId(e.target.value); handleFilterChange(); }}
-            id="filter-assigned"
-          >
-            <option value="">Tất cả SA</option>
-            {(members ?? []).map((m) => (
-              <option key={m.userId} value={m.userId}>{m.fullName}</option>
-            ))}
-          </select>
+          <div style={{ minWidth: 220, flex: '1 1 220px' }}>
+            <SearchableUserPicker
+              mode="local"
+              compact
+              placeholder="Tất cả SA"
+              options={memberOptions}
+              selectedOption={selectedMember}
+              onChange={(option) => {
+                setAssignedUserId(option?.value ?? '');
+                handleFilterChange();
+              }}
+              className={styles.filterPicker}
+            />
+          </div>
 
           <input
             type="date"
             className={styles.filterSelect}
             value={dateFrom}
-            onChange={(e) => { setDateFrom(e.target.value); handleFilterChange(); }}
+            onChange={(event) => {
+              setDateFrom(event.target.value);
+              handleFilterChange();
+            }}
             id="filter-date-from"
             placeholder="Từ ngày"
           />
@@ -158,18 +200,29 @@ export function TeamLeadsPage() {
             type="date"
             className={styles.filterSelect}
             value={dateTo}
-            onChange={(e) => { setDateTo(e.target.value); handleFilterChange(); }}
+            onChange={(event) => {
+              setDateTo(event.target.value);
+              handleFilterChange();
+            }}
             id="filter-date-to"
             placeholder="Đến ngày"
           />
         </div>
       </div>
 
-      {/* Table */}
-      {isLoading && <div className={styles.loadingWrap}><div className={styles.spinner} /></div>}
+      {isLoading && (
+        <div className={styles.loadingWrap}>
+          <div className={styles.spinner} />
+        </div>
+      )}
       {isError && (
         <div className={styles.errorWrap}>
-          <p>Không thể tải dữ liệu. <button onClick={() => refetch()} className={styles.retryBtn}>Thử lại</button></p>
+          <p>
+            Không thể tải dữ liệu.{' '}
+            <button onClick={() => refetch()} className={styles.retryBtn} type="button">
+              Thử lại
+            </button>
+          </p>
         </div>
       )}
 
@@ -194,12 +247,16 @@ export function TeamLeadsPage() {
               <tbody>
                 {data.items.length === 0 && (
                   <tr>
-                    <td colSpan={7} className={styles.emptyRow}>Không có lead nào phù hợp</td>
+                    <td colSpan={7} className={styles.emptyRow}>
+                      Không có lead nào phù hợp
+                    </td>
                   </tr>
                 )}
                 {data.items.map((item) => (
                   <tr key={item.leadId} className={item.slaViolated ? styles.rowViolated : ''}>
-                    <td><span className={styles.leadCode}>{item.leadCode}</span></td>
+                    <td>
+                      <span className={styles.leadCode}>{item.leadCode}</span>
+                    </td>
                     <td>
                       <p className={styles.customerName}>{item.customerName}</p>
                       <p className={styles.customerPhone}>{item.customerPhone}</p>
@@ -209,7 +266,9 @@ export function TeamLeadsPage() {
                         <span className={styles.priorityBadge} data-priority={item.priorityLevel}>
                           {TN_PRIORITY_LABELS[item.priorityLevel]}
                         </span>
-                      ) : '—'}
+                      ) : (
+                        '—'
+                      )}
                     </td>
                     <td>
                       <span className={styles.statusBadge} data-status={item.leadStatus}>
@@ -220,11 +279,15 @@ export function TeamLeadsPage() {
                       {item.slaDeadline ? (
                         <span className={item.slaViolated ? styles.deadlineViolated : ''}>
                           {new Date(item.slaDeadline).toLocaleString('vi-VN', {
-                            day: '2-digit', month: '2-digit',
-                            hour: '2-digit', minute: '2-digit',
+                            day: '2-digit',
+                            month: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
                           })}
                         </span>
-                      ) : '—'}
+                      ) : (
+                        '—'
+                      )}
                     </td>
                     <td>{item.assignedUserName ?? <span className={styles.unassigned}>Chưa gán</span>}</td>
                     <td>
@@ -233,6 +296,7 @@ export function TeamLeadsPage() {
                           className={styles.actionBtnOutline}
                           onClick={() => openDialog('reassign', item)}
                           id={`btn-reassign-${item.leadId}`}
+                          type="button"
                         >
                           Reassign
                         </button>
@@ -240,6 +304,7 @@ export function TeamLeadsPage() {
                           className={styles.actionBtnOutline}
                           onClick={() => openDialog('escalate', item)}
                           id={`btn-escalate-${item.leadId}`}
+                          type="button"
                         >
                           Escalate
                         </button>
@@ -247,6 +312,7 @@ export function TeamLeadsPage() {
                           className={styles.actionBtnGhost}
                           onClick={() => openDialog('note', item)}
                           id={`btn-note-${item.leadId}`}
+                          type="button"
                         >
                           Ghi chú
                         </button>
@@ -260,19 +326,13 @@ export function TeamLeadsPage() {
 
           {totalPages > 1 && (
             <div className={styles.pagination}>
-              <button
-                className={styles.pageBtn}
-                onClick={() => setPage((p) => p - 1)}
-                disabled={page <= 1}
-              >
+              <button className={styles.pageBtn} onClick={() => setPage((value) => value - 1)} disabled={page <= 1} type="button">
                 <ChevronLeft size={16} />
               </button>
-              <span className={styles.pageInfo}>Trang {page} / {totalPages}</span>
-              <button
-                className={styles.pageBtn}
-                onClick={() => setPage((p) => p + 1)}
-                disabled={page >= totalPages}
-              >
+              <span className={styles.pageInfo}>
+                Trang {page} / {totalPages}
+              </span>
+              <button className={styles.pageBtn} onClick={() => setPage((value) => value + 1)} disabled={page >= totalPages} type="button">
                 <ChevronRight size={16} />
               </button>
             </div>
@@ -280,7 +340,6 @@ export function TeamLeadsPage() {
         </>
       )}
 
-      {/* Dialogs */}
       {activeDialog?.type === 'reassign' && (
         <ReassignDialog
           leadId={activeDialog.lead.leadId}

@@ -141,6 +141,13 @@ export interface ReassignLeadRequest {
   reason: string;
 }
 
+export interface TeamLeadReassignTargetDto {
+  userId: string;
+  fullName: string;
+  roleName: string;
+  roleDisplayName?: string | null;
+}
+
 export interface EscalateLeadRequest {
   escalateTo: string;
   reason: string;
@@ -241,6 +248,14 @@ export interface AddableUserDto {
 }
 
 export interface SearchMembersParams {
+  q?: string;
+}
+
+export interface SearchTeamLeadReassignTargetsParams {
+  q?: string;
+}
+
+export interface SearchEscalateTargetsParams {
   q?: string;
 }
 

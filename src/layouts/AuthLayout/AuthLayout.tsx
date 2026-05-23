@@ -56,7 +56,7 @@ export function AuthLayout() {
           <div className={styles.footer}>
             <img src="/viettel-logo.jpg" alt="Viettel Logo" className={styles.viettelLogo} />
             <div className={styles.footerText}>
-              <span className={styles.footerTitle}>Viettel Trading</span>
+              <span className={styles.footerTitle}>Viettel Commerce</span>
               <span className={styles.footerSubtitle}>Thương mại & Xuất nhập khẩu</span>
             </div>
           </div>
