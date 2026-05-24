@@ -30,12 +30,12 @@ export type TicketActivityAction =
 export type TicketPerformancePeriod = 'week' | 'month' | 'quarter';
 
 export const TICKET_STATUS_LABELS: Record<TicketStatus, string> = {
-  New: 'Moi',
-  InProgress: 'Dang xu ly',
-  WaitingCustomer: 'Cho KH phan hoi',
-  Escalated: 'Da escalate',
-  Resolved: 'Da giai quyet',
-  Closed: 'Da dong',
+  New: 'Mới',
+  InProgress: 'Đang xử lý',
+  WaitingCustomer: 'Chờ KH phản hồi',
+  Escalated: 'Đã escalate',
+  Resolved: 'Đã giải quyết',
+  Closed: 'Đã đóng',
 };
 
 export const TICKET_CHANNEL_LABELS: Record<TicketChannel, string> = {
@@ -43,26 +43,26 @@ export const TICKET_CHANNEL_LABELS: Record<TicketChannel, string> = {
 };
 
 export const TICKET_NEED_TYPE_LABELS: Record<TicketNeedType, string> = {
-  CskhSupport: 'Ho tro CSKH',
-  TechnicalSupport: 'Ho tro ky thuat',
-  Complaint: 'Khieu nai',
-  Warranty: 'Bao hanh',
-  Billing: 'Thanh toan',
-  Other: 'Khac',
+  CskhSupport: 'Hỗ trợ CSKH',
+  TechnicalSupport: 'Hỗ trợ kỹ thuật',
+  Complaint: 'Khiếu nại',
+  Warranty: 'Bảo hành',
+  Billing: 'Thanh toán',
+  Other: 'Khác',
 };
 
 export const TICKET_PRIORITY_LABELS: Record<TicketPriorityLevel, string> = {
-  Low: 'Thap',
-  Medium: 'Trung binh',
+  Low: 'Thấp',
+  Medium: 'Trung bình',
   High: 'Cao',
 };
 
 export const TICKET_ACTIVITY_ACTION_LABELS: Record<TicketActivityAction, string> = {
-  TICKET_CREATED: 'Ticket duoc tao',
-  STATUS_CHANGED: 'Chuyen trang thai',
-  PROCESSING_NOTE: 'Ghi chu xu ly',
+  TICKET_CREATED: 'Ticket được tạo',
+  STATUS_CHANGED: 'Chuyển trạng thái',
+  PROCESSING_NOTE: 'Ghi chú xử lý',
   ESCALATED: 'Escalate ticket',
-  SATISFACTION_RECORDED: 'Ghi nhan hai long',
+  SATISFACTION_RECORDED: 'Ghi nhận hài lòng',
 };
 
 export const TICKET_VALID_TRANSITIONS: Partial<Record<TicketStatus, TicketStatus[]>> = {
@@ -79,11 +79,11 @@ export interface SatisfactionMeta {
 }
 
 export const SATISFACTION_META: Record<number, SatisfactionMeta> = {
-  1: { label: 'Rat khong hai long', color: '#ef4444' },
-  2: { label: 'Khong hai long', color: '#f97316' },
-  3: { label: 'Binh thuong', color: '#eab308' },
-  4: { label: 'Hai long', color: '#86efac' },
-  5: { label: 'Rat hai long', color: '#22c55e' },
+  1: { label: 'Rất không hài lòng', color: '#ef4444' },
+  2: { label: 'Không hài lòng', color: '#f97316' },
+  3: { label: 'Bình thường', color: '#eab308' },
+  4: { label: 'Hài lòng', color: '#86efac' },
+  5: { label: 'Rất hài lòng', color: '#22c55e' },
 };
 
 export interface GetTicketsParams {
