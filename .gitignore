@@ -43,5 +43,12 @@ yarn-error.log*
 /fix_dialog.cjs
 /fix_glass.cjs
 
+# Local/internal docs and AI helper metadata
+/.github/introduction/
+/.github/skills/
+/FE_LOGIC_DOCS.md
+/FE_LOGIC_LUONG_CHINH.md
+/HUONG_DAN_SU_DUNG.md
+
 #Docs
 docs/
